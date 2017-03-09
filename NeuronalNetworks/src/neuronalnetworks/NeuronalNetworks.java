@@ -17,6 +17,7 @@ public class NeuronalNetworks {
 	Layer[] layers;
 	public double[][][] weights;
 	private double[][][] weights2;
+	private int numberOfLayers;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String location){
@@ -73,21 +74,21 @@ public class NeuronalNetworks {
 		//TODO Modify image name
 		
 		double[] image = imageLecture(location + imageName +".png");
-		int numberoflayers = weights.length;
+		this.numberOfLayers = weights.length;
 		
 		//Creation du tableau de couches
-		layers = new Layer[numberoflayers+1];
+		layers = new Layer[numberOfLayers+1];
 		layers[0] = new Layer(image, weights[0]);
 		layers[-1] = new Layer();
 		
 		//Creation des objets couches
-		for(int i=1; i<numberoflayers; i++){
+		for(int i=1; i<numberOfLayers; i++){
 			layers[i] = new Layer();
 			layers[i].setWeights(weights[i]);
 		}
 		
 		//Creation des liens entre les couches
-		for(int i=0; i<numberoflayers; i++){
+		for(int i=0; i<numberOfLayers; i++){
 			layers[i].next = layers[i+1];
 		}
 		
@@ -97,6 +98,14 @@ public class NeuronalNetworks {
 		
 		return result;
 	}
+	
+	public void backPropagation(String filelocation, int[] expectedResult) throws  IOException, ClassNotFoundException{
+		
+		this.forwardPropagation();
+		this.layers[this.numberOfLayers-1].backprop_init(expectedResult);
+		
+	}
+	
 	
 	public void extractWeights(){
 		File f = new File("Weights");
