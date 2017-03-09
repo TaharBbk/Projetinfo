@@ -21,6 +21,7 @@ public class NeuronalNetworks {
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfLayers;
+	public static final int LEARNING_FACTOR = 1;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){

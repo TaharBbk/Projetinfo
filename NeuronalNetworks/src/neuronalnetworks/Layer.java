@@ -10,7 +10,6 @@ public class Layer {
 	double[][] differentialErrorWeights;
 	double[] differentialErrorProduct;
 	int numberOfNeurons;
-	int learningfactor = 1; // A Modifier
 	
 	//Constructeur 1
 	public Layer(double[] val, double[][] weight, Layer next){
@@ -129,7 +128,7 @@ public class Layer {
 				
 			}
 			
-			this.precedent.setWeights(this.soustractionMatrice(this.precedent.getWeights(), this.scalaireMatrice(this.learningfactor, this.differentialErrorWeights)));
+			this.precedent.setWeights(this.soustractionMatrice(this.precedent.getWeights(), this.scalaireMatrice(NeuronalNetworks.LEARNING_FACTOR, this.differentialErrorWeights)));
 			
 			this.precedent.backprop(returned);
 			
