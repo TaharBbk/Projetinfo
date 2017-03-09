@@ -4,9 +4,8 @@ public class Layer {
 
 	double[] values;
 	double[][] weights;
-	private Layer Null;
-	Layer next = Null;
-	Layer precedent = Null;
+	Layer next = null;
+	Layer precedent = null;
 	double[] differentialErrorValues;
 	double[][] differentialErrorWeights;
 	double[] differentialErrorProduct;
@@ -61,7 +60,7 @@ public class Layer {
 	
 	//Foncion de propagation du reseau de neurone
 	public void propagate(){
-		if(this.next!=Null){
+		if(this.next!=null){
 			this.next.execute();
 		}
 		this.next.setValues(productMatrix(this.values, this.weights));
@@ -95,7 +94,7 @@ public class Layer {
 	
 	public void backprop(double[] incomingValues) {
 		
-		if(this.precedent != Null) {
+		if(this.precedent != null) {
 			
 			this.differentialErrorWeights = new double[this.numberOfNeurons][this.precedent.getNumberOfNeurons()];
 			this.differentialErrorProduct = new double[this.numberOfNeurons];
