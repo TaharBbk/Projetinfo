@@ -13,18 +13,21 @@ import javax.imageio.ImageIO;
 
 public class NeuronalNetworks {
 
-	static int seuil = 128;
+	public String location = "/home/timoth/Documents/TSP/1A/Projet Info/";
+	//TODO Modify location
+	
+		static int seuil = 128;
 	Layer[] layers;
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfLayers;
 	
 	//Conversion de l'image en tableau
-	public static double[] imageLecture(String location){
+	public static double[] imageLecture(String locationImage){
 		BufferedImage image;
 		try {
 			//Lecture de l'image par JAVA
-			image = ImageIO.read(new File(location));
+			image = ImageIO.read(new File(locationImage));
 			int hauteur = image.getHeight();
 			int largeur = image.getWidth();
 			double[] imagetab = new double[hauteur*largeur];
@@ -61,17 +64,13 @@ public class NeuronalNetworks {
 		return sum/2;
 	}
 	
-	public void neuronalNetwork(double[][][] weights){
+	public NeuronalNetworks(double[][][] weights){
 		this.weights = weights;
 	}
 	
-	public String forwardPropagation() throws IOException, ClassNotFoundException{
+	public String forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
 		
-		String location = "/home/timoth/Documents/TSP/1A/Projet Info/images/";
-		//TODO Modify images location
-				
-		String imageName = "0_082";
-		//TODO Modify image name
+		String imageName = "images/" + imageId;
 		
 		double[] image = imageLecture(location + imageName +".png");
 		this.numberOfLayers = weights.length;
@@ -99,34 +98,32 @@ public class NeuronalNetworks {
 		return result;
 	}
 	
-	public void backPropagation(String filelocation, int[] expectedResult) throws  IOException, ClassNotFoundException{
+	public void backPropagation(String imageId, int[] expectedResult) throws  IOException, ClassNotFoundException{
 		
-		this.forwardPropagation();
+		this.forwardPropagation(imageId);
 		this.layers[this.numberOfLayers-1].backprop_init(expectedResult);
 		
 	}
 	
 	
 	public void extractWeights(){
-		File f = new File("Weights");
+		File f = new File(location + "Weights");
+		//TODO Modify file name
 		//Extraction de l'objet weights
 		if(f.exists()){
 			FileInputStream fis;
 			try {
-				fis = new FileInputStream ("Weights");
+				fis = new FileInputStream (location + "Weights");
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object weight = ois.readObject();
 				weights2 = (double[][][]) weight;
 				weights = weights2;
 				ois.close();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -137,16 +134,14 @@ public class NeuronalNetworks {
 		FileOutputStream fos;
 		
 		try {
-			fos = new FileOutputStream ("Weights");
+			fos = new FileOutputStream (location + "Weights");
 			ObjectOutputStream oos = new ObjectOutputStream (fos);
 			oos.writeObject(this.weights);
 			oos.close();
 			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
