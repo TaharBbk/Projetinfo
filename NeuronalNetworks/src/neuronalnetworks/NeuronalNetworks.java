@@ -69,7 +69,11 @@ public class NeuronalNetworks {
 		this.weights = weights;
 	}
 	
-	public String forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
+	public NeuronalNetworks(){
+		this.extractWeights();
+	}
+	
+	public int forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
 		
 		String imageName = "images/" + imageId;
 		
@@ -94,9 +98,14 @@ public class NeuronalNetworks {
 		
 		layers[0].execute();
 		
-		String result="";
+		double[] result = layers[numberOfLayers].getValues();
 		
-		return result;
+		for(int i=0; i<layers[numberOfLayers].numberOfNeurons; i++){
+			if(result[i] == 1){
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	public void backPropagation(String imageId, int[] expectedResult) throws  IOException, ClassNotFoundException{
