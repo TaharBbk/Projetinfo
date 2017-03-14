@@ -2,14 +2,14 @@ package neuronalnetworks;
 
 public class Layer {
 
-	double[] values;
-	double[][] weights;
-	Layer next = null;
-	Layer precedent = null;
-	double[] differentialErrorValues;
-	double[][] differentialErrorWeights;
-	double[] differentialErrorProduct;
-	int numberOfNeurons;
+	double[] values;						// The vector of the values of the layer
+	double[][] weights;						// The matrix of the weights of the layer
+	Layer next = null;						// The next layer in the NN, defaulted to null
+	Layer precedent = null;					// The precedent layer in the NN
+	double[] differentialErrorValues;		// The derivative of the error with respect to the values of this layer
+	double[][] differentialErrorWeights;	// The derivative of the error with respect to the weights of this layer
+	double[] differentialErrorProduct; 		// The derivative of the error with respect to the product of the weights of the precedent layer by the values of the precedent layer
+	int numberOfNeurons;					// The number of neurons in the layer
 	
 	//Constructeur 1
 	public Layer(double[] val, double[][] weight, Layer next){
@@ -77,24 +77,31 @@ public class Layer {
 	
 	public void backprop_init(int[] expectedResult){
 		
-		this.differentialErrorValues = new double[this.numberOfNeurons];
+		this.differentialErrorValues = new double[this.numberOfNeurons];		// Initialisation of the vector based on info given when the constructor was called
 		
 		for (int i = 0 ; i < this.numberOfNeurons ; i++) {
 			
-			this.differentialErrorValues[i] = 2*(-this.values[i])*(expectedResult[i] - this.values[i]);
-			
+			this.differentialErrorValues[i] = 2*(-this.values[i])*(expectedResult[i] - this.values[i]);		// Derivative of the error function with respect to Xi
+			// Need to replace this part using methods to do the derivative of the error function
 		}
 		
-		this.backprop(this.differentialErrorValues);
+		this.backprop(this.differentialErrorValues);							// We launch the backpropagation process
 		
 	}
-	
+
+	/* 
+	 This methods takes as input the values coming from the last layer visited by the backpropagation algorithm
+	 Note : in this method we always call the weights matrix from the layer stored in the *precedent* variable, because of the way the forward propagation is implemented
+	 */
 	public void backprop(double[] incomingValues) {
 		
 		if(this.precedent != null) {
 			
+			// Initialisation of the variables of the layer
 			this.differentialErrorWeights = new double[this.numberOfNeurons][this.precedent.getNumberOfNeurons()];
 			this.differentialErrorProduct = new double[this.numberOfNeurons];
+			
+			// Declatation of the variables used in this method
 			double[] activatedProduct;
 			double[] returned = new double[this.precedent.getNumberOfNeurons()];
 			
@@ -102,7 +109,7 @@ public class Layer {
 				
 				for (int j = 0; j < this.precedent.getNumberOfNeurons() ; j++) {
 					
-					this.differentialErrorProduct[i] += this.precedent.getWeights()[i][j]*this.precedent.getValues()[j];
+					this.differentialErrorProduct[i] += this.precedent.getWeights()[i][j]*this.precedent.getValues()[j];		// We calculate the differentialErrorProduct variable first as it is needed for further calculations
 					
 				}
 			}
@@ -113,7 +120,7 @@ public class Layer {
 			for (int i = 0 ; i < this.numberOfNeurons ; i++) {	
 				for (int j = 0 ; j < this.precedent.getNumberOfNeurons() ; j++) {
 					
-					this.differentialErrorWeights[i][j] = this.precedent.getValues()[j]*activatedProduct[i]*incomingValues[i];
+					this.differentialErrorWeights[i][j] = this.precedent.getValues()[j]*activatedProduct[i]*incomingValues[i];	// We calculate differentialErrorWeights here
 					
 				}
 			}
@@ -121,16 +128,16 @@ public class Layer {
 			for (int k = 0 ; k < this.precedent.getNumberOfNeurons() ; k++) {
 				for (int i = 0 ; i < this.numberOfNeurons ; i++) {
 					
-					returned[k] += this.precedent.getWeights()[i][k]*this.differentialErrorProduct[i];
+					returned[k] += this.precedent.getWeights()[i][k]*this.differentialErrorProduct[i];							// We calculate the input given to the next call of the backprop method
 					
 				}
 				
 				
 			}
 			
-			this.precedent.setWeights(this.soustractionMatrice(this.precedent.getWeights(), this.scalaireMatrice(NeuronalNetworks.LEARNING_FACTOR, this.differentialErrorWeights)));
+			this.precedent.setWeights(this.soustractionMatrice(this.precedent.getWeights(), this.scalaireMatrice(NeuronalNetworks.LEARNING_FACTOR, this.differentialErrorWeights))); // We modifiy the weights matrix according to the backprop algorithm
 			
-			this.precedent.backprop(returned);
+			this.precedent.backprop(returned);		// We call the method on the next layer to be processed, passing as input what we formerly calculated
 			
 		}
 		
@@ -167,6 +174,7 @@ public class Layer {
 		
 	}
 	
+	// Method mapping the derivative of the activation function on an input array
 	public double[] activationDerivative(double[] input) {
 		
 		int length = input.length;
@@ -182,6 +190,7 @@ public class Layer {
 		
 	}
 	
+	// Method mapping the loss function on an array using a array of expected results
 	public double[] lossFunction(double[] input, double[] expected) {
 		
 		int n = input.length;
@@ -197,6 +206,7 @@ public class Layer {
 		
 	}
 	
+	// Method that multiplies a matrix by an integer scalar
 	public double[][] scalaireMatrice(int scalaire, double[][] matrice) {
 		
 		double[][] res = new double[matrice.length][matrice[0].length];
@@ -213,6 +223,7 @@ public class Layer {
 		
 	}
 	
+	// Method that implements substraction of matrixes : m1 - m2
 	public double[][] soustractionMatrice(double[][] m1, double[][] m2) {
 		
 		double[][] res = new double[m1.length][m1[0].length];
