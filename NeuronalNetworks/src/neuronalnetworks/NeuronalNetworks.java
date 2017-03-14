@@ -66,24 +66,13 @@ public class NeuronalNetworks {
 		return sum/2;
 	}
 	
-	public NeuronalNetworks(double[][][] weights){
-		this.weights = weights;
-	}
-	
 	public NeuronalNetworks(){
+		//Extraction des poids
 		this.extractWeights();
-	}
-	
-	public int forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
-		
-		String imageName = "images/" + imageId;
-		
-		double[] image = imageLecture(location + imageName +".png");
+				
 		this.numberOfLayers = weights.length;
-		
 		//Creation du tableau de couches
 		layers = new Layer[numberOfLayers+1];
-		layers[0] = new Layer(image, weights[0]);
 		layers[-1] = new Layer();
 		
 		//Creation des objets couches
@@ -96,11 +85,17 @@ public class NeuronalNetworks {
 		for(int i=0; i<numberOfLayers; i++){
 			layers[i].next = layers[i+1];
 		}
+	}
+	
+	public int forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
 		
+		String imageName = "images/" + imageId;
+		
+		double[] image = imageLecture(location + imageName +".png");
+		layers[0] = new Layer(image, weights[0]);	
 		layers[0].execute();
 		
 		double[] result = layers[numberOfLayers].getValues();
-		
 		for(int i=0; i<layers[numberOfLayers].numberOfNeurons; i++){
 			if(result[i] == 1){
 				return i;
@@ -113,9 +108,29 @@ public class NeuronalNetworks {
 		
 		this.forwardPropagation(imageId);
 		this.layers[this.numberOfLayers-1].backprop_init(expectedResult);
+		this.saveWeights();
 		
 	}
 	
+	public double randomWeights(){
+		double x = Math.random();
+		if(x<0.5){
+			return 1;
+		}
+		else{
+			return -1;
+		}
+	}
+	
+	public void generateWeights(){
+		for(int i=0; i<weights.length; i++){
+			for(int j=0; j<weights[i].length; j++){
+				for(int h=0; h<weights[i][j].length; h++){
+					weights[i][j][h] = randomWeights();
+				}
+			}
+		}
+	}
 	
 	public void extractWeights(){
 		File f = new File(location + "Weights");
@@ -139,7 +154,10 @@ public class NeuronalNetworks {
 			}
 		}
 		else{
-			
+			double[][][] weights = new double[2][][];
+			weights[0] = new double[7812][15625];
+			weights[1] = new double[10][7812];
+			this.generateWeights();
 		}
 	}
 	
@@ -158,15 +176,5 @@ public class NeuronalNetworks {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-	}
-	
-	public int Bernoulli(double p){
-		double x = Math.random();
-		if(x<p){
-			return 1;
-		}
-		else{
-			return -1;
-		}
 	}
 }
