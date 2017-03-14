@@ -114,11 +114,12 @@ public class NeuronalNetworks {
 	
 	public double randomWeights(){
 		double x = Math.random();
+		double y = Math.random()*0.9+0.1;
 		if(x<0.5){
-			return 1;
+			return 1*y;
 		}
 		else{
-			return -1;
+			return -1*y;
 		}
 	}
 	
