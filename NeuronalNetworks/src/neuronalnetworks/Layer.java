@@ -44,6 +44,10 @@ public class Layer {
 	public void setPrecedent(Layer p) {
 		this.precedent = p;
 	}
+	
+	public void setNext(Layer n) {
+		this.next = n;
+	}
 
 	//Recuperation des valeurs des neurones de la couche
 	public double[] getValues(){

@@ -66,42 +66,43 @@ public class NeuronalNetworks {
 		return sum/2;
 	}
 	
-	public NeuronalNetworks(){
+	public NeuronalNetworks() {
 		//Extraction des poids
 		this.extractWeights();
 				
 		this.numberOfLayers = weights.length;
 		//Creation du tableau de couches
 		layers = new Layer[numberOfLayers+1];
-		layers[-1] = new Layer();
+		layers[layers.length - 1] = new Layer();
 		
 		//Creation des objets couches
-		for(int i=1; i<numberOfLayers; i++){
+		for(int i=0; i<numberOfLayers; i++){
 			layers[i] = new Layer();
 			layers[i].setWeights(weights[i]);
 		}
 		
 		//Creation des liens entre les couches
 		for(int i=0; i<numberOfLayers; i++){
-			layers[i].next = layers[i+1];
+			layers[i].setNext(layers[i+1]);
 		}
 	}
 	
-	public int forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
+	public double[] forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
 		
 		String imageName = "images/" + imageId;
 		
 		double[] image = imageLecture(location + imageName +".png");
-		layers[0] = new Layer(image, weights[0]);	
+		layers[0] = new Layer(image, weights[0]);
+		layers[0].setNext(layers[1]);
 		layers[0].execute();
 		
 		double[] result = layers[numberOfLayers].getValues();
 		for(int i=0; i<layers[numberOfLayers].numberOfNeurons; i++){
 			if(result[i] == 1){
-				return i;
+				return result;
 			}
 		}
-		return -1;
+		return result;
 	}
 	
 	public void backPropagation(String imageId, int[] expectedResult) throws  IOException, ClassNotFoundException{
@@ -156,8 +157,9 @@ public class NeuronalNetworks {
 		}
 		else{
 			double[][][] weights = new double[2][][];
-			weights[0] = new double[7812][15625];
-			weights[1] = new double[10][7812];
+			weights[0] = new double[492][784];
+			weights[1] = new double[10][492];
+			this.weights = weights;
 			this.generateWeights();
 		}
 	}
@@ -177,5 +179,11 @@ public class NeuronalNetworks {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, IOException {
+		NeuronalNetworks nN = new NeuronalNetworks();
+		double[] result = nN.forwardPropagation("8_034");
+		for (int i=0; i<result.length; i++) {System.out.println(result[i]);}
 	}
 }

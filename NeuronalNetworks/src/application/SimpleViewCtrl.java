@@ -54,9 +54,9 @@ public class SimpleViewCtrl {
             RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
             ImageIO.write(renderedImage, "png", file);
             
-            BufferedImage resizedImage = new BufferedImage(125, 125, 1);
+            BufferedImage resizedImage = new BufferedImage(28, 28, 1);
     		Graphics2D g = resizedImage.createGraphics();
-    		g.drawImage((BufferedImage)renderedImage, 0, 0, 25, 25, null);
+    		g.drawImage((BufferedImage)renderedImage, 0, 0, 28, 28, null);
     		g.dispose();
     		ImageIO.write(resizedImage, "png", fileResized);
         } catch (IOException e) {
