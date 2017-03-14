@@ -58,9 +58,9 @@ public class Layer {
 	//Fonction de propagation du reseau de neurones
 	public void propagate(){
 		if(this.next!=null){
+			this.next.setValues(productMatrix(this.values, this.weights));
 			this.next.execute();
 		}
-		this.next.setValues(productMatrix(this.values, this.weights));
 	}
 	
 	public int getNumberOfNeurons() {
@@ -145,17 +145,17 @@ public class Layer {
 	
 	
 	//Produit Matriciel entre un vecteur et une matrice
-	public double[] productMatrix(double[] MB, double[][] MA){
+	public double[] productMatrix(double[] MA, double[][] MB){
 		int ha = MA.length;
-		int la = MA[0].length;
 		int hb = MB.length;
-		assert(la==hb);
-		double[] produit = new double[ha];
+		int lb = MB[0].length;
+		assert(ha==lb);
+		double[] produit = new double[hb];
 		
-		for(int i=0; i<ha; i++){
+		for(int i=0; i<hb; i++){
 			int sum = 0;
-			for(int h=0; h<hb; h++){
-				sum+=MA[i][h]*MB[h];
+			for(int j=0; j<ha; j++){
+				sum+=MA[j]*MB[i][j];
 			}
 			produit[i]=sum;
 		}
