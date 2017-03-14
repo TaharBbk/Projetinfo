@@ -55,7 +55,7 @@ public class Layer {
 		activationFunction(this.values);
 	}
 	
-	//Foncion de propagation du reseau de neurone
+	//Foncion de propagation du reseau de neurones
 	public void propagate(){
 		if(this.next!=null){
 			this.next.execute();

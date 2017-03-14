@@ -21,6 +21,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 import javax.imageio.ImageIO;
+import javafx.scene.text.Text;
 
 public class SimpleViewCtrl {
 	
@@ -38,6 +39,7 @@ public class SimpleViewCtrl {
 	@FXML Circle circle7;
 	@FXML Circle circle8;
 	@FXML Circle circle9;
+	@FXML Text txErreur;
 	
 	//save a png version of the canvas
     void save() {
@@ -66,8 +68,19 @@ public class SimpleViewCtrl {
 	@FXML
 	void analyse() {
 		save();
-		//int result = (int)neuronalNetwork.forwardPropagation("tmpResized");
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
+		
+//		NeuronalNetworks nN = new NeuronalNetworks();
+//		try {
+//			int result = nN.forwardPropagation("tmpResized");
+//			Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
+//			turnOnLight(circles[result]);
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		
 		int i = (int)(Math.random()*10);
 		turnOnLight(circles[i]);
 	}
@@ -107,14 +120,6 @@ public class SimpleViewCtrl {
         gc.stroke();
 	}
 	
-	//useless, was made to avoid linking line...
-	@FXML
-	void Release(MouseEvent event) {
-		GraphicsContext gc = Canvas.getGraphicsContext2D();
-        gc.beginPath();
-        gc.moveTo(event.getX(), event.getY());
-	}
-	
 	//reset canvas and circles
 	@FXML
 	void clear() {
@@ -122,6 +127,11 @@ public class SimpleViewCtrl {
 		gc.clearRect(0, 0, Canvas.getWidth(), Canvas.getHeight());
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
 		for (int i=0; i<10; i++) {turnOffLight(circles[i]);}
+	}
+	
+	@FXML
+	void init(){
+		txErreur.setText("10%");
 	}
 
 }

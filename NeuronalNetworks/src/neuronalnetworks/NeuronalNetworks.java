@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import javax.imageio.ImageIO;
 
 public class NeuronalNetworks {
@@ -136,6 +137,9 @@ public class NeuronalNetworks {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+		}
+		else{
+			
 		}
 	}
 	

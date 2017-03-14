@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane minHeight="500.0" minWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SimpleViewCtrl">
+<AnchorPane minHeight="500.0" minWidth="500.0" onMouseEntered="#init" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SimpleViewCtrl">
    <children>
-      <Rectangle fx:id="borders" arcHeight="5.0" arcWidth="5.0" fill="#fffdff" height="200.0" layoutX="150.0" layoutY="72.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+      <Rectangle fx:id="borders" arcHeight="5.0" arcWidth="5.0" fill="#fffdff" height="200.0" layoutX="150.0" layoutY="87.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
       <Button fx:id="boutonAnalyser" layoutX="263.0" layoutY="329.0" mnemonicParsing="false" onMouseClicked="#analyse" text="Analyser" AnchorPane.leftAnchor="263.0" AnchorPane.rightAnchor="157.0" />
-         <Canvas fx:id="Canvas" height="200.0" layoutX="150.0" layoutY="72.0" onMouseClicked="#moveTo" onMouseDragged="#draw" onMouseReleased="#Release" width="200.0" AnchorPane.rightAnchor="150.0">
+         <Canvas fx:id="Canvas" height="200.0" layoutX="151.0" layoutY="89.0" onMouseDragged="#draw" onMouseMoved="#moveTo" width="200.0" AnchorPane.rightAnchor="149.0">
             <cursor>
                <Cursor fx:constant="CROSSHAIR" />
             </cursor>
@@ -42,5 +42,12 @@
       <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="8" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="400.0" />
       <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="9" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="444.0" />
       <Button fx:id="boutonNouveau" layoutX="150.0" layoutY="328.0" mnemonicParsing="false" onMouseClicked="#clear" text="Nouveau" />
+      <Text layoutX="387.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Taux d'erreurs :">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Text>
+      <Text fx:id="txErreur" layoutX="410.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text layoutX="140.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Analyse de caractères manuscrits" />
    </children>
 </AnchorPane>
