@@ -15,7 +15,7 @@ public class Layer {
 	public Layer(double[] val, double[][] weight, Layer next){
 		this.values = val;
 		this.weights = weight;
-		this.next=next;
+		this.next = next;
 		this.numberOfNeurons = this.values.length;
 		this.next.setPrecedent(this);
 	}
@@ -149,7 +149,7 @@ public class Layer {
 	
 	
 	//Produit Matriciel entre un vecteur et une matrice
-	public double[] productMatrix(double[] MA, double[][] MB){
+	public static double[] productMatrix(double[] MA, double[][] MB){
 		int ha = MA.length;
 		int hb = MB.length;
 		int lb = MB[0].length;
@@ -157,7 +157,7 @@ public class Layer {
 		double[] produit = new double[hb];
 		
 		for(int i=0; i<hb; i++){
-			int sum = 0;
+			double sum = 0;
 			for(int j=0; j<ha; j++){
 				sum+=MA[j]*MB[i][j];
 			}
@@ -166,6 +166,7 @@ public class Layer {
 		
 		return produit;
 	}
+	
 	
 	//Implementation de la fonction d'activation
 	public void activationFunction(double[] M){

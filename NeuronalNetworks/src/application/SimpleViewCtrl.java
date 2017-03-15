@@ -19,11 +19,15 @@ import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-
-import javax.imageio.ImageIO;
 import javafx.scene.text.Text;
 
+import javax.imageio.ImageIO;
+
+import neuronalnetworks.NeuronalNetworks;
+
 public class SimpleViewCtrl {
+	
+	NeuronalNetworks nN = new NeuronalNetworks();
 	
 	@FXML Button boutonAnalyser;
 	@FXML Button boutonNouveau;
@@ -70,19 +74,14 @@ public class SimpleViewCtrl {
 		save();
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
 		
-//		NeuronalNetworks nN = new NeuronalNetworks();
-//		try {
-//			int result = nN.forwardPropagation("tmpResized");
-//			Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
-//			turnOnLight(circles[result]);
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		
-		int i = (int)(Math.random()*10);
-		turnOnLight(circles[i]);
+		try {
+			int result = nN.forwardPropagation("tmpResized");
+			turnOnLight(circles[result]);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//change color of a circle to identify it
@@ -131,7 +130,7 @@ public class SimpleViewCtrl {
 	
 	@FXML
 	void init(){
-		txErreur.setText("10%");
+		txErreur.setText("90%");
 	}
 
 }

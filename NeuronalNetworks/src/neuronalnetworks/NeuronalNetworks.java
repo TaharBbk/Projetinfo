@@ -21,7 +21,7 @@ public class NeuronalNetworks {
 	Layer[] layers;
 	public double[][][] weights;
 	private double[][][] weights2;
-	private int numberOfLayers;
+	private int numberOfWeights;
 	public static final int LEARNING_FACTOR = 1;
 	
 	//Conversion de l'image en tableau
@@ -70,45 +70,53 @@ public class NeuronalNetworks {
 		//Extraction des poids
 		this.extractWeights();
 				
-		this.numberOfLayers = weights.length;
+		this.numberOfWeights = weights.length;
 		//Creation du tableau de couches
-		layers = new Layer[numberOfLayers+1];
-		layers[layers.length - 1] = new Layer();
+		layers = new Layer[numberOfWeights+1];
+		layers[numberOfWeights] = new Layer();
 		
 		//Creation des objets couches
-		for(int i=0; i<numberOfLayers; i++){
+		for(int i=1; i<numberOfWeights; i++){
 			layers[i] = new Layer();
 			layers[i].setWeights(weights[i]);
 		}
 		
 		//Creation des liens entre les couches
-		for(int i=0; i<numberOfLayers; i++){
+		for(int i=1; i<numberOfWeights; i++){
 			layers[i].setNext(layers[i+1]);
 		}
 	}
 	
-	public double[] forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
+	public int forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
 		
 		String imageName = "images/" + imageId;
 		
 		double[] image = imageLecture(location + imageName +".png");
 		layers[0] = new Layer(image, weights[0]);
 		layers[0].setNext(layers[1]);
-		layers[0].execute();
+		layers[0].propagate();
 		
-		double[] result = layers[numberOfLayers].getValues();
-		for(int i=0; i<layers[numberOfLayers].numberOfNeurons; i++){
-			if(result[i] == 1){
-				return result;
+		return max(layers[numberOfWeights].getValues());
+	}
+	
+	//return the maximum of a table
+	public int max(double[] T){
+		int longueur = T.length;
+		double max = T[0];
+		int posmax = 0;
+		for(int i=0; i<longueur; i++){
+			if(max < T[i]){
+				max = T[i];
+				posmax = i;
 			}
 		}
-		return result;
+		return posmax;
 	}
 	
 	public void backPropagation(String imageId, int[] expectedResult) throws  IOException, ClassNotFoundException{
 		
 		this.forwardPropagation(imageId);
-		this.layers[this.numberOfLayers-1].backprop_init(expectedResult);
+		this.layers[this.numberOfWeights-1].backprop_init(expectedResult);
 		this.saveWeights();
 		
 	}
@@ -179,11 +187,5 @@ public class NeuronalNetworks {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-	}
-	
-	public static void main(String[] args) throws ClassNotFoundException, IOException {
-		NeuronalNetworks nN = new NeuronalNetworks();
-		double[] result = nN.forwardPropagation("8_034");
-		for (int i=0; i<result.length; i++) {System.out.println(result[i]);}
-	}
+	}	
 }
