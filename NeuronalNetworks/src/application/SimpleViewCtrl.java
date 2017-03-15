@@ -47,7 +47,7 @@ public class SimpleViewCtrl {
 	
 	//save a png version of the canvas
     void save() {
-    	String location = "/home/timoth/Documents/TSP/1A/Projet Info/";
+    	String location = NeuronalNetworks.location;
     	//TODO Modify location
 		File file = new File(location + "/images/tmp.png");
 		File fileResized = new File(location + "/images/tmpResized.png");

@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 
 public class NeuronalNetworks {
 
-	public String location = "/home/timoth/Documents/TSP/1A/Projet Info/";
+	public final static String location = "/home/timoth/Documents/TSP/1A/Projet Info/";
 	//TODO Modify location
 	
 		static int seuil = 128;
@@ -22,7 +22,7 @@ public class NeuronalNetworks {
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfWeights;
-	public static final int LEARNING_FACTOR = 1;
+	public static final int LEARNING_FACTOR = 100;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){
@@ -113,10 +113,13 @@ public class NeuronalNetworks {
 		return posmax;
 	}
 	
-	public void backPropagation(String imageId, int[] expectedResult) throws  IOException, ClassNotFoundException{
+	public void backPropagation(String imageId, int expectedResult) throws  IOException, ClassNotFoundException{
+		
+		int[] expected = new int[10];
+		expected[expectedResult] = 1;	
 		
 		this.forwardPropagation(imageId);
-		this.layers[this.numberOfWeights-1].backprop_init(expectedResult);
+		this.layers[this.numberOfWeights-1].backprop_init(expected);
 		this.saveWeights();
 		
 	}
@@ -187,5 +190,5 @@ public class NeuronalNetworks {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
-	}	
+	}
 }
