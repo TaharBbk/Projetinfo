@@ -48,10 +48,8 @@ public class SimpleViewCtrl {
 	//save a png version of the canvas
     void save() {
     	String location = NeuronalNetworks.location;
-    	//TODO Modify location
 		File file = new File(location + "/images/tmp.png");
 		File fileResized = new File(location + "/images/tmpResized.png");
-		//TODO Modify files location
 		try {
             WritableImage writableImage = new WritableImage((int)Canvas.getWidth(), (int)Canvas.getHeight());
             Canvas.snapshot(null, writableImage);

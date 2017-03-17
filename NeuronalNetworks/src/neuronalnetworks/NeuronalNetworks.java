@@ -147,7 +147,6 @@ public class NeuronalNetworks {
 	
 	public void extractWeights(){
 		File f = new File(location + "Weights");
-		//TODO Modify file name
 		//Extraction de l'objet weights
 		if(f.exists()){
 			FileInputStream fis;
