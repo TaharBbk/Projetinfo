@@ -12,7 +12,7 @@ https://drive.google.com/open?id=0B97c8mnMgYeleVhmY1dHTUFoaG8
 
 # Utilisation
 
-Afin de tester le prototype, il suffit de modifier le chemin d'accès souhaité (final "location" dans NeuronalNetwork.java), puis d'executer main.java
+Afin de tester le prototype, il suffit d'executer Projetinfo/NeuronalNetworks/src/application/main.java
 Il suffit alors de dessiner dans la zone appropriée, puis cliquer sur 'Analyser' pour que le chiffre trouvé par le réseau de neurones soit indiqué via les "lumières".
 Le boutton 'nouveau' permet d'effacer la zone de dessin et la lumière allumée.
 

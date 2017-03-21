@@ -14,8 +14,7 @@ import javax.imageio.ImageIO;
 
 public class NeuronalNetworks {
 
-	public final static String location = "/home/timoth/Documents/TSP/1A/Projet Info/";
-	//TODO Modify location
+	public final static String location = new File("").getAbsolutePath();;
 	
 		static int seuil = 128;
 	Layer[] layers;
@@ -89,8 +88,7 @@ public class NeuronalNetworks {
 	
 	public int forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
 		
-		String imageName = "images/" + imageId;
-		
+		String imageName = "/images/" + imageId;
 		double[] image = imageLecture(location + imageName +".png");
 		layers[0] = new Layer(image, weights[0]);
 		layers[0].setNext(layers[1]);
