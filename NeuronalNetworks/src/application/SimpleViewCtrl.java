@@ -48,8 +48,8 @@ public class SimpleViewCtrl {
 	//save a png version of the canvas
     void save() {
     	String location = NeuronalNetworks.location;
-		File file = new File(location + "/images/tmp.png");
-		File fileResized = new File(location + "/images/tmpResized.png");
+		File file = new File(location + "/tmp.png");
+		File fileResized = new File(location + "/tmpResized.png");
 		try {
             WritableImage writableImage = new WritableImage((int)Canvas.getWidth(), (int)Canvas.getHeight());
             Canvas.snapshot(null, writableImage);
@@ -69,6 +69,8 @@ public class SimpleViewCtrl {
     //make a forward propagation on the canvas and return result
 	@FXML
 	void analyse() {
+		
+		String location = NeuronalNetworks.location;
 		save();
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
 		
@@ -80,6 +82,11 @@ public class SimpleViewCtrl {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		File file = new File(location + "/tmp.png");
+		File fileResized = new File(location + "/tmpResized.png");
+		file.delete();
+		fileResized.delete();
 	}
 	
 	//change color of a circle to identify it

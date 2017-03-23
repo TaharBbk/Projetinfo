@@ -88,7 +88,10 @@ public class NeuronalNetworks {
 	
 	public int forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
 		
-		String imageName = "/images/" + imageId;
+		String imageName = "";
+		if (imageId == "tmpResized") {imageName = "/" + imageId;}
+		else {imageName = "/images/" + imageId;}
+		
 		double[] image = imageLecture(location + imageName +".png");
 		layers[0] = new Layer(image, weights[0]);
 		layers[0].setNext(layers[1]);
