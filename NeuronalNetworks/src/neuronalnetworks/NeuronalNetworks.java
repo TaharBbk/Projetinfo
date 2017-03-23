@@ -86,7 +86,7 @@ public class NeuronalNetworks {
 		}
 	}
 	
-	public int forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
+	public double[] forwardPropagation(String imageId) throws IOException, ClassNotFoundException{
 		
 		String imageName = "";
 		if (imageId == "tmpResized") {imageName = "/" + imageId;}
@@ -97,11 +97,11 @@ public class NeuronalNetworks {
 		layers[0].setNext(layers[1]);
 		layers[0].propagate();
 		
-		return max(layers[numberOfWeights].getValues());
+		return layers[numberOfWeights].getValues();
 	}
 	
 	//return the maximum of a table
-	public int max(double[] T){
+	public static int max(double[] T){
 		int longueur = T.length;
 		double max = T[0];
 		int posmax = 0;

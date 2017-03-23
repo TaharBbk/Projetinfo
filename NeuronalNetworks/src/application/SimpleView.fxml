@@ -32,16 +32,16 @@
       <Circle fx:id="circle7" centerX="360.0" centerY="401.0" fill="#FF0000" radius="8.0" stroke="#940d0d" strokeType="INSIDE" />
       <Circle fx:id="circle8" centerX="404.0" centerY="401.0" fill="#FF0000" radius="8.0" stroke="#940d0d" strokeType="INSIDE" />
       <Circle fx:id="circle9" centerX="448.0" centerY="401.0" fill="#FF0000" radius="8.0" stroke="#940d0d" strokeType="INSIDE" />
-      <Text layoutX="48.0" layoutY="444.0" strokeType="OUTSIDE" text="0" AnchorPane.bottomAnchor="54.0" />
-      <Text layoutX="92.0" layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1" AnchorPane.bottomAnchor="54.0" />
-      <Text layoutX="134.0" layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="136.0" />
-      <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="180.0" />
-      <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="224.0" />
-      <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="268.0" />
-      <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="6" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="312.0" />
-      <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="356.0" />
-      <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="8" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="400.0" />
-      <Text layoutX="144.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="9" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="444.0" />
+      <Text layoutY="444.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="48.0" />
+      <Text layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="92.0" />
+      <Text layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="136.0" />
+      <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="180.0" />
+      <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="224.0" />
+      <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="268.0" />
+      <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="6" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="312.0" />
+      <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="356.0" />
+      <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="8" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="400.0" />
+      <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="9" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="444.0" />
       <Button fx:id="boutonNouveau" layoutX="150.0" layoutY="328.0" mnemonicParsing="false" onMouseClicked="#clear" text="Nouveau" />
       <Text layoutX="387.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Taux d'erreurs :">
          <font>
@@ -52,5 +52,15 @@
       <Text layoutX="140.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Analyse de caractères manuscrits" />
       <Button fx:id="boutonImport" layoutX="44.0" layoutY="157.0" mnemonicParsing="false" onMouseClicked="#importation" text="Importer" />
       <ImageView fx:id="imageResized" fitHeight="94.0" fitWidth="119.0" layoutX="18.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true" />
+      <Text fx:id="value0" layoutX="42.0" layoutY="469.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" />
+      <Text fx:id="value1" layoutX="86.0" layoutY="455.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="31.0" />
+      <Text fx:id="value2" layoutX="128.0" layoutY="479.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" />
+      <Text fx:id="value3" layoutX="61.0" layoutY="489.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="174.0" />
+      <Text fx:id="value4" layoutX="71.0" layoutY="499.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="218.0" />
+      <Text fx:id="value5" layoutX="81.0" layoutY="509.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="262.0" />
+      <Text fx:id="value6" layoutX="91.0" layoutY="519.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="306.0" />
+      <Text fx:id="value7" layoutX="101.0" layoutY="529.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="350.0" />
+      <Text fx:id="value8" layoutX="111.0" layoutY="539.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="394.0" />
+      <Text fx:id="value9" layoutX="121.0" layoutY="549.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="30.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="438.0" />
    </children>
 </AnchorPane>

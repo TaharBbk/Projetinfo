@@ -6,6 +6,7 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.DecimalFormat;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -50,6 +51,16 @@ public class SimpleViewCtrl {
 	@FXML Circle circle7;
 	@FXML Circle circle8;
 	@FXML Circle circle9;
+	@FXML Text value0;
+	@FXML Text value1;
+	@FXML Text value2;
+	@FXML Text value3;
+	@FXML Text value4;
+	@FXML Text value5;
+	@FXML Text value6;
+	@FXML Text value7;
+	@FXML Text value8;
+	@FXML Text value9;
 	@FXML Text txErreur;
 	@FXML ImageView imageResized;
 	
@@ -80,11 +91,10 @@ public class SimpleViewCtrl {
 		
 		String location = NeuronalNetworks.location;
 		save();
-		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
 		
 		try {
-			int result = nN.forwardPropagation("tmpResized");
-			turnOnLight(circles[result]);
+			double[] results = nN.forwardPropagation("tmpResized");
+			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -98,20 +108,42 @@ public class SimpleViewCtrl {
 	}
 	
 	//change color of a circle to identify it
-	void turnOnLight(Circle c) {
-		c.setRadius(30);
-		c.setStrokeWidth(0);
-		RadialGradient gradient1 = new RadialGradient(0,0,0.5,0.5,0.5,true,CycleMethod.NO_CYCLE,
-				new Stop(0, Color.RED),
-	            new Stop(1, Color.WHITE));
-		c.setFill(gradient1);
+	void turnOnLights(double[] tab) {
+		Text[] values = {value0, value1, value2, value3, value4, value5, value6, value7, value8, value9};
+		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
+		int imax = NeuronalNetworks.max(tab);
+		for (int i = 0; i<=9; i++) {
+			DecimalFormat numberFormat = new DecimalFormat("#0.00");
+			values[i].setText(numberFormat.format(tab[i]));
+			Circle c = circles[i];
+			c.setRadius(20*tab[i]);
+			c.setStrokeWidth(0);
+			if (i ==imax) {
+				RadialGradient gradient1 = new RadialGradient(0,0,0.5,0.5,0.6,true,CycleMethod.NO_CYCLE,
+						new Stop(0, Color.DARKRED),
+			            new Stop(1, Color.WHITE));
+				c.setFill(gradient1);}
+			else {
+				RadialGradient gradient1 = new RadialGradient(0,0,0.5,0.5,0.5,true,CycleMethod.NO_CYCLE,
+						new Stop(0, Color.RED),
+			            new Stop(1, Color.WHITE));
+				c.setFill(gradient1);
+				
+			}
+		}
 	}
 	
 	//set back to normal a circle 
-	void turnOffLight(Circle c) {
-		c.setRadius(8);
-		c.setFill(Color.RED);
-		c.setStrokeWidth(1);
+	void turnOffLights() {
+		Text[] values = {value0, value1, value2, value3, value4, value5, value6, value7, value8, value9};
+		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
+		for (int i = 0; i<=9; i++) {
+			values[i].setText("");
+			Circle c = circles[i];
+			c.setRadius(8);
+			c.setFill(Color.RED);
+			c.setStrokeWidth(1);
+		}
 	}
 
 	//enable to draw on the canvas (mouse dragged)
@@ -138,8 +170,7 @@ public class SimpleViewCtrl {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, Canvas.getWidth(), Canvas.getHeight());
 		imageResized.setImage(null);
-		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
-		for (int i=0; i<10; i++) {turnOffLight(circles[i]);}
+		turnOffLights();
 	}
 	
 	//importe puis analyse une image
@@ -167,10 +198,9 @@ public class SimpleViewCtrl {
 			g.drawImage(Image, 0, 0, 28, 28, null);
 			g.dispose();
 			ImageIO.write(resizedImage, "png", fileResized);
-			Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
 		
-			int result = nN.forwardPropagation("tmpResized");
-			turnOnLight(circles[result]);
+			double[] results = nN.forwardPropagation("tmpResized");
+			turnOnLights(results);
 
 
 			fileResized.delete();
