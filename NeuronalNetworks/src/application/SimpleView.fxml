@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.shape.*?>
@@ -49,5 +50,7 @@
       </Text>
       <Text fx:id="txErreur" layoutX="410.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Text layoutX="140.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Analyse de caractères manuscrits" />
+      <Button fx:id="boutonImport" layoutX="44.0" layoutY="157.0" mnemonicParsing="false" onMouseClicked="#importation" text="Importer" />
+      <ImageView fx:id="imageResized" fitHeight="94.0" fitWidth="119.0" layoutX="18.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

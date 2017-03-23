@@ -5,12 +5,15 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -20,6 +23,9 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 
@@ -31,6 +37,7 @@ public class SimpleViewCtrl {
 	
 	@FXML Button boutonAnalyser;
 	@FXML Button boutonNouveau;
+	@FXML Button boutonImport;
 	@FXML Canvas Canvas;
 	@FXML Rectangle borders;
 	@FXML Circle circle0;
@@ -44,8 +51,9 @@ public class SimpleViewCtrl {
 	@FXML Circle circle8;
 	@FXML Circle circle9;
 	@FXML Text txErreur;
+	@FXML ImageView imageResized;
 	
-	//save a png version of the canvas
+	//save a resised png version of the canvas
     void save() {
     	String location = NeuronalNetworks.location;
 		File file = new File(location + "/tmp.png");
@@ -129,8 +137,48 @@ public class SimpleViewCtrl {
 	void clear() {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, Canvas.getWidth(), Canvas.getHeight());
+		imageResized.setImage(null);
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
 		for (int i=0; i<10; i++) {turnOffLight(circles[i]);}
+	}
+	
+	//importe puis analyse une image
+	@FXML
+	void importation() throws MalformedURLException {
+		
+		String location = NeuronalNetworks.location;
+		Stage mainStage = new Stage();
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Ouvrir l'image à analyser");
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+		File selectedFile = fileChooser.showOpenDialog(mainStage);
+		Image apercuImage = new Image("file:" + selectedFile.getAbsolutePath());
+		imageResized.setImage(apercuImage);
+		
+		BufferedImage Image;
+		try {
+			Image = ImageIO.read(selectedFile);
+			
+			File fileResized = new File(location + "/tmpResized.png");
+	        
+	        BufferedImage resizedImage = new BufferedImage(28, 28, 1);
+			Graphics2D g = resizedImage.createGraphics();
+			g.drawImage(Image, 0, 0, 28, 28, null);
+			g.dispose();
+			ImageIO.write(resizedImage, "png", fileResized);
+			Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
+		
+			int result = nN.forwardPropagation("tmpResized");
+			turnOnLight(circles[result]);
+
+
+			fileResized.delete();
+		  } catch (IOException e) {
+	        	e.printStackTrace();
+	        } catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
