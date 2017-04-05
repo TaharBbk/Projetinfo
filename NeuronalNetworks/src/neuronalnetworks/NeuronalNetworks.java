@@ -14,14 +14,14 @@ import javax.imageio.ImageIO;
 
 public class NeuronalNetworks {
 
-	public final static String location = new File("").getAbsolutePath();;
+	public final static String location = new File("").getAbsolutePath();
 	
 		static int seuil = 128;
 	Layer[] layers;
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfWeights;
-	public static final int LEARNING_FACTOR = 100;
+	public static final int LEARNING_FACTOR = 1;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){
@@ -120,9 +120,7 @@ public class NeuronalNetworks {
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagation(imageId);
-		this.layers[this.numberOfWeights-1].backprop_init(expected);
-		this.saveWeights();
-		
+		this.layers[this.numberOfWeights-1].backprop_init(expected);		
 	}
 	
 	public double randomWeights(){
@@ -147,12 +145,12 @@ public class NeuronalNetworks {
 	}
 	
 	public void extractWeights(){
-		File f = new File(location + "Weights");
+		File f = new File(location + "/Weights");
 		//Extraction de l'objet weights
 		if(f.exists()){
 			FileInputStream fis;
 			try {
-				fis = new FileInputStream (location + "Weights");
+				fis = new FileInputStream (location + "/Weights");
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object weight = ois.readObject();
 				weights2 = (double[][][]) weight;
@@ -180,7 +178,7 @@ public class NeuronalNetworks {
 		FileOutputStream fos;
 		
 		try {
-			fos = new FileOutputStream (location + "Weights");
+			fos = new FileOutputStream (location + "/Weights");
 			ObjectOutputStream oos = new ObjectOutputStream (fos);
 			oos.writeObject(this.weights);
 			oos.close();
