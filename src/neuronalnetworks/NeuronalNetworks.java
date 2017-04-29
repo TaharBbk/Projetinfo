@@ -15,13 +15,14 @@ import javax.imageio.ImageIO;
 public class NeuronalNetworks {
 
 	public final static String location = new File("").getAbsolutePath();
-	
-		static int seuil = 128;
+	static int seuil = 128;
 	Layer[] layers;
+	public double[][] images = new double[60000][784];
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfWeights;
 	public static final int LEARNING_FACTOR = 1;
+	int[] base = {2000,2000,2000};
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){
@@ -47,11 +48,21 @@ public class NeuronalNetworks {
 			}
 			return imagetab;
 		}
-		
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void loadImages(){
+		int n=0;
+		for(int i=0; i<base.length; i++){
+			for(int j=0; j<base[i]; j++){
+				String nom = j + "_0" + i ;
+				images[n]=imageLecture(nom);
+				n++;
+			}
+		}
 	}
 	
 	public NeuronalNetworks(int l) {
