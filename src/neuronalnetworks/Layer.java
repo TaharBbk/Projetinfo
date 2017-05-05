@@ -79,7 +79,7 @@ public class Layer {
 		this.propagate();
 	}
 	
-	public void backprop_init(int[] expectedResult){
+	public void backprop_init(int[] expectedResult, int learningFactor){
 		
 		this.differentialErrorValues = new double[this.numberOfNeurons];		// Initialisation of the vector based on info given when the constructor was called
 		
@@ -89,7 +89,7 @@ public class Layer {
 			// Need to replace this part using methods to do the derivative of the error function
 		}
 		
-		this.backprop(this.differentialErrorValues);							// We launch the backpropagation process
+		this.backprop(this.differentialErrorValues, learningFactor);							// We launch the backpropagation process
 		
 	}
 
@@ -97,7 +97,7 @@ public class Layer {
 	 This methods takes as input the values coming from the last layer visited by the backpropagation algorithm
 	 Note : in this method we always call the weights matrix from the layer stored in the *precedent* variable, because of the way the forward propagation is implemented
 	 */
-	public void backprop(double[] incomingValues) {
+	public void backprop(double[] incomingValues, int learningFactor) {
 		
 		if(this.precedent != null) {
 			
@@ -141,7 +141,7 @@ public class Layer {
 			
 			this.precedent.setWeights(this.soustractionMatrice(this.precedent.getWeights(), this.scalaireMatrice(NeuronalNetworks.LEARNING_FACTOR, this.differentialErrorWeights))); // We modifiy the weights matrix according to the backprop algorithm
 			
-			this.precedent.backprop(returned);		// We call the method on the next layer to be processed, passing as input what we formerly calculated
+			this.precedent.backprop(returned, learningFactor);		// We call the method on the next layer to be processed, passing as input what we formerly calculated
 			
 		}
 		

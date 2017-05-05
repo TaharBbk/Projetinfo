@@ -118,7 +118,8 @@ public class NeuronalNetworks {
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagation(imageId);
-		this.layers[this.numberOfWeights-1].backprop_init(expected);		
+		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR);
+		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR/2);
 	}
 
 	public void backPropagationRAM(double[] image, int expectedResult) throws  IOException, ClassNotFoundException{
@@ -127,7 +128,8 @@ public class NeuronalNetworks {
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagationRAM(image);
-		this.layers[this.numberOfWeights-1].backprop_init(expected);		
+		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR);
+		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR/2);
 	}
 	
 	public double randomWeights(){
