@@ -2,9 +2,9 @@ package neuronalnetworks;
 import java.io.IOException;
 
 public class Test {
-	public double[][][] betterweights;
+	public static double[][][] betterweights;
 	public static double[][] images = new double[60000][784];
-	double bestSuccessRate;
+	public static double bestSuccessRate = 0.1;
 	NeuronalNetworks N;
 	
 	public static void loadImages(){
@@ -70,12 +70,11 @@ public class Test {
 	}
 	
 	public void learningRAM(){
-		for (int i=0; i<1000; i++){
-			for (int j=0; j<10; j++){
+		for (int j=0; j<10; j++){
+			for (int i=0; i<1000; i++){
 				int id = j*2000 + i ;
 				try {
 					N.backPropagationRAM(images[id],j);
-					System.out.println(id);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -101,38 +100,32 @@ public class Test {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				System.out.println(reussit);
 			}
 		}
-		return reussit/10000; 
+		System.out.println(reussit/10000);
+		return reussit/10000;
 	}	
 	
 	
 	
 	
-	public void findTheRightOne(){
+	public static void findTheRightOneRAM(){
 		Test.loadImages();
-		for(int i=492; i<792; i++){
+		for(int i=482; i<485; i++){
+			System.out.println(i);
 			Test T = new Test(i);
 			T.learningRAM();
-			double successRate = T.successRateCalculRAM(); 
-			if(successRate>bestSuccessRate){
-				betterweights=N.weights;
-				bestSuccessRate=successRate;
+			double successRateRAM = T.successRateCalculRAM(); 
+			if(successRateRAM >= Test.bestSuccessRate){
+				Test.betterweights=T.N.weights;
+				Test.bestSuccessRate=successRateRAM;
 			}
+			System.out.println(Test.bestSuccessRate);
 		}
+		System.out.println(Test.bestSuccessRate);
 	}
+	
 	public static void main(String[] args) {
-		System.out.println("step1");
-		Test.loadImages();
-		System.out.println("step2");
-		Test test = new Test(492);
-		System.out.println("step3");
-		test.learningRAM();
-		System.out.println("step4");
-		System.out.println(test.successRateCalculRAM());
-		System.out.println("stepdone");
-		
-		
+		Test.findTheRightOneRAM();
 	}
 }
