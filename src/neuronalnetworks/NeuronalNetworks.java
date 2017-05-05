@@ -21,7 +21,7 @@ public class NeuronalNetworks {
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfWeights;
-	public static final int LEARNING_FACTOR = 1;
+	public static final int LEARNING_FACTOR = 1000;
 	double successRate;
 	
 	//Conversion de l'image en tableau
@@ -122,14 +122,14 @@ public class NeuronalNetworks {
 		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR/2);
 	}
 
-	public void backPropagationRAM(double[] image, int expectedResult) throws  IOException, ClassNotFoundException{
+	public void backPropagationRAM(double[] image, int expectedResult, int learningFactor) throws  IOException, ClassNotFoundException{
 		
 		int[] expected = new int[10];
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagationRAM(image);
-		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR);
-		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR/2);
+		this.layers[this.numberOfWeights-1].backprop_init(expected, learningFactor);
+		this.layers[this.numberOfWeights-1].backprop_init(expected, learningFactor/2);
 	}
 	
 	public double randomWeights(){

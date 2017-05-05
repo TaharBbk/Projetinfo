@@ -70,11 +70,13 @@ public class Test {
 	}
 	
 	public void learningRAM(){
+		int count = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<1000; i++){
 				int id = j*2000 + i ;
+				count++;
 				try {
-					N.backPropagationRAM(images[id],j);
+					N.backPropagationRAM(images[id],j, (int) (NeuronalNetworks.LEARNING_FACTOR/Math.sqrt(count)));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
