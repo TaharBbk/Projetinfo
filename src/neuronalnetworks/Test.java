@@ -111,9 +111,13 @@ public class Test {
 	
 	public static void findTheRightOneRAM(){
 		Test.loadImages();
+		Test T = new Test(481);
+		T.learningRAM();
+		bestSuccessRate = T.successRateCalculRAM();
 		for(int i=482; i<485; i++){
 			System.out.println(i);
-			Test T = new Test(i);
+			NeuronalNetworks N = new NeuronalNetworks(i);
+			T.N = N;
 			T.learningRAM();
 			double successRateRAM = T.successRateCalculRAM(); 
 			if(successRateRAM >= Test.bestSuccessRate){
