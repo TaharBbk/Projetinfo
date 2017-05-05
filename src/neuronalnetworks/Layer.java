@@ -196,7 +196,7 @@ public class Layer {
 	}
 	
 	// Method mapping the loss function on an array using a array of expected results
-	public double[] lossFunction(double[] input, double[] expected) {
+	public static double[] lossFunction(double[] input, double[] expected) {
 		
 		int n = input.length;
 		double[] result = new double[n];

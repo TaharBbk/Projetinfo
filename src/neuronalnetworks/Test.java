@@ -1,11 +1,12 @@
 package neuronalnetworks;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Test {
 	public static double[][][] betterweights;
 	public static double[][] images = new double[60000][784];
 	public static double bestSuccessRate = 0.1;
-	NeuronalNetworks N;
+	static NeuronalNetworks N;
 	
 	public static void loadImages(){
 		int n=0;
@@ -13,7 +14,6 @@ public class Test {
 			for(int j=1; j<2000; j++){
 				String nom = i + "_0" + j + ".png";
 				nom = NeuronalNetworks.location + "\\images\\" + nom;
-				System.out.println(nom);
 				images[n]=NeuronalNetworks.imageLecture(nom);
 				n++;
 			}
@@ -104,11 +104,103 @@ public class Test {
 				}
 			}
 		}
-		System.out.println(reussit/10000);
 		return reussit/10000;
-	}	
+	}
 	
+	public static double meanSquareErrorRAM() {
+		double error = 0;
+		double[] result;
+		double[] expected;
+		double[] loss;
+		for (int i = 1000 ; i < 2000 ; i ++) {
+			
+			for (int j = 0 ; j < 10 ; j++) {
+				
+				expected = new double[10];
+				Arrays.fill(expected, -1);
+				expected[j] = 1;
+				
+				int id = j*2000 + i;
+				try {
+					
+					result = N.forwardPropagationRAM(images[id]);
+					loss = Layer.lossFunction(result, expected);
+					for (int k = 0; k < 10 ; k++) {
+						
+						error += loss[k];
+						
+					}
+					
+					error /= 10000;
+					
+				} catch (ClassNotFoundException e) {
+					
+					e.printStackTrace();
+					
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+					
+				}
+				
+			}
+			
+		}
+		
+		return error;
+		
+		
+	}
 	
+	public static double successRateRAM() {
+		double success = 0;
+		double[] result;
+		double[] expected;
+		double[] loss;
+		double error;
+		for (int i = 1000 ; i < 2000 ; i ++) {
+			
+			for (int j = 0 ; j < 10 ; j++) {
+				
+				expected = new double[10];
+				Arrays.fill(expected, -1);
+				expected[j] = 1;
+				
+				int id = j*2000 + i;
+				try {
+					
+					error = 0;
+					result = N.forwardPropagationRAM(images[id]);
+					loss = Layer.lossFunction(result, expected);
+					
+					for (int k = 0; k < 10 ; k++) {
+						
+						error += loss[k];
+						
+					}
+					
+					if (error < 0.1)
+						success++;
+					
+										
+				} catch (ClassNotFoundException e) {
+					
+					e.printStackTrace();
+					
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+					
+				}
+				
+			}
+			
+		}
+		
+		return success/10000;
+		
+		
+	}
 	
 	
 	public static void findTheRightOneRAM(){
@@ -116,17 +208,16 @@ public class Test {
 		Test T = new Test(481);
 		T.learningRAM();
 		bestSuccessRate = T.successRateCalculRAM();
-		for(int i=482; i<485; i++){
+		for(int i=492; i<493; i++){
 			System.out.println(i);
 			NeuronalNetworks N = new NeuronalNetworks(i);
-			T.N = N;
+			Test.N = N;
 			T.learningRAM();
-			double successRateRAM = T.successRateCalculRAM(); 
+			double successRateRAM = successRateRAM(); 
 			if(successRateRAM >= Test.bestSuccessRate){
-				Test.betterweights=T.N.weights;
+				Test.betterweights=Test.N.weights;
 				Test.bestSuccessRate=successRateRAM;
 			}
-			System.out.println(Test.bestSuccessRate);
 		}
 		System.out.println(Test.bestSuccessRate);
 	}

@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -64,13 +65,13 @@ public class NeuronalNetworks {
 		layers[numberOfWeights] = new Layer();
 		
 		//Creation des objets couches
-		for(int i=1; i<numberOfWeights; i++){
+		for(int i=0; i<numberOfWeights; i++){
 			layers[i] = new Layer();
 			layers[i].setWeights(weights[i]);
 		}
 		
 		//Creation des liens entre les couches
-		for(int i=1; i<numberOfWeights; i++){
+		for(int i=0; i<numberOfWeights; i++){
 			layers[i].setNext(layers[i+1]);
 		}
 	}
@@ -82,16 +83,15 @@ public class NeuronalNetworks {
 		else {imageName = "/images/" + imageId;}
 		
 		double[] image = imageLecture(location + imageName +".png");
-		layers[0] = new Layer(image, weights[0]);
-		layers[0].setNext(layers[1]);
+		layers[0].setValues(image);
 		layers[0].propagate();
 		
 		return layers[numberOfWeights].getValues();
 	}
 	
 	public double[] forwardPropagationRAM(double [] image) throws IOException, ClassNotFoundException{
-		layers[0] = new Layer(image, weights[0]);
-		layers[0].setNext(layers[1]);
+		
+		layers[0].setValues(image);
 		layers[0].propagate();
 		
 		return layers[numberOfWeights].getValues();
@@ -115,11 +115,12 @@ public class NeuronalNetworks {
 	public void backPropagation(String imageId, int expectedResult) throws  IOException, ClassNotFoundException{
 		
 		int[] expected = new int[10];
+		Arrays.fill(expected, -1);
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagation(imageId);
 		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR);
-		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR/2);
+		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR);
 	}
 
 	public void backPropagationRAM(double[] image, int expectedResult, int learningFactor) throws  IOException, ClassNotFoundException{
@@ -128,18 +129,21 @@ public class NeuronalNetworks {
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagationRAM(image);
-		this.layers[this.numberOfWeights-1].backprop_init(expected, learningFactor);
-		this.layers[this.numberOfWeights-1].backprop_init(expected, learningFactor/2);
+		for (int i = 0; i < 5 ; i ++) {
+			
+			this.layers[this.numberOfWeights-1].backprop_init(expected, learningFactor);
+			
+		}
 	}
 	
 	public double randomWeights(){
 		double x = Math.random();
-		double y = Math.random()*0.9+0.1;
-		if(x<0.5){
-			return 1*y;
+		double y = Math.random()*1.6;
+		if(x<0.8){
+			return y-0.9;
 		}
 		else{
-			return -1*y;
+			return y-0.7;
 		}
 	}
 	
