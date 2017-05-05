@@ -22,7 +22,7 @@ public class NeuronalNetworks {
 	private double[][][] weights2;
 	private int numberOfWeights;
 	public static final int LEARNING_FACTOR = 1;
-	int[] base = {2000,2000,2000};
+	double successRate;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){
@@ -53,22 +53,11 @@ public class NeuronalNetworks {
 		}
 		return null;
 	}
-	
-	public void loadImages(){
-		int n=0;
-		for(int i=0; i<base.length; i++){
-			for(int j=0; j<base[i]; j++){
-				String nom = j + "_0" + i ;
-				images[n]=imageLecture(nom);
-				n++;
-			}
-		}
-	}
-	
+
 	public NeuronalNetworks(int l) {
 		//Extraction des poids
 		this.extractWeights(l);
-				
+		this.successRate = 0.1;		
 		this.numberOfWeights = weights.length;
 		//Creation du tableau de couches
 		layers = new Layer[numberOfWeights+1];
@@ -100,6 +89,15 @@ public class NeuronalNetworks {
 		return layers[numberOfWeights].getValues();
 	}
 	
+	public double[] forwardPropagationRAM(double [] image) throws IOException, ClassNotFoundException{
+		layers[0] = new Layer(image, weights[0]);
+		layers[0].setNext(layers[1]);
+		layers[0].propagate();
+		
+		return layers[numberOfWeights].getValues();
+	}
+	
+	
 	//return the maximum of a table
 	public static int max(double[] T){
 		int longueur = T.length;
@@ -120,6 +118,15 @@ public class NeuronalNetworks {
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagation(imageId);
+		this.layers[this.numberOfWeights-1].backprop_init(expected);		
+	}
+
+	public void backPropagationRAM(double[] image, int expectedResult) throws  IOException, ClassNotFoundException{
+		
+		int[] expected = new int[10];
+		expected[expectedResult] = 1;	
+		
+		this.forwardPropagationRAM(image);
 		this.layers[this.numberOfWeights-1].backprop_init(expected);		
 	}
 	

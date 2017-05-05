@@ -3,16 +3,38 @@ import java.io.IOException;
 
 public class Test {
 	public double[][][] betterweights;
+	public static double[][] images = new double[60000][784];
 	double bestSuccessRate;
+	NeuronalNetworks N;
 	
-	// fonction qui doit renvoyer en sortie un nombre compris entre 0 et 9 de maniÃ¨re "alÃ©atoire"
+	public static void loadImages(){
+		int n=0;
+		for(int i=0; i<10; i++){
+			for(int j=1; j<2000; j++){
+				String nom = i + "_0" + j + ".png";
+				nom = NeuronalNetworks.location + "\\images\\" + nom;
+				System.out.println(nom);
+				images[n]=NeuronalNetworks.imageLecture(nom);
+				n++;
+			}
+		}
+	}
+	
+	public Test(int i){
+		N = new NeuronalNetworks(i);
+		betterweights = N.weights;
+		bestSuccessRate = N.successRate;
+				
+	}
+	
+	// fonction qui doit renvoyer en sortie un nombre compris entre 0 et 9 de mani�re "al�atoire"
 	public int uniform(){
 		double a = Math.random();
 		return (int)(a*10);
 	}
 	
-	public void learning(NeuronalNetworks N){
-		for (int i=0; i<2000; i++){
+	public void learning(){
+		for (int i=0; i<1000; i++){
 			for (int j=0; j<10; j++){
 				String nom = j + "_0" + i ;
 				try {
@@ -25,12 +47,12 @@ public class Test {
 			}
 		}
 	}
-	
-	public double test(NeuronalNetworks N){
+
+	public double successRateCalcul(){
 		double reussit = 0;
 		double[] result;
-		for (int i=2000; i<4000; i++){
-			for (int j=0; j<10; i++){
+		for (int i=1000; i<2000; i++){
+			for (int j=0; j<10; j++){
 				String nom = j + "_0" + i ;
 				try {
 					result = N.forwardPropagation(nom);
@@ -38,10 +60,8 @@ public class Test {
 						reussit = reussit +1 ;
 					}
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -49,15 +69,70 @@ public class Test {
 		return reussit/20000; 
 	}
 	
-	public void findtherightone(){
+	public void learningRAM(){
+		for (int i=0; i<1000; i++){
+			for (int j=0; j<10; j++){
+				int id = j*2000 + i ;
+				try {
+					N.backPropagationRAM(images[id],j);
+					System.out.println(id);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public double successRateCalculRAM(){
+		double reussit = 0;
+		double[] result;
+		for (int i=1000; i<2000; i++){
+			for (int j=0; j<10; j++){
+				int id = j*2000 + i ;
+				try {
+					result = N.forwardPropagationRAM(images[id]);
+					if (result[j] >= 0.9){
+						reussit = reussit +1 ;
+					}
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				System.out.println(reussit);
+			}
+		}
+		return reussit/10000; 
+	}	
+	
+	
+	
+	
+	public void findTheRightOne(){
+		Test.loadImages();
 		for(int i=492; i<792; i++){
-			NeuronalNetworks N = new NeuronalNetworks(i);
-			learning(N);
-			double successRate = test(N); 
+			Test T = new Test(i);
+			T.learningRAM();
+			double successRate = T.successRateCalculRAM(); 
 			if(successRate>bestSuccessRate){
 				betterweights=N.weights;
 				bestSuccessRate=successRate;
 			}
 		}
+	}
+	public static void main(String[] args) {
+		System.out.println("step1");
+		Test.loadImages();
+		System.out.println("step2");
+		Test test = new Test(492);
+		System.out.println("step3");
+		test.learningRAM();
+		System.out.println("step4");
+		System.out.println(test.successRateCalculRAM());
+		System.out.println("stepdone");
+		
+		
 	}
 }
