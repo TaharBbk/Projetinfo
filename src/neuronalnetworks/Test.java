@@ -1,11 +1,18 @@
 package neuronalnetworks;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 
 public class Test {
-	public static double[][][] betterweights;
-	public static double[][] images = new double[60000][784];
-	public static double bestSuccessRate = 0.1;
+	public static double[][] images = new double[20000][784];
+	public static NeuronalNetworks bestNeuralNetworks;
 	NeuronalNetworks N;
+	
+	public Test(int i){
+		N = new NeuronalNetworks(i,false);
+	}
 	
 	public static void loadImages(){
 		int n=0;
@@ -13,18 +20,47 @@ public class Test {
 			for(int j=1; j<2000; j++){
 				String nom = i + "_0" + j + ".png";
 				nom = NeuronalNetworks.location + "\\images\\" + nom;
-				System.out.println(nom);
 				images[n]=NeuronalNetworks.imageLecture(nom);
 				n++;
 			}
 		}
+		System.out.println("Toutes les images ont été chargé sur la ram");
 	}
 	
-	public Test(int i){
-		N = new NeuronalNetworks(i);
-		betterweights = N.weights;
-		bestSuccessRate = N.successRate;
-				
+	public void extractNeuralNetworks(){
+		bestNeuralNetworks.extractWeights(482, true);
+		bestNeuralNetworks.extractSuccessRate();
+		bestNeuralNetworks.extractLearningFactor();
+		System.out.println("Le réseau de neurones anciennnement connu a été chargé");
+	}
+	
+	public static void saveNeuralNetworks(){
+		//Enregistrement des objets necessaires pour reconstituer le réseau de neurones avec le meilleur taux de succès
+		FileOutputStream fos1;
+		FileOutputStream fos2;
+		FileOutputStream fos3;
+		
+		try {
+			fos1 = new FileOutputStream (NeuronalNetworks.location + "/bestWeights");
+			fos2 = new FileOutputStream (NeuronalNetworks.location + "/bestSuccessRate");
+			fos3 = new FileOutputStream (NeuronalNetworks.location + "/bestLearningFactor");
+			
+			ObjectOutputStream oos1 = new ObjectOutputStream (fos1);
+			ObjectOutputStream oos2 = new ObjectOutputStream (fos2);
+			ObjectOutputStream oos3 = new ObjectOutputStream (fos3);
+			
+			oos1.writeObject(Test.bestNeuralNetworks.weights);
+			oos2.writeObject(Test.bestNeuralNetworks.successRate);
+			oos3.writeObject(NeuronalNetworks.LEARNING_FACTOR);
+			
+			oos1.close();
+			oos2.close();
+			oos3.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 	
 	// fonction qui doit renvoyer en sortie un nombre compris entre 0 et 9 de manière "aléatoire"
@@ -102,34 +138,45 @@ public class Test {
 				}
 			}
 		}
-		System.out.println(reussit/10000);
 		return reussit/10000;
-	}	
+	}
 	
-	
-	
-	
-	public static void findTheRightOneRAM(){
+	public static void findTheRightOneRAM(int k, int l){
 		Test.loadImages();
-		Test T = new Test(481);
-		T.learningRAM();
-		bestSuccessRate = T.successRateCalculRAM();
-		for(int i=482; i<485; i++){
-			System.out.println(i);
-			NeuronalNetworks N = new NeuronalNetworks(i);
-			T.N = N;
-			T.learningRAM();
-			double successRateRAM = T.successRateCalculRAM(); 
-			if(successRateRAM >= Test.bestSuccessRate){
-				Test.betterweights=T.N.weights;
-				Test.bestSuccessRate=successRateRAM;
+		Test T = new Test(1);
+		bestNeuralNetworks = new NeuronalNetworks(1,true);
+		T.extractNeuralNetworks();
+		for(int j=10; j<11; j++){
+			for(int i=k; i<l; i++){
+				NeuronalNetworks N = new NeuronalNetworks(i,false);
+				T.N = N;
+				NeuronalNetworks.LEARNING_FACTOR = j;
+				T.learningRAM();
+				double successRateRAM = T.successRateCalculRAM();
+				T.N.successRate = successRateRAM;
+				if(successRateRAM >= Test.bestNeuralNetworks.successRate){
+					Test.bestNeuralNetworks = T.N;
+				}
 			}
-			System.out.println(Test.bestSuccessRate);
 		}
-		System.out.println(Test.bestSuccessRate);
+		System.out.println("Taille :" + Test.bestNeuralNetworks.weights[1][1].length);
+		System.out.println("Taux de succés :" + Test.bestNeuralNetworks.successRate);
+		System.out.println("Learning factor :" + NeuronalNetworks.LEARNING_FACTOR);
+	}
+	
+	public static void tempsExecution(long i){
+		System.out.print(i/3600 + " h ");
+		System.out.print((i%3600)/60 + " min ");
+		System.out.print((i%3600)%60 + " sec");
 	}
 	
 	public static void main(String[] args) {
-		Test.findTheRightOneRAM();
+		long startTime = System.currentTimeMillis();
+		Test.findTheRightOneRAM(482,484);
+		Test.saveNeuralNetworks();
+		System.out.println("Le meilleur réseau de neurones déterminé a été sauvegardé");
+		long endTime   = System.currentTimeMillis();
+		long totalTime = (endTime - startTime)/1000;
+		Test.tempsExecution(totalTime);
 	}
 }

@@ -34,7 +34,7 @@ import neuronalnetworks.NeuronalNetworks;
 
 public class SimpleViewCtrl {
 	
-	NeuronalNetworks nN = new NeuronalNetworks(492);
+	NeuronalNetworks nN = new NeuronalNetworks(492,true);
 	
 	@FXML Button boutonAnalyser;
 	@FXML Button boutonNouveau;
