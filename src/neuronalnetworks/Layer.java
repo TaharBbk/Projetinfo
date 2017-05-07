@@ -173,7 +173,8 @@ public class Layer {
 		
 		for(int i=0; i<M.length; i++){
 			
-			M[i]=(1/(1+Math.exp(-1*M[i])));
+			M[i] = 1.7159*(M[i] - (Math.pow(M[i], 3)/3) + (2*Math.pow(M[i], 5)/15) - (17*Math.pow(M[i], 7)/315));
+			// La fonction d'activation est un dévellopement en série de Taylor en 0, multiplié par un coefficient
 			
 		}
 		
@@ -187,7 +188,7 @@ public class Layer {
 		
 		for (int i = 0 ; i < input.length ; i++) {
 			
-			result[i] = 1/(2+Math.exp(result[i])+Math.exp(-result[i]));
+			result[i] = 1.7159*(1 - (2*Math.pow(input[i], 2)/3) + (2*Math.pow(input[i], 4)/3) - (17*Math.pow(input[i], 6)/45));
 			
 		}
 		
