@@ -207,19 +207,23 @@ public class Test {
 		Test.loadImages();
 		Test T = new Test(481);
 		T.learningRAM();
+		int bestI = 481;
 		bestSuccessRate = T.successRateCalculRAM();
-		for(int i=492; i<493; i++){
+		double bestMeanSquareError = Test.meanSquareErrorRAM();
+		for(int i=482; i<503; i++){
 			System.out.println(i);
 			NeuronalNetworks N = new NeuronalNetworks(i);
 			Test.N = N;
 			T.learningRAM();
-			double successRateRAM = successRateRAM(); 
-			if(successRateRAM >= Test.bestSuccessRate){
+			double meanSquareError = meanSquareErrorRAM(); 
+			if(meanSquareError < bestMeanSquareError){
 				Test.betterweights=Test.N.weights;
-				Test.bestSuccessRate=successRateRAM;
+				bestMeanSquareError=meanSquareError;
+				bestI = i; 
 			}
 		}
-		System.out.println(Test.bestSuccessRate);
+		System.out.println(bestMeanSquareError);
+		System.out.println(bestI);
 	}
 	
 	public static void main(String[] args) {
