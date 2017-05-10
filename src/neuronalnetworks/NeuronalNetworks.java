@@ -22,8 +22,9 @@ public class NeuronalNetworks {
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfWeights;
-	public static final int LEARNING_FACTOR = 1000;
+	public static int LEARNING_FACTOR = 1000;
 	double successRate;
+	public static double MeanSquareError;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){
@@ -55,9 +56,9 @@ public class NeuronalNetworks {
 		return null;
 	}
 
-	public NeuronalNetworks(int l) {
+	public NeuronalNetworks(int l, boolean extract) {
 		//Extraction des poids
-		this.extractWeights(l);
+		this.extractWeights(l, extract);
 		this.successRate = 0.1;		
 		this.numberOfWeights = weights.length;
 		//Creation du tableau de couches
@@ -157,13 +158,19 @@ public class NeuronalNetworks {
 		}
 	}
 	
-	public void extractWeights(int i){
-		File f = new File(location + "/Weights");
+	public void extractWeights(int i, boolean extract){
+		double[][][] weights = new double[2][][];
+		weights[0] = new double[i][784];
+		weights[1] = new double[10][i];
+		this.weights = weights;
+		this.generateWeights();
+		
+		File f = new File(location + "/bestWeights");
 		//Extraction de l'objet weights
-		if(f.exists()){
+		if(f.exists() && extract){
 			FileInputStream fis;
 			try {
-				fis = new FileInputStream (location + "/Weights");
+				fis = new FileInputStream (location + "/bestWeights");
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object weight = ois.readObject();
 				weights2 = (double[][][]) weight;
@@ -176,13 +183,6 @@ public class NeuronalNetworks {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		}
-		else{
-			double[][][] weights = new double[2][][];
-			weights[0] = new double[i][784];
-			weights[1] = new double[10][i];
-			this.weights = weights;
-			this.generateWeights();
 		}
 	}
 	
@@ -201,5 +201,74 @@ public class NeuronalNetworks {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	public void extractSuccessRate(){
+		this.successRate = 0.1;
+		
+		File f = new File(location + "/bestSuccessRate");
+		//Extraction du taux de succès
+		if(f.exists()){
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream (NeuronalNetworks.location + "/bestSuccessRate");
+				ObjectInputStream ois = new ObjectInputStream (fis);
+				Object successRate= ois.readObject();
+				this.successRate = (double) successRate;
+				ois.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void extractMeanSquareError(){
+		NeuronalNetworks.MeanSquareError = 1;
+		
+		FileInputStream fis;
+		//Extraction du learning factor
+		File f = new File(location + "/bestMeanSquareError");
+		if(f.exists()){
+			try {
+				fis = new FileInputStream (NeuronalNetworks.location + "/bestMeanSquareError");
+				ObjectInputStream ois = new ObjectInputStream (fis);
+				Object meanSquareError= ois.readObject();
+				NeuronalNetworks.MeanSquareError = (double) meanSquareError;
+				ois.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void extractLearningFactor(){
+		NeuronalNetworks.LEARNING_FACTOR = 15;
+		
+		FileInputStream fis;
+		//Extraction du learning factor
+		File f = new File(location + "/bestLearningFactor");
+		if(f.exists()){
+			try {
+				fis = new FileInputStream (NeuronalNetworks.location + "/bestLearningFactor");
+				ObjectInputStream ois = new ObjectInputStream (fis);
+				Object learningFactor= ois.readObject();
+				NeuronalNetworks.LEARNING_FACTOR = (int) learningFactor;
+				ois.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
