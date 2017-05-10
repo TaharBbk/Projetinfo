@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -21,8 +22,9 @@ public class NeuronalNetworks {
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfWeights;
-	public static int LEARNING_FACTOR = 10;
+	public static int LEARNING_FACTOR = 1000;
 	double successRate;
+	public static double MeanSquareError;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){
@@ -56,7 +58,7 @@ public class NeuronalNetworks {
 
 	public NeuronalNetworks(int l, boolean extract) {
 		//Extraction des poids
-		this.extractWeights(l,extract);
+		this.extractWeights(l, extract);
 		this.successRate = 0.1;		
 		this.numberOfWeights = weights.length;
 		//Creation du tableau de couches
@@ -64,34 +66,13 @@ public class NeuronalNetworks {
 		layers[numberOfWeights] = new Layer();
 		
 		//Creation des objets couches
-		for(int i=1; i<numberOfWeights; i++){
+		for(int i=0; i<numberOfWeights; i++){
 			layers[i] = new Layer();
 			layers[i].setWeights(weights[i]);
 		}
 		
 		//Creation des liens entre les couches
-		for(int i=1; i<numberOfWeights; i++){
-			layers[i].setNext(layers[i+1]);
-		}
-	}
-	
-	public NeuronalNetworks(int l, int j, boolean extract) {
-		//Extraction des poids
-		this.extractWeights(l,j,extract);
-		this.successRate = 0.1;		
-		this.numberOfWeights = weights.length;
-		//Creation du tableau de couches
-		layers = new Layer[numberOfWeights+1];
-		layers[numberOfWeights] = new Layer();
-		
-		//Creation des objets couches
-		for(int i=1; i<numberOfWeights; i++){
-			layers[i] = new Layer();
-			layers[i].setWeights(weights[i]);
-		}
-		
-		//Creation des liens entre les couches
-		for(int i=1; i<numberOfWeights; i++){
+		for(int i=0; i<numberOfWeights; i++){
 			layers[i].setNext(layers[i+1]);
 		}
 	}
@@ -103,16 +84,15 @@ public class NeuronalNetworks {
 		else {imageName = "/images/" + imageId;}
 		
 		double[] image = imageLecture(location + imageName +".png");
-		layers[0] = new Layer(image, weights[0]);
-		layers[0].setNext(layers[1]);
+		layers[0].setValues(image);
 		layers[0].propagate();
 		
 		return layers[numberOfWeights].getValues();
 	}
 	
 	public double[] forwardPropagationRAM(double [] image) throws IOException, ClassNotFoundException{
-		layers[0] = new Layer(image, weights[0]);
-		layers[0].setNext(layers[1]);
+		
+		layers[0].setValues(image);
 		layers[0].propagate();
 		
 		return layers[numberOfWeights].getValues();
@@ -136,31 +116,35 @@ public class NeuronalNetworks {
 	public void backPropagation(String imageId, int expectedResult) throws  IOException, ClassNotFoundException{
 		
 		int[] expected = new int[10];
+		Arrays.fill(expected, -1);
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagation(imageId);
 		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR);
-		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR/2);
+		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR);
 	}
 
-	public void backPropagationRAM(double[] image, int expectedResult) throws  IOException, ClassNotFoundException{
+	public void backPropagationRAM(double[] image, int expectedResult, int learningFactor) throws  IOException, ClassNotFoundException{
 		
 		int[] expected = new int[10];
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagationRAM(image);
-		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR);
-		this.layers[this.numberOfWeights-1].backprop_init(expected, LEARNING_FACTOR/2);
+		for (int i = 0; i < 5 ; i ++) {
+			
+			this.layers[this.numberOfWeights-1].backprop_init(expected, learningFactor);
+			
+		}
 	}
 	
 	public double randomWeights(){
 		double x = Math.random();
-		double y = Math.random()*0.9+0.1;
-		if(x<0.5){
-			return 1*y;
+		double y = Math.random()*1.6;
+		if(x<0.8){
+			return y-0.9;
 		}
 		else{
-			return -1*y;
+			return y-0.7;
 		}
 	}
 	
@@ -202,34 +186,21 @@ public class NeuronalNetworks {
 		}
 	}
 	
-	public void extractWeights(int i, int j, boolean extract){
+	public void saveWeights(){
+		//Enregistrement de l'objet weights
+		FileOutputStream fos;
 		
-		double[][][] weights = new double[3][][];
-		weights[0] = new double[i][784];
-		weights[1] = new double[j][i];
-		weights[2] = new double[10][j];
-		this.weights = weights;
-		this.generateWeights();
-		
-		File f = new File(location + "/bestWeights");
-		//Extraction de l'objet weights
-		if(f.exists() && extract){
-			FileInputStream fis;
-			try {
-				fis = new FileInputStream (location + "/bestWeights");
-				ObjectInputStream ois = new ObjectInputStream (fis);
-				Object weight = ois.readObject();
-				weights2 = (double[][][]) weight;
-				weights = weights2;
-				ois.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
+		try {
+			fos = new FileOutputStream (location + "/Weights");
+			ObjectOutputStream oos = new ObjectOutputStream (fos);
+			oos.writeObject(this.weights);
+			oos.close();
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 	
 	public void extractSuccessRate(){
@@ -244,6 +215,29 @@ public class NeuronalNetworks {
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object successRate= ois.readObject();
 				this.successRate = (double) successRate;
+				ois.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void extractMeanSquareError(){
+		NeuronalNetworks.MeanSquareError = 1;
+		
+		FileInputStream fis;
+		//Extraction du learning factor
+		File f = new File(location + "/bestMeanSquareError");
+		if(f.exists()){
+			try {
+				fis = new FileInputStream (NeuronalNetworks.location + "/bestMeanSquareError");
+				ObjectInputStream ois = new ObjectInputStream (fis);
+				Object meanSquareError= ois.readObject();
+				NeuronalNetworks.MeanSquareError = (double) meanSquareError;
 				ois.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -276,22 +270,5 @@ public class NeuronalNetworks {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public void saveWeights(){
-		//Enregistrement de l'objet weights
-		FileOutputStream fos;
-		
-		try {
-			fos = new FileOutputStream (location + "/Weights");
-			ObjectOutputStream oos = new ObjectOutputStream (fos);
-			oos.writeObject(this.weights);
-			oos.close();
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
 	}
 }

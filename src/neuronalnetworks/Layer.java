@@ -173,7 +173,8 @@ public class Layer {
 		
 		for(int i=0; i<M.length; i++){
 			
-			M[i]=(1/(1+Math.exp(-1*M[i])));
+			M[i] = 1.7159*Math.tanh(M[i]);
+			// La fonction d'activation est un dévellopement en série de Taylor en 0, multiplié par un coefficient
 			
 		}
 		
@@ -187,7 +188,7 @@ public class Layer {
 		
 		for (int i = 0 ; i < input.length ; i++) {
 			
-			result[i] = 1/(2+Math.exp(result[i])+Math.exp(-result[i]));
+			result[i] = 1.7159*(1/Math.pow(Math.cosh(input[i]),2));
 			
 		}
 		
@@ -196,7 +197,7 @@ public class Layer {
 	}
 	
 	// Method mapping the loss function on an array using a array of expected results
-	public double[] lossFunction(double[] input, double[] expected) {
+	public static double[] lossFunction(double[] input, double[] expected) {
 		
 		int n = input.length;
 		double[] result = new double[n];
