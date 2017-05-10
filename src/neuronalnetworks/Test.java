@@ -69,7 +69,7 @@ public class Test {
 		}	
 	}
 	
-	// fonction qui doit renvoyer en sortie un nombre compris entre 0 et 9 de manière "aléatoire"
+	// fonction qui doit renvoyer en sortie un nombre compris entre 0 et 9 de maniÃ¨re "alÃ©atoire"
 	public int uniform(){
 		double a = Math.random();
 		return (int)(a*10);
