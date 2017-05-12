@@ -138,14 +138,10 @@ public class NeuronalNetworks {
 	}
 	
 	public double randomWeights(){
-		double x = Math.random();
-		double y = Math.random()*1.6;
-		if(x<0.8){
-			return y-0.9;
-		}
-		else{
-			return y-0.7;
-		}
+		double x = (Math.random()*2.02) - 1.01;
+		while (Math.abs(x) < 0.01)
+			x = (Math.random()*2) - 1;
+		return x;
 	}
 	
 	public void generateWeights(){
