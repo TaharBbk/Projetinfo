@@ -25,6 +25,7 @@ public class NeuronalNetworks {
 	public static int LEARNING_FACTOR = 1000;
 	double successRate;
 	public static double MeanSquareError;
+	public static final int nombreIterationsBackprop = 1;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){
@@ -127,10 +128,11 @@ public class NeuronalNetworks {
 	public void backPropagationRAM(double[] image, int expectedResult, int learningFactor) throws  IOException, ClassNotFoundException{
 		
 		int[] expected = new int[10];
+		Arrays.fill(expected, -1);
 		expected[expectedResult] = 1;	
 		
 		this.forwardPropagationRAM(image);
-		for (int i = 0; i < 5 ; i ++) {
+		for (int i = 0; i < nombreIterationsBackprop ; i ++) {
 			
 			this.layers[this.numberOfWeights-1].backprop_init(expected, learningFactor);
 			

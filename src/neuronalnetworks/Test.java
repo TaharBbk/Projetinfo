@@ -133,7 +133,7 @@ public class Test {
 				try {
 					result = N.forwardPropagationRAM(images[j][i]);
 					if (rangMax(result) == j){
-						reussit = reussit +1 ;
+						reussit = reussit +1;
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -270,8 +270,9 @@ public class Test {
 			T.learningRAM();
 			double meanSquareError = meanSquareErrorRAM();
 			double successRAM = T.successRateCalculRAM();
-			if(meanSquareError < NeuronalNetworks.MeanSquareError & successRAM > Test.bestNeuralNetworks.successRate){
+			if(successRAM > Test.bestNeuralNetworks.successRate){
 				Test.bestNeuralNetworks = Test.N; 
+				bestMeanSquareError = meanSquareError;
 			}
 		}
 		System.out.println("Erreur quadratique moyenne : " + bestMeanSquareError);
