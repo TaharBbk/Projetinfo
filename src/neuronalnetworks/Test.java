@@ -7,13 +7,13 @@ import java.util.Arrays;
 
 public class Test {
 	public static double[][][] betterweights;
-	public static double[][][] images = new double[10][2000][784];
+	public static double[][][] images = new double[10][4000][784];
 	public static NeuronalNetworks bestNeuralNetworks;
 	public static NeuronalNetworks N;
 	
 	public static void loadImages(){
 		for(int i=0; i<10; i++){
-			for(int j=1; j<2000; j++){
+			for(int j=1; j<4000; j++){
 				String nom = i + "_0" + j + ".png";
 				nom = NeuronalNetworks.location + "/images/" + nom;
 				images[i][j]=NeuronalNetworks.imageLecture(nom);
@@ -75,7 +75,7 @@ public class Test {
 	}
 	
 	public void learning(){
-		for (int i=0; i<1000; i++){
+		for (int i=0; i<2000; i++){
 			for (int j=0; j<10; j++){
 				String nom = j + "_0" + i ;
 				try {
@@ -92,7 +92,7 @@ public class Test {
 	public double successRateCalcul(){
 		double reussit = 0;
 		double[] result;
-		for (int i=1000; i<2000; i++){
+		for (int i=2000; i<4000; i++){
 			for (int j=0; j<10; j++){
 				String nom = j + "_0" + i ;
 				try {
@@ -114,7 +114,7 @@ public class Test {
 	public void learningRAM(int k){
 		int count = 0;
 		for (int j=0; j<10; j++){
-			for (int i=0; i<1000; i++){
+			for (int i=0; i<2000; i++){
 				count++;
 				try {
 					N.backPropagationRAM(images[j][i],j, (int) (k/Math.sqrt(count)));
@@ -130,11 +130,11 @@ public class Test {
 	public double successRateCalculRAM(){
 		double reussit = 0;
 		double[] result;
-		for (int i=1000; i<2000; i++){
+		for (int i=2000; i<4000; i++){
 			for (int j=0; j<10; j++){
 				try {
 					result = N.forwardPropagationRAM(images[j][i]);
-					if (NeuronalNetworks.max(result) == j && result[j]/1.7159 >= 0.9){
+					if (NeuronalNetworks.max(result) == j){
 						reussit = reussit +1 ;
 					}
 				}
@@ -146,7 +146,7 @@ public class Test {
 				}
 			}
 		}
-		return reussit/10000;
+		return reussit/20000;
 	}
 	
 	public double rangMax(double[] input) {
@@ -174,7 +174,7 @@ public class Test {
 		double[] result;
 		double[] expected;
 		double[] loss;
-		for (int i = 1000 ; i < 2000 ; i ++) {
+		for (int i = 2000 ; i < 4000 ; i ++) {
 			
 			for (int j = 0 ; j < 10 ; j++) {
 				
@@ -211,60 +211,11 @@ public class Test {
 		
 	}
 	
-	public static double successRateRAM() {
-		double success = 0;
-		double[] result;
-		double[] expected;
-		double[] loss;
-		double error;
-		for (int i = 1000 ; i < 2000 ; i ++) {
-			
-			for (int j = 0 ; j < 10 ; j++) {
-				
-				expected = new double[10];
-				Arrays.fill(expected, -1);
-				expected[j] = 1;
-				
-				try {
-					error = 0;
-					result = N.forwardPropagationRAM(images[j][i]);
-					loss = Layer.lossFunction(result, expected);
-					
-					for (int k = 0; k < 10 ; k++) {
-						
-						error += loss[k];
-						
-					}
-					
-					if (error < 0.1)
-						success++;
-					
-										
-				} catch (ClassNotFoundException e) {
-					
-					e.printStackTrace();
-					
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-					
-				}
-				
-			}
-			
-		}
-		
-		return success/10000;
-		
-		
-	}
-	
-	
 	public static void findTheRightOneRAM(int k, int l, int li, int lf){
 		Test.loadImages();
 		Test T = new Test(1);
 		bestNeuralNetworks = new NeuronalNetworks(1, true);
-		T.extractNeuralNetworks();
+//		T.extractNeuralNetworks();
 		double bestMeanSquareError = Test.meanSquareErrorRAM();
 		for(int j = li; j<lf; j++){
 			for(int i=k; i<l; i++){
@@ -294,7 +245,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(782,784,14,16);
+		Test.findTheRightOneRAM(480,490,14,16);
 		Test.saveNeuralNetworks();
 		System.out.println("Le meilleur réseau de neurones déterminé a été sauvegardé");
 		long endTime   = System.currentTimeMillis();
