@@ -174,7 +174,7 @@ public class Layer {
 		for(int i=0; i<M.length; i++){
 			
 			M[i] = 1.7159*Math.tanh(M[i]);
-			// La fonction d'activation est un dévellopement en série de Taylor en 0, multiplié par un coefficient
+			// La fonction d'activation est un dï¿½vellopement en sï¿½rie de Taylor en 0, multipliï¿½ par un coefficient
 			
 		}
 		
