@@ -38,7 +38,9 @@ public class Layer {
 	}
 
 	public void setValues(double[] values) {
+		
 		this.values = values;
+		//System.out.println(this.values.length);
 	}
 	
 	public void setPrecedent(Layer p) {
@@ -56,7 +58,7 @@ public class Layer {
 	
 	//Fonction d'activaton
 	public void activate(){
-		activationFunction(this.values);
+		this.values=activationFunction(this.values);
 	}
 	
 	//Fonction de propagation du reseau de neurones
@@ -163,20 +165,24 @@ public class Layer {
 			}
 			produit[i]=sum;
 		}
-		
+			
 		return produit;
 	}
 	
 	
 	//Implementation de la fonction d'activation
-	public void activationFunction(double[] M){
+	public double[] activationFunction(double[] M){
+		
+		double[] result = new double[M.length];
 		
 		for(int i=0; i<M.length; i++){
 			
-			M[i] = 1.7159*Math.tanh(M[i]);
+			result[i] = 1.7159*Math.tanh(M[i]);
 			// La fonction d'activation est un d�vellopement en s�rie de Taylor en 0, multipli� par un coefficient
 			
 		}
+		
+		return result;
 		
 	}
 	
@@ -191,7 +197,6 @@ public class Layer {
 			result[i] = 1.7159*(1/Math.pow(Math.cosh(input[i]),2));
 			
 		}
-		
 		return result;
 		
 	}
