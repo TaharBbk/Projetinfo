@@ -61,7 +61,7 @@ public class SimpleViewCtrl {
 	@FXML Text value7;
 	@FXML Text value8;
 	@FXML Text value9;
-	@FXML Text txErreur;
+	@FXML Text txSuccess;
 	@FXML ImageView imageResized;
 	
 	//save a resised png version of the canvas
@@ -213,7 +213,7 @@ public class SimpleViewCtrl {
 	
 	@FXML
 	void init(){
-		txErreur.setText(nN.getSuccessRate());
+		txSuccess.setText(nN.getSuccessRate());
 	}
 
 }

@@ -43,12 +43,12 @@
       <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="8" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="400.0" />
       <Text layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="9" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="444.0" />
       <Button fx:id="boutonNouveau" layoutX="150.0" layoutY="328.0" mnemonicParsing="false" onMouseClicked="#clear" text="Nouveau" />
-      <Text layoutX="387.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Taux d'erreurs :">
+      <Text layoutX="387.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Taux de succès :">
          <font>
             <Font size="10.0" />
          </font>
       </Text>
-      <Text fx:id="txErreur" layoutX="410.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="txSuccess" layoutX="410.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Text layoutX="140.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Analyse de caractères manuscrits" />
       <Button fx:id="boutonImport" layoutX="44.0" layoutY="157.0" mnemonicParsing="false" onMouseClicked="#importation" text="Importer" />
       <ImageView fx:id="imageResized" fitHeight="94.0" fitWidth="119.0" layoutX="18.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true" />
