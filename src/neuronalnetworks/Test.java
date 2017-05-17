@@ -7,18 +7,21 @@ import java.util.Arrays;
 
 public class Test {
 	public static double[][][] betterweights;
-	public static double[][][] images = new double[10][2000][784];
+	public static double[][] images = new double[20000][784];
 	public static NeuronalNetworks bestNeuralNetworks;
 	public static NeuronalNetworks N;
 	
 	public static void loadImages(){
+		int n = 0;
 		for(int i=0; i<10; i++){
 			for(int j=1; j<2000; j++){
 				String nom = i + "_0" + j + ".png";
-				nom = NeuronalNetworks.location + "\\images\\" + nom;
-				images[i][j]=NeuronalNetworks.imageLecture(nom);
+				nom = NeuronalNetworks.location + "/images/" + nom;
+				images[n]=NeuronalNetworks.imageLecture(nom);
+				n++;
 			}
 		}
+		System.out.println("Les images ont Ã©tÃ© chargÃ©s en ram");
 	}
 	
 	public Test(int i){
@@ -30,11 +33,11 @@ public class Test {
 		bestNeuralNetworks.extractSuccessRate();
 		bestNeuralNetworks.extractLearningFactor();
 		bestNeuralNetworks.extractMeanSquareError();
-		System.out.println("Le réseau de neurones anciennnement connu a été chargé");
+		System.out.println("Le rÃ©seau de neurones anciennnement connu a Ã©tÃ© chargÃ©");
 	}
 	
 	public static void saveNeuralNetworks(){
-		//Enregistrement des objets necessaires pour reconstituer le réseau de neurones avec le meilleur taux de succès
+		//Enregistrement des objets necessaires pour reconstituer le rï¿½seau de neurones avec le meilleur taux de succï¿½s
 		FileOutputStream fos1;
 		FileOutputStream fos2;
 		FileOutputStream fos3;
@@ -96,7 +99,7 @@ public class Test {
 				String nom = j + "_0" + i ;
 				try {
 					result = N.forwardPropagation(nom);
-					if (result[j] == 1){
+					if (NeuronalNetworks.max(result) == j && result[j] == 1){
 						reussit = reussit +1 ;
 					}
 				} catch (ClassNotFoundException e) {
@@ -109,13 +112,14 @@ public class Test {
 		return reussit/20000; 
 	}
 	
-	public void learningRAM(){
+	public void learningRAM(int k){
 		int count = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<1000; i++){
 				count++;
 				try {
-					N.backPropagationRAM(images[j][i],j, (int) (NeuronalNetworks.LEARNING_FACTOR/Math.sqrt(count)));
+					int id = j*2000 +i;
+					N.backPropagationRAM(images[id],j, (int) (k/Math.sqrt(count)));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -131,13 +135,16 @@ public class Test {
 		for (int i=1000; i<2000; i++){
 			for (int j=0; j<10; j++){
 				try {
-					result = N.forwardPropagationRAM(images[j][i]);
-					if (rangMax(result) == j){
-						reussit = reussit +1;
+					int id = j*2000+i;
+					result = N.forwardPropagationRAM(images[id]);
+					if (NeuronalNetworks.max(result) == j && result[j]/1.7159 >= 0.9){
+						reussit = reussit +1 ;
 					}
-				} catch (ClassNotFoundException e) {
+				}
+				catch (ClassNotFoundException e) {
 					e.printStackTrace();
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -178,8 +185,8 @@ public class Test {
 				Arrays.fill(expected, -1);
 				expected[j] = 1;
 				try {
-					
-					result = N.forwardPropagationRAM(images[j][i]);
+					int id = j*2000 + i;
+					result = N.forwardPropagationRAM(images[id]);
 					loss = Layer.lossFunction(result, expected);
 					for (int k = 0; k < 10 ; k++) {
 						
@@ -223,9 +230,9 @@ public class Test {
 				expected[j] = 1;
 				
 				try {
-					
+					int id = j*2000 + i;
 					error = 0;
-					result = N.forwardPropagationRAM(images[j][i]);
+					result = N.forwardPropagationRAM(images[id]);
 					loss = Layer.lossFunction(result, expected);
 					
 					for (int k = 0; k < 10 ; k++) {
@@ -258,26 +265,29 @@ public class Test {
 	}
 	
 	
-	public static void findTheRightOneRAM(int k, int l){
+	public static void findTheRightOneRAM(int k, int l, int li, int lf){
 		Test.loadImages();
 		Test T = new Test(1);
 		bestNeuralNetworks = new NeuronalNetworks(1, true);
 		T.extractNeuralNetworks();
 		double bestMeanSquareError = Test.meanSquareErrorRAM();
-		for(int i=k; i<l; i++){
-			NeuronalNetworks N = new NeuronalNetworks(i, false);
-			Test.N = N;
-			T.learningRAM();
-			double meanSquareError = meanSquareErrorRAM();
-			double successRAM = T.successRateCalculRAM();
-			if(successRAM > Test.bestNeuralNetworks.successRate){
-				Test.bestNeuralNetworks = Test.N; 
-				bestMeanSquareError = meanSquareError;
+		for(int j = li; j<lf; j++){
+			for(int i=k; i<l; i++){
+				NeuronalNetworks N = new NeuronalNetworks(i, false);
+				Test.N = N;
+				T.learningRAM(j);
+				NeuronalNetworks.MeanSquareError = meanSquareErrorRAM();
+				double successRAM = T.successRateCalculRAM();
+				Test.N.successRate = successRAM;
+				if(successRAM > Test.bestNeuralNetworks.successRate){
+					NeuronalNetworks.LEARNING_FACTOR = j;
+					Test.bestNeuralNetworks = Test.N;
+				}
 			}
 		}
 		System.out.println("Erreur quadratique moyenne : " + bestMeanSquareError);
 		System.out.println("Taille :" + Test.bestNeuralNetworks.weights[1][1].length);
-		System.out.println("Taux de succés :" + Test.bestNeuralNetworks.successRate);
+		System.out.println("Taux de succÃ©s :" + Test.bestNeuralNetworks.successRate);
 		System.out.println("Learning factor :" + NeuronalNetworks.LEARNING_FACTOR);
 	}
 	
@@ -289,12 +299,11 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(482,784);
+		Test.findTheRightOneRAM(782,784,14,16);
 		Test.saveNeuralNetworks();
-		System.out.println("Le meilleur réseau de neurones déterminé a été sauvegardé");
+		System.out.println("Le meilleur rÃ©seau de neurones dÃ©terminÃ© a Ã©tÃ© sauvegardÃ©");
 		long endTime   = System.currentTimeMillis();
 		long totalTime = (endTime - startTime)/1000;
 		Test.tempsExecution(totalTime);
-		
 	}
 }
