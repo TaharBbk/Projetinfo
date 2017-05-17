@@ -22,7 +22,7 @@ public class NeuronalNetworks {
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfWeights;
-	public static int LEARNING_FACTOR = 1000;
+	public static int LEARNING_FACTOR = 10;
 	double successRate;
 	public static double MeanSquareError;
 	public static final int nombreIterationsBackprop = 3;
@@ -80,6 +80,7 @@ public class NeuronalNetworks {
 	
 	public double[] forwardPropagationRAM(double [] image) throws IOException, ClassNotFoundException{
 		
+		System.out.println(image.length);
 		layers[0].setValues(image);
 		layers[0].propagate();
 		

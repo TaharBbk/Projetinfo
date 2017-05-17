@@ -10,6 +10,7 @@ public class Test {
 	public static double[][][] images = new double[10][4000][784];
 	public static NeuronalNetworks bestNeuralNetworks;
 	public static NeuronalNetworks N;
+	public static double avg;
 	
 	public static void loadImages(){
 		for(int i=0; i<10; i++){
@@ -19,38 +20,39 @@ public class Test {
 				images[i][j]=NeuronalNetworks.imageLecture(nom);
 			}
 		}
+		centreReduitImages();
 		System.out.println("Les images ont ete chargés en ram");
 	}
 	
-//	public static long average(){
-//		long avg = 0;
-//		int cte = 784*10*images[0].length;
-//		for(int i=0; i<10; i++){
-//			for(int j=0; j<images[i].length; j++){
-//				for(int k=0; k<784; k++){
-//					avg+=images[i][j][k]/cte;
-//				}
-//			}
-//		}
-//		return avg;
-//	}
-//	
-//	public static long variance(){
-//		TODO
-//	}
-//	
-//	public static void centreReduitImages(){
-//		long avg = average();
-//		long var = variance();
-//		for(int i=0; i<10; i++){
-//			for(int j=0; j<images[i].length; j++){
-//				for(int k=0; k<784; k++){
-//					images[i][j][k] -= avg;
-//					images[i][j][k] /= var;
-//				}
-//			}
-//		}
-//	}
+	public static void average(){
+		double temp;
+		double avg2 = 0;
+		for(int i=0; i<10; i++){
+			avg2 = 0;
+			for(int j=0; j<images[i].length; j++){
+				temp = 0;
+				for(int k=0; k<784; k++){
+					temp+=images[i][j][k];
+				}
+				avg2+=temp/784;
+			}
+			avg+=avg2/4000;
+		}
+		avg /= 10;
+	}
+	
+	public static void centreReduitImages(){
+		average();
+		double var = avg - Math.pow(avg, 2);
+		double ecartType = Math.sqrt(var);
+		for(int i=0; i<10; i++){
+			for(int j=0; j<images[i].length; j++){
+				for(int k=0; k<784; k++){
+					images[i][j][k] = (images[i][j][k]-avg)/ecartType;
+				}
+			}
+		}
+	}
 	
 	public Test(int i){
 		N = new NeuronalNetworks(i,false);				
@@ -232,7 +234,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(484,489,1000,1001);
+		Test.findTheRightOneRAM(484,489,10,11);
 		Test.saveNeuralNetworks();
 		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 		long endTime   = System.currentTimeMillis();
