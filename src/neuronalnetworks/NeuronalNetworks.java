@@ -205,7 +205,7 @@ public class NeuronalNetworks {
 		this.successRate = 0.1;
 		
 		File f = new File(location + "/bestSuccessRate");
-		//Extraction du taux de succès
+		//Extraction du taux de succes
 		if(f.exists()){
 			FileInputStream fis;
 			try {
@@ -268,5 +268,9 @@ public class NeuronalNetworks {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public String getSuccessRate() {
+		return "" + successRate;
 	}
 }

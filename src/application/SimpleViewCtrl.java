@@ -213,7 +213,7 @@ public class SimpleViewCtrl {
 	
 	@FXML
 	void init(){
-		txErreur.setText("90%");
+		txErreur.setText(nN.getSuccessRate());
 	}
 
 }
