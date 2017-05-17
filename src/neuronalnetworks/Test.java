@@ -7,18 +7,16 @@ import java.util.Arrays;
 
 public class Test {
 	public static double[][][] betterweights;
-	public static double[][] images = new double[20000][784];
+	public static double[][][] images = new double[10][2000][784];
 	public static NeuronalNetworks bestNeuralNetworks;
 	public static NeuronalNetworks N;
 	
 	public static void loadImages(){
-		int n = 0;
 		for(int i=0; i<10; i++){
 			for(int j=1; j<2000; j++){
 				String nom = i + "_0" + j + ".png";
 				nom = NeuronalNetworks.location + "/images/" + nom;
-				images[n]=NeuronalNetworks.imageLecture(nom);
-				n++;
+				images[i][j]=NeuronalNetworks.imageLecture(nom);
 			}
 		}
 		System.out.println("Les images ont été chargés en ram");
@@ -112,14 +110,14 @@ public class Test {
 		return reussit/20000; 
 	}
 	
+	
 	public void learningRAM(int k){
 		int count = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<1000; i++){
 				count++;
 				try {
-					int id = j*2000 +i;
-					N.backPropagationRAM(images[id],j, (int) (k/Math.sqrt(count)));
+					N.backPropagationRAM(images[j][i],j, (int) (k/Math.sqrt(count)));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -135,8 +133,7 @@ public class Test {
 		for (int i=1000; i<2000; i++){
 			for (int j=0; j<10; j++){
 				try {
-					int id = j*2000+i;
-					result = N.forwardPropagationRAM(images[id]);
+					result = N.forwardPropagationRAM(images[j][i]);
 					if (NeuronalNetworks.max(result) == j && result[j]/1.7159 >= 0.9){
 						reussit = reussit +1 ;
 					}
@@ -185,8 +182,7 @@ public class Test {
 				Arrays.fill(expected, -1);
 				expected[j] = 1;
 				try {
-					int id = j*2000 + i;
-					result = N.forwardPropagationRAM(images[id]);
+					result = N.forwardPropagationRAM(images[j][i]);
 					loss = Layer.lossFunction(result, expected);
 					for (int k = 0; k < 10 ; k++) {
 						
@@ -230,9 +226,8 @@ public class Test {
 				expected[j] = 1;
 				
 				try {
-					int id = j*2000 + i;
 					error = 0;
-					result = N.forwardPropagationRAM(images[id]);
+					result = N.forwardPropagationRAM(images[j][i]);
 					loss = Layer.lossFunction(result, expected);
 					
 					for (int k = 0; k < 10 ; k++) {
