@@ -19,8 +19,38 @@ public class Test {
 				images[i][j]=NeuronalNetworks.imageLecture(nom);
 			}
 		}
-		System.out.println("Les images ont été chargés en ram");
+		System.out.println("Les images ont ete chargés en ram");
 	}
+	
+//	public static long average(){
+//		long avg = 0;
+//		int cte = 784*10*images[0].length;
+//		for(int i=0; i<10; i++){
+//			for(int j=0; j<images[i].length; j++){
+//				for(int k=0; k<784; k++){
+//					avg+=images[i][j][k]/cte;
+//				}
+//			}
+//		}
+//		return avg;
+//	}
+//	
+//	public static long variance(){
+//		TODO
+//	}
+//	
+//	public static void centreReduitImages(){
+//		long avg = average();
+//		long var = variance();
+//		for(int i=0; i<10; i++){
+//			for(int j=0; j<images[i].length; j++){
+//				for(int k=0; k<784; k++){
+//					images[i][j][k] -= avg;
+//					images[i][j][k] /= var;
+//				}
+//			}
+//		}
+//	}
 	
 	public Test(int i){
 		N = new NeuronalNetworks(i,false);				
@@ -31,7 +61,7 @@ public class Test {
 		bestNeuralNetworks.extractSuccessRate();
 		bestNeuralNetworks.extractLearningFactor();
 		bestNeuralNetworks.extractMeanSquareError();
-		System.out.println("Le réseau de neurones anciennnement connu a été chargé");
+		System.out.println("Le réseau de neurones anciennnement connu a ete charge");
 	}
 	
 	public static void saveNeuralNetworks(){
@@ -68,56 +98,13 @@ public class Test {
 		}	
 	}
 	
-	// fonction qui doit renvoyer en sortie un nombre compris entre 0 et 9 de manière "aléatoire"
-	public int uniform(){
-		double a = Math.random();
-		return (int)(a*10);
-	}
-	
-	public void learning(){
-		for (int i=0; i<2000; i++){
-			for (int j=0; j<10; j++){
-				String nom = j + "_0" + i ;
-				try {
-					N.backPropagation(nom,j);
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	public double successRateCalcul(){
-		double reussit = 0;
-		double[] result;
-		for (int i=2000; i<4000; i++){
-			for (int j=0; j<10; j++){
-				String nom = j + "_0" + i ;
-				try {
-					result = N.forwardPropagation(nom);
-					if (NeuronalNetworks.max(result) == j && result[j] == 1){
-						reussit = reussit +1 ;
-					}
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return reussit/20000; 
-	}
-	
-	
 	public void learningRAM(int k){
 		int count = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<2000; i++){
 				count++;
 				try {
-					N.backPropagationRAM(images[j][i],j, (int) (k/Math.sqrt(count)));
+					N.backPropagationRAM(images[j][i],j, (int) (k/Math.log(count+10)));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -190,8 +177,6 @@ public class Test {
 						
 					}
 					
-					error /= 10000;
-					
 				} catch (ClassNotFoundException e) {
 					
 					e.printStackTrace();
@@ -206,7 +191,7 @@ public class Test {
 			
 		}
 		
-		return error;
+		return error / 20000;
 		
 		
 	}
@@ -235,7 +220,7 @@ public class Test {
 		}
 		System.out.println("Erreur quadratique moyenne : " + bestMeanSquareError);
 		System.out.println("Taille :" + Test.bestNeuralNetworks.weights[1][1].length);
-		System.out.println("Taux de succès :" + Test.bestNeuralNetworks.successRate);
+		System.out.println("Taux de succes :" + Test.bestNeuralNetworks.successRate);
 		System.out.println("Learning factor :" + NeuronalNetworks.LEARNING_FACTOR);
 	}
 	
@@ -247,9 +232,9 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(480,490,14,16);
+		Test.findTheRightOneRAM(484,489,1000,1001);
 		Test.saveNeuralNetworks();
-		System.out.println("Le meilleur réseau de neurones déterminé a été sauvegardé");
+		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 		long endTime   = System.currentTimeMillis();
 		long totalTime = (endTime - startTime)/1000;
 		Test.tempsExecution(totalTime);

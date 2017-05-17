@@ -93,7 +93,7 @@ public class SimpleViewCtrl {
 		save();
 		
 		try {
-			double[] results = nN.forwardPropagation("tmpResized");
+			double[] results = nN.forwardPropagationRAM(NeuronalNetworks.imageLecture("tmpResized"));
 			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -199,7 +199,7 @@ public class SimpleViewCtrl {
 			g.dispose();
 			ImageIO.write(resizedImage, "png", fileResized);
 		
-			double[] results = nN.forwardPropagation("tmpResized");
+			double[] results = nN.forwardPropagationRAM(NeuronalNetworks.imageLecture("tmpResized"));
 			turnOnLights(results);
 
 
@@ -213,6 +213,7 @@ public class SimpleViewCtrl {
 	
 	@FXML
 	void init(){
+		nN.extractSuccessRate();
 		txSuccess.setText(nN.getSuccessRate());
 	}
 
