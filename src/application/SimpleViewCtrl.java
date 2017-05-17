@@ -116,7 +116,7 @@ public class SimpleViewCtrl {
 			DecimalFormat numberFormat = new DecimalFormat("#0.00");
 			values[i].setText(numberFormat.format(tab[i]));
 			Circle c = circles[i];
-			c.setRadius(20*tab[i]);
+			c.setRadius(10+10*tab[i]);
 			c.setStrokeWidth(0);
 			if (i ==imax) {
 				RadialGradient gradient1 = new RadialGradient(0,0,0.5,0.5,0.6,true,CycleMethod.NO_CYCLE,
