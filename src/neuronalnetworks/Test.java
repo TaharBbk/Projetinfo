@@ -35,7 +35,7 @@ public class Test {
 	}
 	
 	public static void saveNeuralNetworks(){
-		//Enregistrement des objets necessaires pour reconstituer le r�seau de neurones avec le meilleur taux de succ�s
+		//Enregistrement des objets necessaires pour reconstituer le reseau de neurones avec le meilleur taux de succ�s
 		FileOutputStream fos1;
 		FileOutputStream fos2;
 		FileOutputStream fos3;
@@ -229,11 +229,13 @@ public class Test {
 					NeuronalNetworks.LEARNING_FACTOR = j;
 					Test.bestNeuralNetworks = Test.N;
 				}
+				System.out.println("Taille couche cachée : "+ i);
+				System.out.println("Learning factor : " + j);
 			}
 		}
 		System.out.println("Erreur quadratique moyenne : " + bestMeanSquareError);
 		System.out.println("Taille :" + Test.bestNeuralNetworks.weights[1][1].length);
-		System.out.println("Taux de succés :" + Test.bestNeuralNetworks.successRate);
+		System.out.println("Taux de succès :" + Test.bestNeuralNetworks.successRate);
 		System.out.println("Learning factor :" + NeuronalNetworks.LEARNING_FACTOR);
 	}
 	
