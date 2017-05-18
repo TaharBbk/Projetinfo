@@ -103,7 +103,6 @@ public class NeuronalNetworks {
 	}
 
 	public void backPropagationRAM(double[] image, int expectedResult, int learningFactor) throws  IOException, ClassNotFoundException{
-		
 		int[] expected = new int[10];
 		Arrays.fill(expected, -1);
 		expected[expectedResult] = 1;	

@@ -16,7 +16,7 @@ public class Test {
 		for(int i=0; i<10; i++){
 			for(int j=1; j<4000; j++){
 				String nom = i + "_0" + j + ".png";
-				nom = NeuronalNetworks.location + "/images/" + nom;
+				nom = NeuronalNetworks.location + "\\projetinfo\\images\\" + nom;
 				images[i][j]=NeuronalNetworks.imageLecture(nom);
 			}
 		}
@@ -100,13 +100,13 @@ public class Test {
 		}	
 	}
 	
-	public void learningRAM(int k){
+	public void learningRAM(int learningFactor){
 		int count = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<2000; i++){
 				count++;
 				try {
-					N.backPropagationRAM(images[j][i],j, (int) (k/Math.log(count+10)));
+					N.backPropagationRAM(images[j][i],j, (int) (learningFactor/Math.log(count+10)));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
