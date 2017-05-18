@@ -175,7 +175,6 @@ public class Layer {
 	public double[] activationFunction(double[] M){
 		
 		double[] result = new double[M.length];
-		int a = 1;
 		
 		for(int i=0; i<M.length; i++){
 			
