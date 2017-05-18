@@ -80,7 +80,8 @@ public class NeuronalNetworks {
 	
 	public double[] forwardPropagationRAM(double [] image) throws IOException, ClassNotFoundException{
 		
-		assert (image.length == 10);
+		
+		assert (image.length == 784);
 		
 		layers[0].setValues(image);
 		layers[0].propagate();
@@ -105,7 +106,7 @@ public class NeuronalNetworks {
 
 	public double backPropagationRAM(double[] image, int expectedResult, int learningFactor) throws  IOException, ClassNotFoundException{
 		
-		assert (image.length == 10);
+		assert (image.length == 784);
 		
 		int[] expected = new int[10];
 		Arrays.fill(expected, -1);
