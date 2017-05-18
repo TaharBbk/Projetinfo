@@ -10,7 +10,6 @@ public class Test {
 	public static double[][][] images = new double[10][4000][784];
 	public static NeuronalNetworks bestNeuralNetworks;
 	public static NeuronalNetworks N;
-	public static double avg;
 	
 	public static void loadImages(){
 		for(int i=0; i<10; i++){
@@ -24,8 +23,9 @@ public class Test {
 		System.out.println("Les images ont ete chargés en ram");
 	}
 	
-	public static void average(){
+	public static double average(){
 		double temp;
+		double avg = 0;
 		double avg2 = 0;
 		for(int i=0; i<10; i++){
 			avg2 = 0;
@@ -39,19 +39,49 @@ public class Test {
 			avg+=avg2/4000;
 		}
 		avg /= 10;
+		return avg;
+	}
+	
+	public static double variance(double moyenne) {
+		
+		double temp = 0;
+		double var = 0;
+		double var2 = 0;
+		for (int i = 0 ; i < 10 ; i++) {
+			for (int j = 0; j < images[i].length ; j++) {
+				for (int k = 0 ; k < 784 ; k++) {
+					
+					temp += Math.pow(images[i][j][k],2);
+					
+				}
+				var2 += temp/784;
+			}
+			var += var2/4000;
+		}
+		var /= 10;
+		var -= Math.pow(moyenne, 2);
+		return var;
+		
+		
 	}
 	
 	public static void centreReduitImages(){
-		average();
-		double var = avg - Math.pow(avg, 2);
+		double moyenne = average();
+		double var = variance(moyenne);
 		double ecartType = Math.sqrt(var);
 		for(int i=0; i<10; i++){
 			for(int j=0; j<images[i].length; j++){
 				for(int k=0; k<784; k++){
-					images[i][j][k] = (images[i][j][k]-avg)/ecartType;
+					images[i][j][k] = (images[i][j][k]-moyenne)/ecartType;
 				}
 			}
 		}
+		double nouvelleMoyenne = average();
+		double nouvelleVariance = variance(nouvelleMoyenne);
+		assert (Math.abs(nouvelleMoyenne) <= 1);
+		assert (nouvelleVariance <= 2);
+		
+		
 	}
 	
 	public Test(int i){
@@ -102,11 +132,12 @@ public class Test {
 	
 	public void learningRAM(int learningFactor){
 		int count = 0;
+		double moyenne = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<2000; i++){
 				count++;
 				try {
-					N.backPropagationRAM(images[j][i],j, (int) (learningFactor/Math.log(count+10)));
+					moyenne+=N.backPropagationRAM(images[j][i],j, (int) (learningFactor/Math.log(count+10)));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -114,6 +145,8 @@ public class Test {
 				}
 			}
 		}
+		moyenne /= 20000;
+		assert (moyenne <= 10);
 	}
 
 	public double successRateCalculRAM(){
