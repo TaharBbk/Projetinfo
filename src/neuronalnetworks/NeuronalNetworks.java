@@ -135,7 +135,7 @@ public class NeuronalNetworks {
 		
 	}
 	
-	public double randomWeights(int nombreEntrees){
+	public double randomWeights(double nombreEntrees){
 		double cte = Math.cbrt(3/(2*nombreEntrees));
 		double x = (Math.random()*2*cte) - cte;
 		while (Math.abs(x) < 0.0001)
