@@ -31,7 +31,7 @@ public class Test {
 					arraySum(avg,images[i][j]);
 			}
 		}
-		return avg;
+		return arrayDivide(avg, 40000);
 	}
 	
 	private static double[] arraySum(double[] a1, double[] a2) {
@@ -52,6 +52,19 @@ public class Test {
 		
 	}
 	
+	private static double[] arrayDivide(double[] a, double diviseur) {
+		
+		double[] resultat = new double[a.length];
+		for (int i = 0 ; i < a.length ; i++) {
+			
+			resultat[i] = a[i] / diviseur;
+			
+		}
+		
+		return resultat;
+		
+	}
+	
 	public static double[] variance(double[] moyenne) {
 		
 		double[] var = new double[784];
@@ -63,7 +76,7 @@ public class Test {
 			}
 		}
 		
-		return arraySum(var, arrayNegate(arraySquared(moyenne)));
+		return arraySum(arrayDivide(var, 40000), arrayNegate(arraySquared(moyenne)));
 		
 		
 	}
@@ -110,14 +123,14 @@ public class Test {
 		for(int i=0; i<10; i++){
 			for(int j=0; j<images[i].length; j++){
 				for(int k=0; k<784; k++){
-					//assert (Math.abs(ecartType[k]) >= 0.000001);
-					assert (!(Double.isNaN(images[i][j][k])));
+					assert (Math.abs(ecartType[k]) >= 0.000001);
+					//assert (!(Double.isNaN(images[i][j][k])));
 					//assert (!(Double.isNaN(moyenne[k])));
 					//assert (Double.isFinite(images[i][j][k]));
 					//assert (Double.isFinite(moyenne[k]));
 					images[i][j][k] = (images[i][j][k]-moyenne[k])/ecartType[k];
 					//assert (-1 <= images[i][j][k] && images[i][j][k] <= 1);
-					//assert (!(Double.isNaN(images[i][j][k])));
+					assert (!(Double.isNaN(images[i][j][k])));
 				}
 			}
 		}
@@ -192,7 +205,7 @@ public class Test {
 			}
 		}
 		moyenne /= 20000;
-		assert (moyenne <= 10);
+		//assert (moyenne <= 10);
 	}
 
 	public double successRateCalculRAM(){
