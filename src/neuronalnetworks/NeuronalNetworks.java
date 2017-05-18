@@ -25,7 +25,7 @@ public class NeuronalNetworks {
 	public static int LEARNING_FACTOR = 10;
 	double successRate;
 	public static double MeanSquareError;
-	public static final int nombreIterationsBackprop = 3;
+	public static final int nombreIterationsBackprop = 1;
 	
 	//Conversion de l'image en tableau
 	public static double[] imageLecture(String locationImage){

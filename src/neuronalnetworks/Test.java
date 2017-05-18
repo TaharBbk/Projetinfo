@@ -129,11 +129,13 @@ public class Test {
 		for(int i=0; i<10; i++){
 			for(int j=0; j<images[i].length; j++){
 				for(int k=0; k<784; k++){
-					assert (Math.abs(ecartType[k]) >= 0.000001);
-					//assert (!(Double.isNaN(images[i][j][k])));
-					//assert (!(Double.isNaN(moyenne[k])));
-					//assert (Double.isFinite(images[i][j][k]));
-					//assert (Double.isFinite(moyenne[k]));
+					assert (!(Double.isNaN(images[i][j][k])));
+					assert (!(Double.isNaN(moyenne[k])));
+					assert (Double.isFinite(images[i][j][k]));
+					assert (Double.isFinite(moyenne[k]));
+					if (ecartType[k]<0.25){
+						ecartType[k]=0.25;
+					}
 					images[i][j][k] = (images[i][j][k]-moyenne[k])/ecartType[k];
 					//assert (-1 <= images[i][j][k] && images[i][j][k] <= 1);
 					assert (!(Double.isNaN(images[i][j][k])));
@@ -196,13 +198,13 @@ public class Test {
 	}
 	
 	public void learningRAM(int learningFactor){
-		int count = 0;
+		//int count = 0;
 		double moyenne = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<2000; i++){
-				count++;
+				//count++;
 				try {
-					moyenne+=N.backPropagationRAM(images[j][i],j, (int) (learningFactor/Math.log(count+10)));
+					moyenne+=N.backPropagationRAM(images[j][i],j, (int) (learningFactor));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -332,7 +334,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(484,489,10,11);
+		Test.findTheRightOneRAM(500,501,1,10);
 		Test.saveNeuralNetworks();
 		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 		long endTime   = System.currentTimeMillis();
