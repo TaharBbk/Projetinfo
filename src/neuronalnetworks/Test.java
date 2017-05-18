@@ -34,7 +34,7 @@ public class Test {
 		double[] avg = new double[784];
 		for(int i=0; i<10; i++){
 			for(int j=0; j<images[i].length; j++){
-					arraySum(avg,images[i][j]);
+					avg = arraySum(avg,images[i][j]);
 			}
 		}
 		return arrayDivide(avg, 40000);
@@ -77,7 +77,7 @@ public class Test {
 		for (int i = 0 ; i < 10 ; i++) {
 			for (int j = 0; j < images[i].length ; j++) {
 					
-					arraySum(var, arraySquared(images[i][j]));
+					var = arraySum(var, arraySquared(images[i][j]));
 					
 			}
 		}
