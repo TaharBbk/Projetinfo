@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 public class NeuronalNetworks {
 
 	public final static String location = new File("").getAbsolutePath();
-	static int seuil = 128;
+	static int seuil = 150;
 	Layer[] layers;
 	public double[][] images = new double[60000][784];
 	public double[][][] weights;
@@ -135,18 +135,20 @@ public class NeuronalNetworks {
 		
 	}
 	
-	public double randomWeights(){
-		double x = (Math.random()*2.02) - 1.01;
-		while (Math.abs(x) < 0.01)
-			x = (Math.random()*2) - 1;
+	public double randomWeights(int nombreEntrees){
+		double cte = Math.cbrt(3/(2*nombreEntrees));
+		double x = (Math.random()*2*cte) - cte;
+		while (Math.abs(x) < 0.0001)
+			x = (Math.random()*2*cte) - cte;
 		return x;
 	}
 	
 	public void generateWeights(){
+
 		for(int i=0; i<weights.length; i++){
 			for(int j=0; j<weights[i].length; j++){
 				for(int h=0; h<weights[i][j].length; h++){
-					weights[i][j][h] = randomWeights();
+					weights[i][j][h] = randomWeights(weights[i][j].length);
 				}
 			}
 		}
