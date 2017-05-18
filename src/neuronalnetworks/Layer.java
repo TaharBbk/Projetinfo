@@ -48,6 +48,10 @@ public class Layer {
 		this.precedent = p;
 	}
 	
+	public Layer getPrecedent() {
+		return this.precedent;
+	}
+	
 	public void setNext(Layer n) {
 		this.next = n;
 	}
@@ -83,7 +87,6 @@ public class Layer {
 	}
 	
 	public void backprop_init(int[] expectedResult, int learningFactor){
-		
 		this.differentialErrorValues = new double[this.numberOfNeurons];		// Initialisation of the vector based on info given when the constructor was called
 		
 		for (int i = 0 ; i < this.numberOfNeurons ; i++) {
@@ -102,7 +105,11 @@ public class Layer {
 	 */
 	public void backprop(double[] incomingValues, double learningFactor) {
 		
+		System.out.println("backprop");
+		
 		if(this.precedent != null) {
+			
+			System.out.println("this.precedent != null");
 			
 			// Initialisation of the variables of the layer
 			this.differentialErrorWeights = new double[this.numberOfNeurons][this.precedent.getNumberOfNeurons()];
@@ -141,8 +148,10 @@ public class Layer {
 				
 				
 			}
-			
+			System.out.println(this.precedent.getWeights()[0][0]);
 			this.precedent.setWeights(this.soustractionMatrice(this.precedent.getWeights(), this.scalaireMatrice(NeuronalNetworks.LEARNING_FACTOR, this.differentialErrorWeights))); // We modifiy the weights matrix according to the backprop algorithm
+			System.out.println(this.precedent.getWeights()[0][0]);
+			System.out.println("===");
 			
 			this.precedent.backprop(returned, learningFactor);		// We call the method on the next layer to be processed, passing as input what we formerly calculated
 			

@@ -74,6 +74,7 @@ public class NeuronalNetworks {
 		//Creation des liens entre les couches
 		for(int i=0; i<numberOfWeights; i++){
 			layers[i].setNext(layers[i+1]);
+			layers[i+1].setPrecedent(layers[i]);
 		}
 	}
 	

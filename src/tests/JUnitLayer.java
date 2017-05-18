@@ -31,23 +31,33 @@ public class JUnitLayer {
 	@Test
 	public void testActivate() {
 		underTestLayer.activate();
-		double[] calculatedResult = {-0.79294683,
-									0.79294683,
-									1.13942064};
+		double[] calculatedResult = {-0.05,
+									0.05,
+									0.08};
 		Assert.assertArrayEquals(underTestLayer.getValues(), calculatedResult, 0.00001);	
 	}
 	
 	@Test
 	public void testPropagate() {
-		for (int i=0; i<3; i++){
-			System.out.println(underTestLayer.getValues()[i]);
-		}
 		underTestLayer2.propagate();
-		double[] calculatedResult = {-0.154015,0,0.546549};
-		for (int i=0; i<3; i++){
-			System.out.println(i+": " + underTestLayer.getValues()[i]);
-		}
+		double[] calculatedResult = {-0.0089999,0.0,0.0329999};
 		Assert.assertArrayEquals(underTestLayer.getValues(), calculatedResult, 0.00001);
+	}
+	
+	@Test
+	public void testBackProp(){
+		double[] incomingValues = {0.71, 0.34, 0.18};
+		underTestLayer.backprop(incomingValues, 10);
+		double[][] calculatedWeight = {{1,0.5,0.2},
+				 			 {0.3,0.3,0},
+				 			 {-0.7,0.6,-0.4}};
+		for (int i=0; i<3; i++){
+			Assert.assertEquals(underTestLayer.getPrecedent(), underTestLayer2);
+			Assert.assertArrayEquals(underTestLayer.getWeights()[i], calculatedWeight[i], 0.00001);
+			for (int j=0; j<3; j++){
+				System.out.println(i+","+j+": " + underTestLayer.getWeights()[i][j]);
+			}
+		}
 	}
 	
 
