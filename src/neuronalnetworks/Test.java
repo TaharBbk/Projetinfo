@@ -26,7 +26,7 @@ public class Test {
 			}
 		}
 		centreReduitImages();
-		System.out.println("Les images ont ete chargés en ram");
+		System.out.println("Les images ont ete chargees en ram");
 	}
 	
 	// La variance et la moyenne sont calculees pour chaque pixel et non pas globalement
