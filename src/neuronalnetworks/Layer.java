@@ -179,8 +179,7 @@ public class Layer {
 		
 		for(int i=0; i<M.length; i++){
 			
-			result[i] = 1.7159*Math.tanh(M[i])+this.activationFunctionLinearCoeff*M[i];
-			// La fonction d'activation est un d�vellopement en s�rie de Taylor en 0, multipli� par un coefficient
+			result[i] = 1.7159*Math.tanh(2/3*M[i])+this.activationFunctionLinearCoeff*M[i];
 			
 		}
 		
@@ -196,7 +195,7 @@ public class Layer {
 		
 		for (int i = 0 ; i < input.length ; i++) {
 			
-			result[i] = 1.7159*(1/Math.pow(Math.cosh(input[i]),2))+this.activationFunctionLinearCoeff;
+			result[i] = 1.7159*(4/(3*(Math.cosh(4/3*input[i])+1)))+this.activationFunctionLinearCoeff;
 			
 		}
 		return result;

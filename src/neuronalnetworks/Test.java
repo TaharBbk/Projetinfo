@@ -108,7 +108,9 @@ public class Test {
 		for(int i=0; i<10; i++){
 			for(int j=0; j<images[i].length; j++){
 				for(int k=0; k<784; k++){
+					assert (Math.abs(ecartType[k]) >= 0.000001);
 					images[i][j][k] = (images[i][j][k]-moyenne[k])/ecartType[k];
+					assert (-1 <= images[i][j][k] && images[i][j][k] <= 1);
 				}
 			}
 		}
