@@ -23,64 +23,101 @@ public class Test {
 		System.out.println("Les images ont ete chargÃ©s en ram");
 	}
 	
-	public static double average(){
-		double temp;
-		double avg = 0;
-		double avg2 = 0;
+	// La variance et la moyenne sont calculées pour chaque pixel et non pas globalement
+	public static double[] average(){
+		double[] avg = new double[784];
 		for(int i=0; i<10; i++){
-			avg2 = 0;
 			for(int j=0; j<images[i].length; j++){
-				temp = 0;
-				for(int k=0; k<784; k++){
-					temp+=images[i][j][k];
-				}
-				avg2+=temp/784;
+					arraySum(avg,images[i][j]);
 			}
-			avg+=avg2/4000;
 		}
-		avg /= 10;
 		return avg;
 	}
 	
-	public static double variance(double moyenne) {
+	private static double[] arraySum(double[] a1, double[] a2) {
 		
-		double temp = 0;
-		double var = 0;
-		double var2 = 0;
+		assert (a1.length == a2.length);
+		
+		double[] resultat = new double[a1.length];
+		
+		for (int i = 0 ; i < a1.length ; i++) {
+			
+			resultat[i] += a1[i];
+			resultat[i] += a2[i];
+			
+		}
+		
+		return resultat;
+		
+		
+	}
+	
+	public static double[] variance(double[] moyenne) {
+		
+		double[] var = new double[784];
 		for (int i = 0 ; i < 10 ; i++) {
 			for (int j = 0; j < images[i].length ; j++) {
-				for (int k = 0 ; k < 784 ; k++) {
 					
-					temp += Math.pow(images[i][j][k],2);
+					arraySum(var, arraySquared(images[i][j]));
 					
-				}
-				var2 += temp/784;
 			}
-			var += var2/4000;
 		}
-		var /= 10;
-		var -= Math.pow(moyenne, 2);
-		return var;
 		
+		return arraySum(var, arrayNegate(arraySquared(moyenne)));
+		
+		
+	}
+	
+	private static double[] arrayNegate(double[] a) {
+		
+		double[] resultat = new double[a.length];
+		for (int i = 0 ; i < a.length ; i++)
+			resultat[i] -= a[i];
+		return resultat;
+		
+	}
+	
+	private static double[] arraySquared(double[] a) {
+		
+		double[] resultat = new double[a.length];
+		
+		for (int i = 0 ; i < a.length ; i++) {
+			
+			resultat[i] = Math.pow(a[i], 2);
+			
+		}
+		
+		return resultat;
+		
+		
+	}
+	
+	private static double[] arraySqrt(double[] a) {
+		
+		double[] resultat = new double[a.length];
+		for(int i = 0 ; i < a.length ; i++)
+			resultat[i] = Math.sqrt(a[i]);
+		return resultat;
 		
 	}
 	
 	public static void centreReduitImages(){
-		double moyenne = average();
-		double var = variance(moyenne);
-		double ecartType = Math.sqrt(var);
+		double[] moyenne = average();
+		double[] var = variance(moyenne);
+		double[] ecartType = arraySqrt(var);
 		for(int i=0; i<10; i++){
 			for(int j=0; j<images[i].length; j++){
 				for(int k=0; k<784; k++){
-					images[i][j][k] = (images[i][j][k]-moyenne)/ecartType;
+					images[i][j][k] = (images[i][j][k]-moyenne[k])/ecartType[k];
 				}
 			}
 		}
+		/*
 		double nouvelleMoyenne = average();
 		double nouvelleVariance = variance(nouvelleMoyenne);
 		assert (Math.abs(nouvelleMoyenne) <= 1);
 		assert (nouvelleVariance <= 2);
-		
+		*/
 		
 	}
 	
