@@ -59,8 +59,7 @@ public class NeuronalNetworks {
 
 	public NeuronalNetworks(int l, boolean extract) {
 		//Extraction des poids
-		this.extractWeights(l, extract);
-		this.successRate = 0.1;		
+		this.extractWeights(l, extract);		
 		this.numberOfWeights = weights.length;
 		//Creation du tableau de couches
 		layers = new Layer[numberOfWeights+1];
@@ -84,6 +83,7 @@ public class NeuronalNetworks {
 		assert (image.length == 784);
 		
 		layers[0].setValues(image);
+		layers[0].activate();
 		layers[0].propagate();
 		
 		return layers[numberOfWeights].getValues();

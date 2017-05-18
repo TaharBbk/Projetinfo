@@ -10,12 +10,18 @@ public class Test {
 	public static double[][][] images = new double[10][4000][784];
 	public static NeuronalNetworks bestNeuralNetworks;
 	public static NeuronalNetworks N;
+	private static String OS = System.getProperty("os.name").toLowerCase();
 	
 	public static void loadImages(){
 		for(int i=0; i<10; i++){
 			for(int j=1; j<4000; j++){
 				String nom = i + "_0" + j + ".png";
-				nom = NeuronalNetworks.location + "\\projetinfo\\images\\" + nom;
+				if(OS.indexOf("win") >= 0){
+					nom = NeuronalNetworks.location + "\\projetinfo\\images\\" + nom;
+				}
+				else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+					nom = NeuronalNetworks.location + "/images/" + nom;
+				}
 				images[i][j]=NeuronalNetworks.imageLecture(nom);
 			}
 		}
@@ -23,7 +29,7 @@ public class Test {
 		System.out.println("Les images ont ete chargÃ©s en ram");
 	}
 	
-	// La variance et la moyenne sont calculées pour chaque pixel et non pas globalement
+	// La variance et la moyenne sont calculï¿½es pour chaque pixel et non pas globalement
 	public static double[] average(){
 		double[] avg = new double[784];
 		for(int i=0; i<10; i++){
@@ -114,7 +120,7 @@ public class Test {
 		
 	}
 	
-	// /!\ Il faut rajouter -ea dans les paramètres de la vm (clic droit > Run As > Run Configurations)
+	// /!\ Il faut rajouter -ea dans les paramï¿½tres de la vm (clic droit > Run As > Run Configurations)
 	
 	public static void centreReduitImages(){
 		double[] moyenne = average();
@@ -292,8 +298,8 @@ public class Test {
 	
 	public static void findTheRightOneRAM(int k, int l, int li, int lf){
 		Test.loadImages();
-		Test T = new Test(1);
-		bestNeuralNetworks = new NeuronalNetworks(1, true);
+		Test T = new Test(k);
+		bestNeuralNetworks = new NeuronalNetworks(k, true);
 //		T.extractNeuralNetworks();
 		double bestMeanSquareError = Test.meanSquareErrorRAM();
 		for(int j = li; j<lf; j++){
