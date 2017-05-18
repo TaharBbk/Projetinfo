@@ -29,7 +29,7 @@ public class Test {
 		System.out.println("Les images ont ete chargés en ram");
 	}
 	
-	// La variance et la moyenne sont calcul�es pour chaque pixel et non pas globalement
+	// La variance et la moyenne sont calculees pour chaque pixel et non pas globalement
 	public static double[] average(){
 		double[] avg = new double[784];
 		for(int i=0; i<10; i++){
@@ -120,7 +120,7 @@ public class Test {
 		
 	}
 	
-	// /!\ Il faut rajouter -ea dans les param�tres de la vm (clic droit > Run As > Run Configurations)
+	// /!\ Il faut rajouter -ea dans les parametres de la vm (clic droit > Run As > Run Configurations)
 	
 	public static void centreReduitImages(){
 		double[] moyenne = average();
@@ -162,7 +162,7 @@ public class Test {
 	}
 	
 	public static void saveNeuralNetworks(){
-		//Enregistrement des objets necessaires pour reconstituer le reseau de neurones avec le meilleur taux de succ�s
+		//Enregistrement des objets necessaires pour reconstituer le reseau de neurones avec le meilleur taux de succes
 		FileOutputStream fos1;
 		FileOutputStream fos2;
 		FileOutputStream fos3;
