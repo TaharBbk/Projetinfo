@@ -197,7 +197,7 @@ public class Test {
 		}	
 	}
 	
-	public void learningRAM(int learningFactor){
+	public void learningRAM(double learningFactor){
 		//int count = 0;
 		double moyenne = 0;
 		for (int j=0; j<10; j++){
@@ -298,26 +298,27 @@ public class Test {
 		
 	}
 	
-	public static void findTheRightOneRAM(int k, int l, int li, int lf){
+	public static void findTheRightOneRAM(int hiddenSizeStart, int hiddenSizeEnd, double learnStart, double learnEnd, double learnIncrement){
 		Test.loadImages();
-		Test T = new Test(k);
-		bestNeuralNetworks = new NeuronalNetworks(k, true);
+		Test T = new Test(hiddenSizeStart);
+		bestNeuralNetworks = new NeuronalNetworks(hiddenSizeStart, true);
 //		T.extractNeuralNetworks();
 		double bestMeanSquareError = Test.meanSquareErrorRAM();
-		for(int j = li; j<lf; j++){
-			for(int i=k; i<l; i++){
+		double currentLearnF = learnStart;
+		while(currentLearnF < learnEnd) {
+			for(int i=hiddenSizeStart; i<hiddenSizeEnd; i++){
 				NeuronalNetworks N = new NeuronalNetworks(i, false);
 				Test.N = N;
-				T.learningRAM(j);
+				T.learningRAM(currentLearnF);
 				NeuronalNetworks.MeanSquareError = meanSquareErrorRAM();
 				double successRAM = T.successRateCalculRAM();
 				Test.N.successRate = successRAM;
 				if(successRAM > Test.bestNeuralNetworks.successRate){
-					NeuronalNetworks.LEARNING_FACTOR = j;
+					NeuronalNetworks.LEARNING_FACTOR = currentLearnF;
 					Test.bestNeuralNetworks = Test.N;
 				}
 				System.out.println("Taille couche cachée : "+ i);
-				System.out.println("Learning factor : " + j);
+				System.out.println("Learning factor : " + currentLearnF);
 			}
 		}
 		System.out.println("Erreur quadratique moyenne : " + bestMeanSquareError);
@@ -334,7 +335,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(500,501,1,10);
+		Test.findTheRightOneRAM(480,520,0.1,3,0.2);
 		Test.saveNeuralNetworks();
 		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 		long endTime   = System.currentTimeMillis();

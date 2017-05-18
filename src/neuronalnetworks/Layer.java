@@ -100,7 +100,7 @@ public class Layer {
 	 This methods takes as input the values coming from the last layer visited by the backpropagation algorithm
 	 Note : in this method we always call the weights matrix from the layer stored in the *precedent* variable, because of the way the forward propagation is implemented
 	 */
-	public void backprop(double[] incomingValues, int learningFactor) {
+	public void backprop(double[] incomingValues, double learningFactor) {
 		
 		if(this.precedent != null) {
 			
@@ -218,7 +218,7 @@ public class Layer {
 	}
 	
 	// Method that multiplies a matrix by an integer scalar
-	public double[][] scalaireMatrice(int scalaire, double[][] matrice) {
+	public double[][] scalaireMatrice(double scalaire, double[][] matrice) {
 		
 		double[][] res = new double[matrice.length][matrice[0].length];
 		

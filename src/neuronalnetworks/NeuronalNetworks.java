@@ -22,7 +22,7 @@ public class NeuronalNetworks {
 	public double[][][] weights;
 	private double[][][] weights2;
 	private int numberOfWeights;
-	public static int LEARNING_FACTOR = 10;
+	public static double LEARNING_FACTOR;
 	double successRate;
 	public static double MeanSquareError;
 	public static final int nombreIterationsBackprop = 1;
