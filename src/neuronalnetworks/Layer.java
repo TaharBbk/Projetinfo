@@ -10,6 +10,7 @@ public class Layer {
 	double[][] differentialErrorWeights;	// The derivative of the error with respect to the weights of this layer
 	double[] differentialErrorProduct; 		// The derivative of the error with respect to the product of the weights of the precedent layer by the values of the precedent layer
 	int numberOfNeurons;					// The number of neurons in the layer
+	int activationFunctionLinearCoeff = 1;
 	
 	//Constructeur 1
 	public Layer(double[] val, double[][] weight, Layer next){
@@ -174,10 +175,11 @@ public class Layer {
 	public double[] activationFunction(double[] M){
 		
 		double[] result = new double[M.length];
+		int a = 1;
 		
 		for(int i=0; i<M.length; i++){
 			
-			result[i] = 1.7159*Math.tanh(M[i]);
+			result[i] = 1.7159*Math.tanh(M[i])+this.activationFunctionLinearCoeff*M[i];
 			// La fonction d'activation est un d�vellopement en s�rie de Taylor en 0, multipli� par un coefficient
 			
 		}
@@ -194,7 +196,7 @@ public class Layer {
 		
 		for (int i = 0 ; i < input.length ; i++) {
 			
-			result[i] = 1.7159*(1/Math.pow(Math.cosh(input[i]),2));
+			result[i] = 1.7159*(1/Math.pow(Math.cosh(input[i]),2))+this.activationFunctionLinearCoeff;
 			
 		}
 		return result;
