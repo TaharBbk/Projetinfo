@@ -101,6 +101,8 @@ public class Test {
 		
 	}
 	
+	// /!\ Il faut rajouter -ea dans les paramètres de la vm (clic droit > Run As > Run Configurations)
+	
 	public static void centreReduitImages(){
 		double[] moyenne = average();
 		double[] var = variance(moyenne);
@@ -115,6 +117,7 @@ public class Test {
 					assert (Double.isFinite(moyenne[k]));
 					images[i][j][k] = (images[i][j][k]-moyenne[k])/ecartType[k];
 					assert (-1 <= images[i][j][k] && images[i][j][k] <= 1);
+					assert (!(Double.isNaN(images[i][j][k])));
 					System.out.println(images[i][j][k]);
 				}
 			}
