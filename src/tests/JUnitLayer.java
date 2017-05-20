@@ -18,7 +18,7 @@ public class JUnitLayer {
 		double[][] weight = {{1,0.5,0.2},
 							 {0.3,0.3,0},
 							 {-0.7,0.6,-0.4}};
-		underTestLayer = new Layer(val, weight);
+		underTestLayer = new Layer(val);
 		underTestLayer2 = new Layer(val, weight, underTestLayer);
 		
 	}

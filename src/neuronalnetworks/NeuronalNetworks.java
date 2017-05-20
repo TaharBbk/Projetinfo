@@ -63,18 +63,11 @@ public class NeuronalNetworks {
 		this.numberOfWeights = weights.length;
 		//Creation du tableau de couches
 		layers = new Layer[numberOfWeights+1];
-		layers[numberOfWeights] = new Layer();
-		
+		layers[numberOfWeights] = new Layer(new double[10]);
+
 		//Creation des objets couches
-		for(int i=0; i<numberOfWeights; i++){
-			layers[i] = new Layer();
-			layers[i].setWeights(weights[i]);
-		}
-		
-		//Creation des liens entre les couches
-		for(int i=0; i<numberOfWeights; i++){
-			layers[i].setNext(layers[i+1]);
-			layers[i+1].setPrecedent(layers[i]);
+		for(int i=numberOfWeights-1; i>=0; i--){
+			layers[i] = new Layer(new double[weights[i][0].length], weights[i], layers[i+1]);		
 		}
 	}
 	
@@ -105,7 +98,7 @@ public class NeuronalNetworks {
 		return posmax;
 	}
 
-	public double backPropagationRAM(double[] image, int expectedResult, int learningFactor) throws  IOException, ClassNotFoundException{
+	public double backPropagationRAM(double[] image, int expectedResult, double learningFactor) throws  IOException, ClassNotFoundException{
 		
 		assert (image.length == 784);
 		
@@ -116,7 +109,7 @@ public class NeuronalNetworks {
 		double moyenne = avgArray(this.forwardPropagationRAM(image));
 		for (int i = 0; i < nombreIterationsBackprop ; i ++) {
 			
-			this.layers[this.numberOfWeights-1].backprop_init(expected, learningFactor/(i+1));
+			this.layers[this.numberOfWeights].backprop_init(expected, learningFactor/(i+1));
 			
 		}
 

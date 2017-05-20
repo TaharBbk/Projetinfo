@@ -204,7 +204,7 @@ public class Test {
 			for (int i=0; i<2000; i++){
 				//count++;
 				try {
-					moyenne+=N.backPropagationRAM(images[j][i],j, (int) (learningFactor));
+					moyenne+=N.backPropagationRAM(images[j][i],j, learningFactor);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -320,6 +320,7 @@ public class Test {
 				System.out.println("Taille couche cachée : "+ i);
 				System.out.println("Learning factor : " + currentLearnF);
 			}
+			currentLearnF += learnIncrement;
 		}
 		System.out.println("Erreur quadratique moyenne : " + bestMeanSquareError);
 		System.out.println("Taille :" + Test.bestNeuralNetworks.weights[1][1].length);
@@ -335,7 +336,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(480,520,0.1,3,0.2);
+		Test.findTheRightOneRAM(480,481,1,3,3);
 		Test.saveNeuralNetworks();
 		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 		long endTime   = System.currentTimeMillis();
