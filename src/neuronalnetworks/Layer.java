@@ -87,7 +87,7 @@ public class Layer {
 	
 	//Execution de la forward propagation
 	
-	public void backprop_init(int[] expectedResult, double learningFactor){
+	public void backprop_init(double[] expectedResult, double learningFactor){
 		this.differentialErrorValues = new double[this.numberOfNeurons];		// Initialisation of the vector based on info given when the constructor was called
 		
 		for (int i = 0 ; i < this.numberOfNeurons ; i++) {
@@ -95,6 +95,9 @@ public class Layer {
 			this.differentialErrorValues = lossFunctionDerivative(this.values, expectedResult);		// Derivative of the error function with respect to Xi
 			
 		}
+		
+		for (int i = 0 ; i < this.differentialErrorValues.length ; i++)
+			assert (!(Double.isNaN(this.differentialErrorValues[i])));
 		
 		this.precedent.backprop(this.differentialErrorValues, learningFactor);							// We launch the backpropagation process
 		
@@ -278,13 +281,15 @@ public class Layer {
 		
 	}
 	
-	public static double[] lossFunctionDerivative(double[] input, int[] expected) {
+	public static double[] lossFunctionDerivative(double[] input, double[] expected) {
 		
 		double[] result = new double[input.length];
 		
 		for (int i = 0 ; i < input.length ; i++) {
 			
-			result[i] = (-2)*((double)expected[i]-input[i]);
+			result[i] = (-2)*(expected[i]-input[i]);
+			assert(!(Double.isNaN(input[i])));
+			assert(!(Double.isNaN(result[i])));
 			
 		}
 		

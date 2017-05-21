@@ -99,7 +99,7 @@ public class NeuronalNetworks {
 		
 		assert (image.length == 784);
 		
-		int[] expected = new int[10];
+		double[] expected = new double[10];
 		Arrays.fill(expected, -1);
 		expected[expectedResult] = 1;	
 		

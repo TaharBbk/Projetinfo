@@ -235,8 +235,10 @@ public class Test {
 					Arrays.fill(expected,-1);
 					expected[j] = 1;
 					temp = Layer.lossFunction(result, expected);
+					
 					for (int k = 0 ; k < 10 ; k++) {
 						
+						assert (!(Double.isNaN(temp[k])));
 						eqm += temp[k]/10;
 						
 					}
@@ -253,6 +255,7 @@ public class Test {
 		double[] res = new double[2];
 		res[0] = success/20000;
 		res[1] = eqm/20000;
+		assert(!(Double.isNaN(res[1])));
 		return res;
 	}
 	
