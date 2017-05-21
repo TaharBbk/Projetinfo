@@ -66,7 +66,7 @@ public class Layer {
 	//Fonction de propagation du reseau de neurones
 	public void propagate(){
 		if(this.next!=null){
-			this.next.setValues(productMatrix(this.values, this.weights));
+			this.next.setValues(productMatrixVector(this.weights, this.values));
 			this.next.execute();
 		}
 		else
@@ -113,43 +113,30 @@ public class Layer {
 			
 		// Initialisation of the variables of the layer
 		int nextNumberOfNeurons = this.next.getNumberOfNeurons();
-		this.differentialErrorWeights = new double[nextNumberOfNeurons][this.numberOfNeurons];
-		this.differentialErrorProduct = new double[nextNumberOfNeurons];
+		this.differentialErrorWeights = new double[this.numberOfNeurons][nextNumberOfNeurons];
+		this.differentialErrorProduct = new double[this.numberOfNeurons];
 		
 		// Declatation of the variables used in this method
+		double[] product;
 		double[] activatedProduct;
-		double[] returned = new double[this.getNumberOfNeurons()];
+		double[] returned = new double[this.numberOfNeurons];
 		
-		for (int i = 0 ; i < nextNumberOfNeurons; i++) {
+		product = productMatrixVector(this.weights, this.values);
+		activatedProduct = this.activationDerivative(product);
+		
+		for(int i = 0 ; i < activatedProduct.length ; i++) {
 			
-			for (int j = 0; j < this.numberOfNeurons ; j++) {
-				
-				this.differentialErrorProduct[i] += this.weights[i][j]*this.values[j];		// We calculate the differentialErrorProduct variable first as it is needed for further calculations
-				
-			}
-		}
-		
-		activatedProduct = this.activationDerivative(this.differentialErrorProduct);
-		
-			
-		for (int i = 0 ; i < nextNumberOfNeurons ; i++) {	
-			for (int j = 0 ; j < this.numberOfNeurons ; j++) {
-				
-				this.differentialErrorWeights[i][j] = this.values[j]*activatedProduct[i]*incomingValues[i];	// We calculate differentialErrorWeights here
-				
-			}
-		}
-		
-		for (int k = 0 ; k < this.numberOfNeurons ; k++) {
-			for (int i = 0 ; i < nextNumberOfNeurons; i++) {
-				
-				returned[k] += this.weights[i][k]*this.differentialErrorProduct[i];							// We calculate the input given to the next call of the backprop method
-				
-			}
-			
+			this.differentialErrorProduct[i] = activatedProduct[i]*incomingValues[i];
 			
 		}
+		assert (this.differentialErrorProduct.length == this.values.length);
 			
+		this.differentialErrorWeights = productVectorVector(this.values, this.differentialErrorProduct);
+		assert (this.differentialErrorWeights.length == this.differentialErrorProduct.length && this.differentialErrorWeights[0].length == this.values.length);
+		
+		returned = productMatrixVector(transpose(this.weights), this.differentialErrorProduct);
+		assert (returned.length == this.values.length);
+	
 		this.weights = (this.soustractionMatrice(this.weights, this.scalaireMatrice(learningFactor, this.differentialErrorWeights))); // We modifiy the weights matrix according to the backprop algorithm
 		
 		if (this.numberOfNeurons != 784)
@@ -159,22 +146,93 @@ public class Layer {
 	}
 	
 	//Produit Matriciel entre un vecteur et une matrice
-	public static double[] productMatrix(double[] MA, double[][] MB){
-		int ha = MA.length;
-		int hb = MB.length;
-		int lb = MB[0].length;
-		assert(ha==lb);
-		double[] produit = new double[hb];
+	public static double[] productMatrixVector(double[][] A, double[] V){
 		
-		for(int i=0; i<hb; i++){
-			double sum = 0;
-			for(int j=0; j<ha; j++){
-				sum+=MA[j]*MB[i][j];
+		assert(V.length == A.length);
+		
+		double temp;
+		double[] produit = new double[A[0].length];
+		
+		for (int j = 0 ; j < A[0].length ; j++){
+			
+			temp = 0;
+			
+			for(int k=0; k < V.length ; k++){
+			
+				temp += A[k][j]*V[k];
+			
 			}
-			produit[i]=sum;
+			
+			produit[j] = temp;
+		
 		}
 			
 		return produit;
+	}
+	
+	public static double[][] productMatrixMatrix(double[][] A, double[][] B) {
+		
+		double[][] result = new double[B.length][A[0].length];
+		assert (A.length == B[0].length);
+		double temp;
+		
+		for (int i = 0 ; i < B.length ; i++) {
+			
+			for (int j = 0 ; j < A[0].length ; j++) {
+				
+				temp = 0;
+				
+				for (int k = 0 ; k < A.length ; k++) {
+					
+					temp += A[k][j]*B[i][k];
+					
+				}
+				
+				result[i][j] = temp;
+				
+			}
+			
+			
+		}
+		
+		return result;
+		
+	}
+	
+	public static double[][] productVectorVector(double[] A, double[] B) {
+		
+		double[][] result = new double[B.length][A.length];
+		
+		for (int i = 0 ; i < B.length ; i++) {
+			
+			for (int j = 0 ; j < A.length ; j++) {
+				
+				result[i][j] = A[j]*B[i];
+				
+			}
+			
+		}
+		
+	return result;
+		
+	}
+
+	public static double[][] transpose(double[][] M) {
+		
+		double[][] result = new double[M[0].length][M.length];
+		
+		for (int i = 0 ; i < M[0].length ; i++) {
+			
+			for (int j = 0 ; j < M.length ; j++) {
+				
+				result[i][j] = M[j][i];
+				
+			}
+			
+		}
+		
+		return result;
+		
 	}
 	
 	//Implementation de la fonction d'activation

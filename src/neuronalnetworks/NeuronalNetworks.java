@@ -142,7 +142,7 @@ public class NeuronalNetworks {
 		for(int i=0; i<weights.length; i++){
 			for(int j=0; j<weights[i].length; j++){
 				for(int h=0; h<weights[i][j].length; h++){
-					weights[i][j][h] = randomWeights(weights[i][j].length);
+					weights[i][j][h] = randomWeights(weights.length);
 				}
 			}
 		}
@@ -150,10 +150,9 @@ public class NeuronalNetworks {
 	
 	public void extractWeights(int i, boolean extract){
 		double[][][] weights = new double[2][][];
-		weights[0] = new double[i][784];
-		weights[1] = new double[10][i];
+		weights[0] = new double[784][i];
+		weights[1] = new double[i][10];
 		this.weights = weights;
-		this.generateWeights();
 		
 		File f = new File(location + "/bestWeights");
 		//Extraction de l'objet weights
@@ -173,6 +172,11 @@ public class NeuronalNetworks {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+		}
+		else {
+			
+			this.generateWeights();
+			
 		}
 	}
 	
