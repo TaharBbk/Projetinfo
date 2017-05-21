@@ -33,7 +33,7 @@ public class Test {
 	public static double[] average(){
 		double[] avg = new double[784];
 		for(int i=0; i<10; i++){
-			for(int j=0; j<images[i].length; j++){
+			for(int j=0; j<images[0].length; j++){
 					avg = arraySum(avg,images[i][j]);
 			}
 		}
@@ -216,18 +216,31 @@ public class Test {
 		//assert (moyenne <= 10);
 	}
 
-	public double successRateCalculRAM(){
-		double reussit = 0;
-		int temoin = 0;
+	public double[] successRateCalculRAM(){
 		double[] result;
+		double success = 0;
+		double eqm=0;
+		double[] expected;
+		double[] temp;
 		for (int i=2000; i<4000; i++){
 			for (int j=0; j<10; j++){
 				try {
 					result = N.forwardPropagationRAM(images[j][i]);
+					
 					if (NeuronalNetworks.max(result) == j){
-						reussit = reussit +1 ;
+						success++;
 					}
-					temoin++;
+					
+					expected = new double[10];
+					Arrays.fill(expected,-1);
+					expected[j] = 1;
+					temp = Layer.lossFunction(result, expected);
+					for (int k = 0 ; k < 10 ; k++) {
+						
+						eqm += temp[k]/10;
+						
+					}
+					
 				}
 				catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -237,8 +250,10 @@ public class Test {
 				}
 			}
 		}
-		assert(temoin == 20000);
-		return reussit/20000;
+		double[] res = new double[2];
+		res[0] = success/20000;
+		res[1] = eqm/20000;
+		return res;
 	}
 	
 	public double rangMax(double[] input) {
@@ -304,30 +319,30 @@ public class Test {
 	public static void findTheRightOneRAM(int hiddenSizeStart, int hiddenSizeEnd, double learnStart, double learnEnd, double learnIncrement){
 		Test.loadImages();
 		Test T = new Test(hiddenSizeStart);
-		bestNeuralNetworks = new NeuronalNetworks(hiddenSizeStart, true);
+//		bestNeuralNetworks = new NeuronalNetworks(hiddenSizeStart, true);
 //		T.extractNeuralNetworks();
-		double bestMeanSquareError = Test.meanSquareErrorRAM();
+		double[] bestStats = new double[2]; // 0 = successrate, 1 = meanSquareError
+		double[] stats;
 		double currentLearnF = learnStart;
 		while(currentLearnF < learnEnd) {
 			for(int i=hiddenSizeStart; i<hiddenSizeEnd; i++){
-				NeuronalNetworks N = new NeuronalNetworks(i, false);
-				Test.N = N;
+				Test.N = new NeuronalNetworks(i, false);
 				T.learningRAM(currentLearnF);
-				NeuronalNetworks.MeanSquareError = meanSquareErrorRAM();
-				double successRAM = T.successRateCalculRAM();
-				Test.N.successRate = successRAM;
-				if(successRAM > Test.bestNeuralNetworks.successRate){
+				stats = T.successRateCalculRAM();
+				if(stats[0] > bestStats[0]){
 					NeuronalNetworks.LEARNING_FACTOR = currentLearnF;
 					Test.bestNeuralNetworks = Test.N;
+					bestStats[0] = stats[0];
+					bestStats[1] = stats[1];
 				}
 				System.out.println("Taille couche cachée : "+ i);
 				System.out.println("Learning factor : " + currentLearnF);
 			}
 			currentLearnF += learnIncrement;
 		}
-		System.out.println("Erreur quadratique moyenne : " + bestMeanSquareError);
-		System.out.println("Taille :" + Test.bestNeuralNetworks.weights[1][1].length);
-		System.out.println("Taux de succes :" + Test.bestNeuralNetworks.successRate);
+		System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
+//		System.out.println("Taille :" + Test.bestNeuralNetworks.weights[1][1].length);
+		System.out.println("Taux de succes :" + bestStats[0]);
 		System.out.println("Learning factor :" + NeuronalNetworks.LEARNING_FACTOR);
 	}
 	
@@ -340,8 +355,8 @@ public class Test {
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 		Test.findTheRightOneRAM(484,485,1,1.1,0.2);
-		Test.saveNeuralNetworks();
-		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
+//		Test.saveNeuralNetworks();
+//		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 		long endTime   = System.currentTimeMillis();
 		long totalTime = (endTime - startTime)/1000;
 		Test.tempsExecution(totalTime);

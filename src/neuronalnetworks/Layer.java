@@ -10,7 +10,7 @@ public class Layer {
 	double[][] differentialErrorWeights;	// The derivative of the error with respect to the weights of this layer
 	double[] differentialErrorProduct; 		// The derivative of the error with respect to the product of the weights of the precedent layer by the values of the precedent layer
 	int numberOfNeurons;					// The number of neurons in the layer
-	double activationFunctionLinearCoeff = 0.1;
+	double activationFunctionLinearCoeff = 0.2;
 	
 	//Constructeur 1
 	public Layer(double[] val, double[][] weight, Layer next){
@@ -65,17 +65,17 @@ public class Layer {
 	
 	//Fonction de propagation du reseau de neurones
 	public void propagate(){
+		this.activate();
 		if(this.next!=null){
 			this.next.setValues(productMatrixVector(this.weights, this.values));
-			this.next.execute();
+			this.next.propagate();
 		}
-		else
-			this.activate();
 	}
 	
 	public void forward_init() {
 		
-		this.propagate();
+		this.next.setValues(productMatrixVector(this.weights, this.values));
+		this.next.propagate();
 		
 	}
 	
@@ -86,10 +86,6 @@ public class Layer {
 	}
 	
 	//Execution de la forward propagation
-	public void execute(){
-		this.activate();
-		this.propagate();
-	}
 	
 	public void backprop_init(int[] expectedResult, double learningFactor){
 		this.differentialErrorValues = new double[this.numberOfNeurons];		// Initialisation of the vector based on info given when the constructor was called
