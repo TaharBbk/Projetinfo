@@ -129,17 +129,18 @@ public class Layer {
 			this.differentialErrorProduct[i] = activatedProduct[i]*incomingValues[i];
 			
 		}
-		assert (this.differentialErrorProduct.length == this.values.length);
 			
-		this.differentialErrorWeights = productVectorVector(this.values, this.differentialErrorProduct);
-		assert (this.differentialErrorWeights.length == this.differentialErrorProduct.length && this.differentialErrorWeights[0].length == this.values.length);
+		this.differentialErrorWeights = productVectorVector(this.differentialErrorProduct, this.values);
+		//assert (this.differentialErrorWeights.length == this.differentialErrorProduct.length && this.differentialErrorWeights[0].length == this.values.length);
 		
 		returned = productMatrixVector(transpose(this.weights), this.differentialErrorProduct);
 		assert (returned.length == this.values.length);
 	
+		assert (this.weights.length == this.differentialErrorWeights.length);
+		assert (this.weights[0].length == this.differentialErrorWeights[0].length);
 		this.weights = (this.soustractionMatrice(this.weights, this.scalaireMatrice(learningFactor, this.differentialErrorWeights))); // We modifiy the weights matrix according to the backprop algorithm
 		
-		if (this.numberOfNeurons != 784)
+		if (this.precedent != null)
 			this.precedent.backprop(returned, learningFactor);		// We call the method on the next layer to be processed, passing as input what we formerly calculated
 		
 		
