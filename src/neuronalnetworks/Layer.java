@@ -69,6 +69,14 @@ public class Layer {
 			this.next.setValues(productMatrix(this.values, this.weights));
 			this.next.execute();
 		}
+		else
+			this.activate();
+	}
+	
+	public void forward_init() {
+		
+		this.propagate();
+		
 	}
 	
 	public int getNumberOfNeurons() {
