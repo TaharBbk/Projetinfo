@@ -288,7 +288,7 @@ public class Layer {
 		
 		for (int i = 0 ; i < input.length ; i++) {
 			
-			result[i] = (-2)*(expected[i]-(double)input[i]);
+			result[i] = (-2)*((double)expected[i]-input[i]);
 			
 		}
 		
