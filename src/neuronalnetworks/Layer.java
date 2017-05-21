@@ -65,7 +65,16 @@ public class Layer {
 	
 	//Fonction de propagation du reseau de neurones
 	public void propagate(){
+		
+		for (int i = 0 ; i < this.values.length ; i++) {
+			
+			assert(!(Double.isNaN(this.values[i])));
+			
+			
+		}
+		
 		this.activate();
+		
 		if(this.next!=null){
 			this.next.setValues(productMatrixVector(this.weights, this.values));
 			this.next.propagate();
@@ -75,6 +84,7 @@ public class Layer {
 	public void forward_init() {
 		
 		this.next.setValues(productMatrixVector(this.weights, this.values));
+		
 		this.next.propagate();
 		
 	}
@@ -160,6 +170,9 @@ public class Layer {
 			for(int k=0; k < V.length ; k++){
 			
 				temp += A[k][j]*V[k];
+				assert (!(Double.isNaN(A[k][j])));
+				assert (!(Double.isNaN(V[k])));
+				assert (!(Double.isNaN(temp)));
 			
 			}
 			
