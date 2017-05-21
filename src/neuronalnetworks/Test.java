@@ -199,12 +199,12 @@ public class Test {
 	
 	public void learningRAM(double learningFactor){
 		//int count = 0;
-		double moyenne = 0;
+		//double moyenne = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<2000; i++){
 				//count++;
 				try {
-					moyenne+=N.backPropagationRAM(images[j][i],j, learningFactor);
+					N.backPropagationRAM(images[j][i],j, learningFactor);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -212,12 +212,13 @@ public class Test {
 				}
 			}
 		}
-		moyenne /= 20000;
+		//moyenne /= 20000;
 		//assert (moyenne <= 10);
 	}
 
 	public double successRateCalculRAM(){
 		double reussit = 0;
+		int temoin = 0;
 		double[] result;
 		for (int i=2000; i<4000; i++){
 			for (int j=0; j<10; j++){
@@ -226,6 +227,7 @@ public class Test {
 					if (NeuronalNetworks.max(result) == j){
 						reussit = reussit +1 ;
 					}
+					temoin++;
 				}
 				catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -235,6 +237,7 @@ public class Test {
 				}
 			}
 		}
+		assert(temoin == 20000);
 		return reussit/20000;
 	}
 	

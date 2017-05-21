@@ -73,16 +73,13 @@ public class NeuronalNetworks {
 	
 	public double[] forwardPropagationRAM(double [] image) throws IOException, ClassNotFoundException{
 		
-		
 		assert (image.length == 784);
 		
 		layers[0].setValues(image);
-		layers[0].activate();
-		layers[0].propagate();
+		layers[0].forward_init();
 		
-		return layers[numberOfWeights].getValues();
+		return layers[2].getValues();
 	}
-	
 	
 	//return the maximum of a table
 	public static int max(double[] T){
@@ -98,7 +95,7 @@ public class NeuronalNetworks {
 		return posmax;
 	}
 
-	public double backPropagationRAM(double[] image, int expectedResult, double learningFactor) throws  IOException, ClassNotFoundException{
+	public void backPropagationRAM(double[] image, int expectedResult, double learningFactor) throws  IOException, ClassNotFoundException{
 		
 		assert (image.length == 784);
 		
@@ -106,14 +103,17 @@ public class NeuronalNetworks {
 		Arrays.fill(expected, -1);
 		expected[expectedResult] = 1;	
 		
-		double moyenne = avgArray(this.forwardPropagationRAM(image));
+		//double moyenne = avgArray(this.forwardPropagationRAM(image));
+		
+		this.forwardPropagationRAM(image);
+		
 		for (int i = 0; i < nombreIterationsBackprop ; i ++) {
 			
-			this.layers[this.numberOfWeights].backprop_init(expected, learningFactor/(i+1));
+			this.layers[2].backprop_init(expected, learningFactor);
 			
 		}
 
-		return moyenne;
+		//return moyenne;
 	}
 	
 	public double avgArray(double[] Tableau) {
