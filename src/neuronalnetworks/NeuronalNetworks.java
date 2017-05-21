@@ -133,7 +133,7 @@ public class NeuronalNetworks {
 		double cte = Math.cbrt(3/(2*nombreEntrees));
 		double x = (Math.random()*2*cte) - cte;
 		while (Math.abs(x) < 0.0001)
-			x = (Math.random()*2*cte) - cte;
+			x = (Math.random()*2*cte) - 2*cte;
 		return x;
 	}
 	

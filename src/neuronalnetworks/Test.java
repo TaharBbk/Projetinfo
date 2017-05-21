@@ -133,8 +133,8 @@ public class Test {
 					assert (!(Double.isNaN(moyenne[k])));
 					assert (Double.isFinite(images[i][j][k]));
 					assert (Double.isFinite(moyenne[k]));
-					if (ecartType[k]<0.25){
-						ecartType[k]=0.25;
+					if (ecartType[k]<(0.0012755102)){
+						ecartType[k]=(0.0012755102);
 					}
 					images[i][j][k] = (images[i][j][k]-moyenne[k])/ecartType[k];
 					//assert (-1 <= images[i][j][k] && images[i][j][k] <= 1);
@@ -357,7 +357,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(484,485,1,1.1,0.2);
+		Test.findTheRightOneRAM(480,520,0.1,3,0.2);
 //		Test.saveNeuralNetworks();
 //		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 		long endTime   = System.currentTimeMillis();

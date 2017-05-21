@@ -10,7 +10,7 @@ public class Layer {
 	double[][] differentialErrorWeights;	// The derivative of the error with respect to the weights of this layer
 	double[] differentialErrorProduct; 		// The derivative of the error with respect to the product of the weights of the precedent layer by the values of the precedent layer
 	int numberOfNeurons;					// The number of neurons in the layer
-	double activationFunctionLinearCoeff = 0.2;
+	double activationFunctionLinearCoeff = 0.001;
 	
 	//Constructeur 1
 	public Layer(double[] val, double[][] weight, Layer next){
