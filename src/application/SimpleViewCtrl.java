@@ -35,6 +35,7 @@ import neuronalnetworks.NeuronalNetworks;
 public class SimpleViewCtrl {
 	
 	NeuronalNetworks nN = new NeuronalNetworks(492,true);
+	private static String OS = System.getProperty("os.name").toLowerCase();
 	
 	@FXML Button boutonAnalyser;
 	@FXML Button boutonNouveau;
@@ -90,10 +91,17 @@ public class SimpleViewCtrl {
 	void analyse() {
 		
 		String location = NeuronalNetworks.location;
+		String nom = "";
 		save();
 		
 		try {
-			double[] results = nN.forwardPropagationRAM(NeuronalNetworks.imageLecture(location + "/tmpResized.png"));
+			if(OS.indexOf("win") >= 0){
+				nom = location + "\\tmpResized.png";
+			}
+			else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+				nom = location + "/tmpResized.png";
+			}
+			double[] results = nN.forwardPropagationRAM(NeuronalNetworks.imageLecture(nom));
 			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
