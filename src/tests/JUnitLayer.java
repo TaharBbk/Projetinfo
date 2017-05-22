@@ -31,32 +31,28 @@ public class JUnitLayer {
 	@Test
 	public void testActivate() {
 		underTestLayer.activate();
-		double[] calculatedResult = {-0.05,
-									0.05,
-									0.08};
-		Assert.assertArrayEquals(underTestLayer.getValues(), calculatedResult, 0.00001);	
+		double[] calculatedResult = {-5E-4,
+									5E-4,
+									8E-4};
+		Assert.assertArrayEquals(underTestLayer.getValues(), calculatedResult, 1E-8);	
 	}
 	
 	@Test
 	public void testPropagate() {
 		underTestLayer2.propagate();
-		double[] calculatedResult = {-0.0089999,0.0,0.0329999};
-		Assert.assertArrayEquals(underTestLayer.getValues(), calculatedResult, 0.00001);
+		double[] calculatedResult = {-9.1E-7,3.8E-7,-4.2E-7};
+		Assert.assertArrayEquals(underTestLayer.getValues(), calculatedResult, 1E-8);
 	}
 	
 	@Test
-	public void testBackProp(){
-		double[] incomingValues = {0.71, 0.34, 0.18};
-		underTestLayer.backprop(incomingValues, 10);
-		double[][] calculatedWeight = {{1,0.5,0.2},
-				 			 {0.3,0.3,0},
-				 			 {-0.7,0.6,-0.4}};
+	public void testBackPropagation(){
+		underTestLayer.backprop_init(new double[] {-1, 1, -1}, 1.0);
+		double[][] calculatedWeight = {{1.4686682,-0.0523056,2.172679},
+				 			 {-0.1686682,0.8523056,-1.972679},
+				 			 {-1.4498692,1.4836890,-3.5562864}};
 		for (int i=0; i<3; i++){
 			Assert.assertEquals(underTestLayer.getPrecedent(), underTestLayer2);
-			Assert.assertArrayEquals(underTestLayer.getWeights()[i], calculatedWeight[i], 0.00001);
-			for (int j=0; j<3; j++){
-				System.out.println(i+","+j+": " + underTestLayer.getWeights()[i][j]);
-			}
+			Assert.assertArrayEquals(underTestLayer2.getWeights()[i], calculatedWeight[i], 0.00001);
 		}
 	}
 	
