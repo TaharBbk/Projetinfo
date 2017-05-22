@@ -64,7 +64,7 @@ public class SimpleViewCtrl {
 	@FXML Text txSuccess;
 	@FXML ImageView imageResized;
 	
-	//save a resised png version of the canvas
+	//save a resized png version of the canvas
     void save() {
     	String location = NeuronalNetworks.location;
 		File file = new File(location + "/tmp.png");
@@ -93,7 +93,7 @@ public class SimpleViewCtrl {
 		save();
 		
 		try {
-			double[] results = nN.forwardPropagationRAM(NeuronalNetworks.imageLecture("tmpResized"));
+			double[] results = nN.forwardPropagationRAM(NeuronalNetworks.imageLecture(location + "/tmpResized.png"));
 			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

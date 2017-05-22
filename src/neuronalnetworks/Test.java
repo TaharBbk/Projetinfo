@@ -357,9 +357,9 @@ public class Test {
 	
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		Test.findTheRightOneRAM(480,520,0.1,3,0.2);
-//		Test.saveNeuralNetworks();
-//		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
+		Test.findTheRightOneRAM(480,481,1,1.1,0.2);
+		Test.saveNeuralNetworks();
+		System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 		long endTime   = System.currentTimeMillis();
 		long totalTime = (endTime - startTime)/1000;
 		Test.tempsExecution(totalTime);
