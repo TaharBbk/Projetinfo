@@ -18,9 +18,9 @@ public class NeuralNetworks {
 	Layer[] layers;
 	public double[][][] weights; //Tableau contenant les matrices des poids
 	private int numberOfWeights; //Nombre de matrices de poids
-	public static double LEARNING_FACTOR;
+	double learningFactor;
 	double successRate;
-	public static double MeanSquareError;
+	double meanSquareError;
 	public static final int nombreIterationsBackprop = 1;
 
 	
@@ -230,7 +230,7 @@ public class NeuralNetworks {
 	 */
 	public void extractMeanSquareError(){
 		//Besoin d'initialiser l'erreur quadratique moyenne si le fichier n'existe pas
-		NeuralNetworks.MeanSquareError = 1;
+		this.meanSquareError = 1;
 		
 		FileInputStream fis;
 		File f = new File(location + "/bestMeanSquareError");
@@ -239,7 +239,7 @@ public class NeuralNetworks {
 				fis = new FileInputStream (NeuralNetworks.location + "/bestMeanSquareError");
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object meanSquareError= ois.readObject();
-				NeuralNetworks.MeanSquareError = (double) meanSquareError;
+				this.meanSquareError = (double) meanSquareError;
 				ois.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -257,7 +257,7 @@ public class NeuralNetworks {
 	 */
 	public void extractLearningFactor(){
 		//Besoin d'initialiser le learning factor si le fichier n'existe pas
-		NeuralNetworks.LEARNING_FACTOR = 15;
+		this.learningFactor = 0.2;
 		
 		FileInputStream fis;
 		File f = new File(location + "/bestLearningFactor");
@@ -266,7 +266,7 @@ public class NeuralNetworks {
 				fis = new FileInputStream (NeuralNetworks.location + "/bestLearningFactor");
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object learningFactor= ois.readObject();
-				NeuralNetworks.LEARNING_FACTOR = (double) learningFactor;
+				this.learningFactor = (double) learningFactor;
 				ois.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

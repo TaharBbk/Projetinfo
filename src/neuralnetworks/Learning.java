@@ -205,8 +205,8 @@ public class Learning {
 			
 			oos1.writeObject(Learning.bestNeuralNetworks.weights);
 			oos2.writeObject(Learning.bestNeuralNetworks.successRate);
-			oos3.writeObject(NeuralNetworks.LEARNING_FACTOR);
-			oos4.writeObject(NeuralNetworks.MeanSquareError);
+			oos3.writeObject(Learning.bestNeuralNetworks.learningFactor);
+			oos4.writeObject(Learning.bestNeuralNetworks.meanSquareError);
 			
 			oos1.close();
 			oos2.close();
@@ -293,12 +293,12 @@ public class Learning {
 		T.extractNeuralNetworks();
 		double[] bestStats = new double[2]; // 0 = successrate, 1 = meanSquareError
 		bestStats[0] = Learning.bestNeuralNetworks.successRate;
-		bestStats[1] = Learning.bestNeuralNetworks.MeanSquareError;
+		bestStats[1] = Learning.bestNeuralNetworks.meanSquareError;
 		//On affiche le meilleur reseaux de neurones connu a ce jour 
 		System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
 		System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
 		System.out.println("Taux de succes : " + bestStats[0]);
-		System.out.println("Learning factor : " + NeuralNetworks.LEARNING_FACTOR);
+		System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
 		System.out.println("-----------------------");
 		Learning.saveNeuralNetworks();
 		double[] stats;
@@ -318,10 +318,10 @@ public class Learning {
 				System.out.println("Taux de succes : " + stats[0]);
 				if(stats[0] > bestStats[0]){
 					//Mise a jour du reseaux et sauvegarde
-					NeuralNetworks.LEARNING_FACTOR = currentLearnF;
+					Learning.bestNeuralNetworks.learningFactor = currentLearnF;
 					Learning.bestNeuralNetworks = Learning.N;
 					Learning.bestNeuralNetworks.successRate=stats[0];
-					Learning.bestNeuralNetworks.MeanSquareError=stats[1];
+					Learning.bestNeuralNetworks.meanSquareError=stats[1];
 					bestStats[0] = stats[0];
 					bestStats[1] = stats[1];
 					Learning.saveNeuralNetworks();
@@ -335,7 +335,7 @@ public class Learning {
 			System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
 			System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
 			System.out.println("Taux de succes : " + bestStats[0]);
-			System.out.println("Learning factor : " + NeuralNetworks.LEARNING_FACTOR);
+			System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
 			System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 			System.out.println("---------------------------------------------------------");
 		}
@@ -343,7 +343,7 @@ public class Learning {
 		System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
 		System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
 		System.out.println("Taux de succes : " + bestStats[0]);
-		System.out.println("Learning factor : " + NeuralNetworks.LEARNING_FACTOR);
+		System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
 		System.out.println("-----------------------");
 	}
 	
