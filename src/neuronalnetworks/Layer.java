@@ -11,15 +11,15 @@ public class Layer {
 	double[] differentialErrorProduct; 		// The derivative of the error with respect to the product of the weights of the precedent layer by the values of the precedent layer
 	int numberOfNeurons;					// The number of neurons in the layer
 	/**
-	 * Variable qui détermine le coefficient linéaire dans la fonction d'activation
+	 * Variable qui determine le coefficient lineaire dans la fonction d'activation
 	 */
 	double activationFunctionLinearCoeff = 0.001;
 	
 	/**
-	 * Un constructeur qui permet de créer une couche en prenant une matrice de poids donnée
+	 * Un constructeur qui permet de creer une couche en prenant une matrice de poids donnee
 	 * @param val le vecteur des valeurs des neurones de la couche
-	 * @param weight la matrice de poids que possède la couche
-	 * @param next la couche suivante dans le réseau de neurones
+	 * @param weight la matrice de poids que possede la couche
+	 * @param next la couche suivante dans le reseau de neurones
 	 */
 	public Layer(double[] val, double[][] weight, Layer next){
 		this.values = val;
@@ -30,7 +30,7 @@ public class Layer {
 	}
 	
 	/**
-	 * Un constructeur qui ne demande pas de matrice de poids à la création de la couche
+	 * Un constructeur qui ne demande pas de matrice de poids a la creation de la couche
 	 * @param val La liste des valeurs des neurones de la couche
 	 */
 	public Layer(double[] val){
@@ -39,7 +39,7 @@ public class Layer {
 	}
 	
 	/**
-	 * Une méthode pour obtenir les poids de la couche
+	 * Une methode pour obtenir les poids de la couche
 	 * @return la matrice des poids
 	 */
 	public double[][] getWeights() {
@@ -47,7 +47,7 @@ public class Layer {
 	}
 
 	/**
-	 * Une méthode pour changer les poids de la couche
+	 * Une methode pour changer les poids de la couche
 	 * @param weights les nouveaux poids de la couche
 	 */
 	public void setWeights(double[][] weights) {
@@ -55,7 +55,7 @@ public class Layer {
 	}
 
 	/**
-	 * Une méthode pour assigner des valeurs aux neurones de la couche
+	 * Une methode pour assigner des valeurs aux neurones de la couche
 	 * @param values le vecteur des nouvelles valeurs
 	 */
 	public void setValues(double[] values) {
@@ -65,31 +65,31 @@ public class Layer {
 	}
 	
 	/**
-	 * Une méthode pour définir la couche précédente dans le réseau de neurones
-	 * @param p la couche étant à définir comme étant la précédente de celle-ci
+	 * Une methode pour definir la couche precedente dans le reseau de neurones
+	 * @param p la couche etant a definir comme etant la precedente de celle-ci
 	 */
 	public void setPrecedent(Layer p) {
 		this.precedent = p;
 	}
 	
 	/**
-	 * Une méthode pour obtenir la couche précédent cette couche
-	 * @return la couche précédent cette couche si elle existe, null sinon
+	 * Une methode pour obtenir la couche precedent cette couche
+	 * @return la couche precedent cette couche si elle existe, null sinon
 	 */
 	public Layer getPrecedent() {
 		return this.precedent;
 	}
 	
 	/**
-	 * Une méthode pour définir la couche suivant celle-ci dans le réseau de neurones
-	 * @param n la couche à définir comme étant la suivante
+	 * Une methode pour definir la couche suivant celle-ci dans le reseau de neurones
+	 * @param n la couche a definir comme etant la suivante
 	 */
 	public void setNext(Layer n) {
 		this.next = n;
 	}
 
 	/**
-	 * Une méthode pour récupérer la valeur des neurones de la couche cachée
+	 * Une methode pour recuperer la valeur des neurones de la couche cachee
 	 * @return la valeur des neurones de la couche
 	 */
 	public double[] getValues(){
@@ -97,18 +97,18 @@ public class Layer {
 	}
 	
 	/**
-	 * Une méthode pour appliquer la fonction d'activation aux valeurs de cette couche
+	 * Une methode pour appliquer la fonction d'activation aux valeurs de cette couche
 	 */
 	public void activate(){
 		this.values=activationFunction(this.values);
 	}
 	
 	/**
-	 * Une méthode pour effectuer la forward propagation
+	 * Une methode pour effectuer la forward propagation
 	 */
 	public void propagate(){
 		
-		//On vérifie qu'aucune valeur qui a été entrée est NaN
+		//On verifie qu'aucune valeur qui a ete entree est NaN
 		for (int i = 0 ; i < this.values.length ; i++) {
 			
 			assert(!(Double.isNaN(this.values[i])));
@@ -119,8 +119,8 @@ public class Layer {
 		//On effectue l'activation des valeurs
 		this.activate();
 		
-		/*S'il existe une couche suivante, on modifie ses valeurs comme étant 
-		 * le résultat de la multiplication de la matrice des poids de cette couche
+		/*S'il existe une couche suivante, on modifie ses valeurs comme etant 
+		 * le resultat de la multiplication de la matrice des poids de cette couche
 		 * avec les valeurs de cette couche*/
 		if(this.next!=null){
 			this.next.setValues(productMatrixVector(this.weights, this.values));
@@ -129,19 +129,19 @@ public class Layer {
 	}
 	
 	/**
-	 * Une méthode pour initialiser la forward propagation
+	 * Une methode pour initialiser la forward propagation
 	 */
 	public void forward_init() {
 		
-		//Il ne faut pas appliquer la fonction d'activation pour la couche d'entrée, on passe donc directement à la transmission des valeurs
+		//Il ne faut pas appliquer la fonction d'activation pour la couche d'entree, on passe donc directement a la transmission des valeurs
 		this.next.setValues(productMatrixVector(this.weights, this.values));
 		this.next.propagate();
 		
 	}
 	
 	/**
-	 * Une méthode pour obtenir le nombre de neurones présents dans la couche
-	 * @return le nombre de neurones présents dans la couche
+	 * Une methode pour obtenir le nombre de neurones presents dans la couche
+	 * @return le nombre de neurones presents dans la couche
 	 */
 	public int getNumberOfNeurons() {
 		
@@ -150,8 +150,8 @@ public class Layer {
 	}
 	
 	/**
-	 * Une méthode pour initialiser la backpropagation sur cette couche
-	 * @param expectedResult le tableau des valeurs attendues à la sortie
+	 * Une methode pour initialiser la backpropagation sur cette couche
+	 * @param expectedResult le tableau des valeurs attendues a la sortie
 	 * @param learningFactor le coefficient d'apprentissage pour cette backpropagation
 	 */
 	public void backprop_init(double[] expectedResult, double learningFactor){
@@ -169,7 +169,7 @@ public class Layer {
 		for (int i = 0 ; i < this.differentialErrorValues.length ; i++)
 			assert (!(Double.isNaN(this.differentialErrorValues[i])));
 		
-		//On lance l'appel de la backprop sur la couche précédente en passant en argument le vecteur que l'on vient de calculer, ainsi que le facteur d'apprentisssage qui reste le même
+		//On lance l'appel de la backprop sur la couche precedente en passant en argument le vecteur que l'on vient de calculer, ainsi que le facteur d'apprentisssage qui reste le même
 		this.precedent.backprop(this.differentialErrorValues, learningFactor);						
 		
 	}
@@ -179,9 +179,9 @@ public class Layer {
 	 Note : in this method we always call the weights matrix from the layer stored in the *precedent* variable, because of the way the forward propagation is implemented
 	 */
 	/**
-	 * Méthode pour effectuer la backprop proprement dite : elle modifie les poids de la couche et est appellée récursivement sur la couche précédent si elle existe
-	 * @param incomingValues le jacobien de l'erreur par les valeurs de la couche suivante dans le réseau de neurones : celle qui a appellé la méthode
-	 * @param learningFactor le facteur d'apprentissage qui définit l'importance de la correction sur les poids
+	 * Methode pour effectuer la backprop proprement dite : elle modifie les poids de la couche et est appellee recursivement sur la couche precedent si elle existe
+	 * @param incomingValues le jacobien de l'erreur par les valeurs de la couche suivante dans le reseau de neurones : celle qui a appelle la methode
+	 * @param learningFactor le facteur d'apprentissage qui definit l'importance de la correction sur les poids
 	 */
 	public void backprop(double[] incomingValues, double learningFactor) {
 		
@@ -204,16 +204,16 @@ public class Layer {
 		 */
 		double[] product;
 		/**
-		 * Vecteur contenant le produit de la matrice des poids de cette couche et du vecteur des valeurs de cette couche, auquel on a appliqué la dérivée de la fonction d'activation sur chacune de ses composantes
+		 * Vecteur contenant le produit de la matrice des poids de cette couche et du vecteur des valeurs de cette couche, auquel on a applique la derivee de la fonction d'activation sur chacune de ses composantes
 		 */
 		double[] activatedProduct;
 		/**
-		 * Vecteur conteant le jacobien de l'erreur par les valeurs de cette couche, et qui sera passé en argument dans l'appel récursif de la méthode backprop
+		 * Vecteur conteant le jacobien de l'erreur par les valeurs de cette couche, et qui sera passe en argument dans l'appel recursif de la methode backprop
 		 */
 		double[] returned = new double[this.numberOfNeurons];
 		
-		// On calcule les valeurs des différentes variables
-		// Pour plus de précisions sur les opérations en jeu, veuillez consulter l'annexe du rapport
+		// On calcule les valeurs des differentes variables
+		// Pour plus de precisions sur les operations en jeu, veuillez consulter l'annexe du rapport
 		
 		product = productMatrixVector(this.weights, this.values);
 		activatedProduct = this.activationDerivative(product);
@@ -232,10 +232,10 @@ public class Layer {
 		assert (this.weights.length == this.differentialErrorWeights.length);
 		assert (this.weights[0].length == this.differentialErrorWeights[0].length);
 		
-		// On met à jour la valeur des poids de cette couche
+		// On met a jour la valeur des poids de cette couche
 		this.weights = (this.soustractionMatrice(this.weights, this.scalaireMatrice(learningFactor, this.differentialErrorWeights))); 
 		
-		// Si une couche précédente existe, alors on appelle la méthode en passant en argument la variable returned et le même learningFactor
+		// Si une couche precedente existe, alors on appelle la methode en passant en argument la variable returned et le même learningFactor
 		if (this.precedent != null)
 			this.precedent.backprop(returned, learningFactor);		// We call the method on the next layer to be processed, passing as input what we formerly calculated
 		
@@ -243,26 +243,26 @@ public class Layer {
 	}
 	
 	/**
-	 * Méthode qui effectue le produit matriciel d'une matrice par un vecteur : AxV
-	 * @param A matrice utilisée dans le calcul
-	 * @param V vecteur utilisé dans le calcul
+	 * Methode qui effectue le produit matriciel d'une matrice par un vecteur : AxV
+	 * @param A matrice utilisee dans le calcul
+	 * @param V vecteur utilise dans le calcul
 	 * @return le produit matrice x vecteur
 	 */
 	public static double[] productMatrixVector(double[][] A, double[] V){
 		
-		// On vérifie que les conditions nécéssaires pour effectuer le produit sont présentes
+		// On verifie que les conditions necessaires pour effectuer le produit sont presentes
 		assert(V.length == A.length);
 		
 		/**
-		 * La variable utilisée pour sauvegarder des valeurs intermédiaires dans le calcul
+		 * La variable utilisee pour sauvegarder des valeurs intermediaires dans le calcul
 		 */
 		double temp;
 		/**
-		 * La variable qui contient le résultat du produit
+		 * La variable qui contient le resultat du produit
 		 */
 		double[] produit = new double[A[0].length];
 		
-		//Le calcul nécéssite l'utilisation de deux boucles
+		//Le calcul necessite l'utilisation de deux boucles
 		for (int j = 0 ; j < A[0].length ; j++){
 			
 			temp = 0;
@@ -281,23 +281,23 @@ public class Layer {
 	}
 	
 	/**
-	 * Méthode qui effectue le produit entre deux matrices AxB
-	 * @param A matrice à gauche du produit
-	 * @param B matrice à droite du produit
+	 * Methode qui effectue le produit entre deux matrices AxB
+	 * @param A matrice a gauche du produit
+	 * @param B matrice a droite du produit
 	 * @return le produit de matrices
 	 */
 	public static double[][] productMatrixMatrix(double[][] A, double[][] B) {
 		
 		/**
-		 * Variable qui contient le résultat du produit, et qui sera retournée
+		 * Variable qui contient le resultat du produit, et qui sera retournee
 		 */
 		double[][] result = new double[B.length][A[0].length];
 		
-		//On vérifie que les conditions nécéssaires au produit sont présentes
+		//On verifie que les conditions necessaires au produit sont presentes
 		assert (A.length == B[0].length);
 		
 		/**
-		 * Variable utilisée pour stocker des résultats intermédiaires
+		 * Variable utilisee pour stocker des resultats intermediaires
 		 */
 		double temp;
 		
@@ -325,15 +325,15 @@ public class Layer {
 	}
 	
 	/**
-	 * Méthode qui effectue le produit entre deux vecteurs, le premier colonne et le deuxieme ligne
-	 * @param A vecteur colonne passé en argument
-	 * @param B vecteur ligne passé en argument
+	 * Methode qui effectue le produit entre deux vecteurs, le premier colonne et le deuxieme ligne
+	 * @param A vecteur colonne passe en argument
+	 * @param B vecteur ligne passe en argument
 	 * @return la matrice produit des deux vecteurs
 	 */
 	public static double[][] productVectorVector(double[] A, double[] B) {
 		
 		/**
-		 * Variable qui contient le résultat qui sera retourné
+		 * Variable qui contient le resultat qui sera retourne
 		 */
 		double[][] result = new double[B.length][A.length];
 		
@@ -352,14 +352,14 @@ public class Layer {
 	}
 
 	/**
-	 * Méthode qui effectue la transposée d'une matrice
-	 * @param M matrice à transposer
-	 * @return la transposée de la matrice passée en argument
+	 * Methode qui effectue la transposee d'une matrice
+	 * @param M matrice a transposer
+	 * @return la transposee de la matrice passee en argument
 	 */
 	public static double[][] transpose(double[][] M) {
 		
 		/**
-		 * Variable utilisée pour stocker le résultat qui sera renvoyé
+		 * Variable utilisee pour stocker le resultat qui sera renvoye
 		 */
 		double[][] result = new double[M[0].length][M.length];
 		
@@ -380,12 +380,12 @@ public class Layer {
 	/**
 	 * Fonction d'activation de la couche
 	 * @param M vecteur de double
-	 * @return le vecteur passé en argument, dont toutes les composantes x_i ont été remplacées par F(x_i) avec F fonction d'activation
+	 * @return le vecteur passe en argument, dont toutes les composantes x_i ont ete remplacees par F(x_i) avec F fonction d'activation
 	 */
 	public double[] activationFunction(double[] M){
 		
 		/**
-		 * Variable contenant le résultat, qui sera retournée
+		 * Variable contenant le resultat, qui sera retournee
 		 */
 		double[] result = new double[M.length];
 		
@@ -400,14 +400,14 @@ public class Layer {
 	}
 	
 	/**
-	 * Méthode qui mappe la dérivée de la fonction d'activation sur le vecteur passé en argument
+	 * Methode qui mappe la derivee de la fonction d'activation sur le vecteur passe en argument
 	 * @param input vecteur sur lequel on va effectuer le calcul
-	 * @return vecteur avec les composantes remplacées par leur image par la dérivée de la fonction d'activation
+	 * @return vecteur avec les composantes remplacees par leur image par la derivee de la fonction d'activation
 	 */
 	public double[] activationDerivative(double[] input) {
 		
 		/**
-		 * Variable intermédiaire qui contient les valeurs du vecteur à retourner
+		 * Variable intermediaire qui contient les valeurs du vecteur a retourner
 		 */
 		double[] result = new double[input.length];
 		
@@ -421,17 +421,17 @@ public class Layer {
 	}
 	
 	/**
-	 * Méthode qui à partir d'un vecteur de valeurs données et un vecteur de valeurs attendues, renvoie le vecteur de de l'erreur quadratique de chaque composante des vecteurs passés en entrée
-	 * @param input vecteur de données
+	 * Methode qui a partir d'un vecteur de valeurs donnees et un vecteur de valeurs attendues, renvoie le vecteur de de l'erreur quadratique de chaque composante des vecteurs passes en entree
+	 * @param input vecteur de donnees
 	 * @param expected vecteur des valeurs attendues
-	 * @return le vecteur de de l'erreur quadratique de chaque composante des vecteurs passés en entrée
+	 * @return le vecteur de de l'erreur quadratique de chaque composante des vecteurs passes en entree
 	 */
 	public static double[] lossFunction(double[] input, double[] expected) {
 		
-		//On vérifie que la condition nécéssaire est respectée
+		//On verifie que la condition necessaire est respectee
 		assert(input.length == expected.length);
 		/**
-		 * Variable intermédiaire qui stocke le résultat à retourner
+		 * Variable intermediaire qui stocke le resultat a retourner
 		 */
 		double[] result = new double[input.length];
 		
@@ -446,10 +446,10 @@ public class Layer {
 	}
 	
 	/**
-	 * Méthode qui calcule la dérivée de la fonction de perte sur chaque composante de deux vecteurs
-	 * @param input vecteur de valeurs donées
+	 * Methode qui calcule la derivee de la fonction de perte sur chaque composante de deux vecteurs
+	 * @param input vecteur de valeurs donees
 	 * @param expected vecteur de valeurs attendues
-	 * @return vecteur de la dérivée de la fonction de perte sur chaque composante de deux vecteurs
+	 * @return vecteur de la derivee de la fonction de perte sur chaque composante de deux vecteurs
 	 */
 	public static double[] lossFunctionDerivative(double[] input, double[] expected) {
 		
@@ -466,10 +466,10 @@ public class Layer {
 	}
 	
 	/**
-	 * Méthode qui effectue la multiplication d'une matrice par un scalaire
-	 * @param scalaire scalaire à multiplier
+	 * Methode qui effectue la multiplication d'une matrice par un scalaire
+	 * @param scalaire scalaire a multiplier
 	 * @param matrice matrice qu'on souhaite multiplier
-	 * @return matrice multipliée par un scalaire
+	 * @return matrice multipliee par un scalaire
 	 */
 	public double[][] scalaireMatrice(double scalaire, double[][] matrice) {
 		
@@ -488,10 +488,10 @@ public class Layer {
 	}
 	
 	/**
-	 * Méthode qui effectue la soustraction de deux matrices
+	 * Methode qui effectue la soustraction de deux matrices
 	 * @param m1 matrice qui est dans la partie positive de la soustraction
-	 * @param m2 matrice dans la partie négative de la soustraction
-	 * @return la matrice résultat de la soustraction des deux matrices passées en entrée
+	 * @param m2 matrice dans la partie negative de la soustraction
+	 * @return la matrice resultat de la soustraction des deux matrices passees en entree
 	 */
 	public double[][] soustractionMatrice(double[][] m1, double[][] m2) {
 		

@@ -18,7 +18,7 @@ public class NeuronalNetworks {
 	public final static String location = new File("").getAbsolutePath();
 	static int seuil = 150;
 	/**
-	 * Array qui contient les couches du réseau de neurones : 0 - entrée, 1 - cachée, 2 - sortie
+	 * Array qui contient les couches du reseau de neurones : 0 - entree, 1 - cachee, 2 - sortie
 	 */
 	Layer[] layers;
 	public double[][] images = new double[60000][784];
@@ -69,8 +69,8 @@ public class NeuronalNetworks {
 	
 	/**
 	 * Constructeur de la classe
-	 * @param l taille de la couche cachée
-	 * @param extract boolean qui dicte si les poids sont à extraire d'un réseau sauvegardé ou pas
+	 * @param l taille de la couche cachee
+	 * @param extract boolean qui dicte si les poids sont a extraire d'un reseau sauvegarde ou pas
 	 */
 	public NeuronalNetworks(int l, boolean extract) {
 		//Extraction des poids
@@ -88,15 +88,15 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Méthode qui effectue une forward propagation en utilisant une image chargée en RAM
-	 * @param image l'array qui contient les pixels de l'image à analyser
-	 * @return l'array qui contient les valeurs de sortie du réseau de neurones après la forward propagation
+	 * Methode qui effectue une forward propagation en utilisant une image chargee en RAM
+	 * @param image l'array qui contient les pixels de l'image a analyser
+	 * @return l'array qui contient les valeurs de sortie du reseau de neurones apres la forward propagation
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
 	public double[] forwardPropagationRAM(double [] image) throws IOException, ClassNotFoundException{
 		
-		//On vérifie que l'array passé en argument est de la bonne taille
+		//On verifie que l'array passe en argument est de la bonne taille
 		assert (image.length == 784);
 		
 		layers[0].setValues(image);
@@ -106,9 +106,9 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Méthode qui cherche le rang du maximum d'un array
-	 * @param T array dont on cherche le rang de l'élément de valeur maximum
-	 * @return rang de l'élément de valeur maximum de l'array
+	 * Methode qui cherche le rang du maximum d'un array
+	 * @param T array dont on cherche le rang de l'element de valeur maximum
+	 * @return rang de l'element de valeur maximum de l'array
 	 */
 	public static int max(double[] T){
 		
@@ -127,10 +127,10 @@ public class NeuronalNetworks {
 	}
 
 	/**
-	 * Méthode qui effectue une backprop sur une image chargée en RAM
-	 * @param image l'array contenant les pixels de l'image à analyser
-	 * @param expectedResult l'array contenant les résultats attendus à la sortie du réseau de neurones
-	 * @param learningFactor le facteur d'apprentissage souhaité pour cette backprop
+	 * Methode qui effectue une backprop sur une image chargee en RAM
+	 * @param image l'array contenant les pixels de l'image a analyser
+	 * @param expectedResult l'array contenant les resultats attendus a la sortie du reseau de neurones
+	 * @param learningFactor le facteur d'apprentissage souhaite pour cette backprop
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
@@ -142,10 +142,10 @@ public class NeuronalNetworks {
 		Arrays.fill(expected, -1);
 		expected[expectedResult] = 1;	
 		
-		//On effectue d'abord la forward propagation afin de calculer les valeurs prises par les neurones, nécéssaires pour effectuer la backprop
+		//On effectue d'abord la forward propagation afin de calculer les valeurs prises par les neurones, necessaires pour effectuer la backprop
 		this.forwardPropagationRAM(image);
 		
-		//On itère le processus de backprop un nombre de fois défini
+		//On itere le processus de backprop un nombre de fois defini
 		for (int i = 0; i < nombreIterationsBackprop ; i ++) {
 			
 			this.layers[2].backprop_init(expected, learningFactor);
@@ -154,9 +154,9 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Méthode qui renvoie la somme des éléments d'un array
-	 * @param Tableau array dont on cherche à sommer les éléments
-	 * @return somme des éléments de l'array passé en argument
+	 * Methode qui renvoie la somme des elements d'un array
+	 * @param Tableau array dont on cherche a sommer les elements
+	 * @return somme des elements de l'array passe en argument
 	 */
 	public double avgArray(double[] Tableau) {
 		
@@ -172,23 +172,23 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Fonction qui génère un nombre aléatoire de loi uniforme de moyenne 0 et de variance déterminée par l'argument
-	 * @param nombreEntrees un coefficient qui détermine la variance de la fonction, qui est de 1/nombreEntrees
-	 * @return un nombre aléatoire qui dépend des arguments
+	 * Fonction qui genere un nombre aleatoire de loi uniforme de moyenne 0 et de variance determinee par l'argument
+	 * @param nombreEntrees un coefficient qui determine la variance de la fonction, qui est de 1/nombreEntrees
+	 * @return un nombre aleatoire qui depend des arguments
 	 */
 	public double randomWeights(double nombreEntrees){
 		
 		double cte = Math.cbrt(3/(2*nombreEntrees));
 		double x = (Math.random()*2*cte) - cte;
 		
-		// On évite que le nombre soit trop faible pour ne pas avoir de poids inutile dans le réseau de neurones
+		// On evite que le nombre soit trop faible pour ne pas avoir de poids inutile dans le reseau de neurones
 		while (Math.abs(x) < 0.0001)
 			x = (Math.random()*2*cte) - cte;
 		return x;
 	}
 	
 	/**
-	 * Méthode qui pour chaque poids assigne une valeur aléatoire qui dépend de la largeur de la matrice de poids dans laquelle il se trouve
+	 * Methode qui pour chaque poids assigne une valeur aleatoire qui depend de la largeur de la matrice de poids dans laquelle il se trouve
 	 */
 	public void generateWeights(){
 
@@ -202,9 +202,9 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Méthode qui charge les matrices de poids d'un réseau de neurones sauvegardé ou génère de nouveaux poids aléatoires
-	 * @param i Taille de la couche cachée dans le réseau à charger / générer
-	 * @param extract boolean qui indique si oui ou non il faut charger des poids d'un réseau de neurones sauvegardé, ou bien en générer de nouveaux
+	 * Methode qui charge les matrices de poids d'un reseau de neurones sauvegarde ou genere de nouveaux poids aleatoires
+	 * @param i Taille de la couche cachee dans le reseau a charger / generer
+	 * @param extract boolean qui indique si oui ou non il faut charger des poids d'un reseau de neurones sauvegarde, ou bien en generer de nouveaux
 	 */
 	public void extractWeights(int i, boolean extract){
 		double[][][] weights = new double[2][][];
@@ -239,7 +239,7 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Fonction qui sauvegarde les poids de l'instance actuelle de la classe, afin de les réutiliser plus tard
+	 * Fonction qui sauvegarde les poids de l'instance actuelle de la classe, afin de les reutiliser plus tard
 	 */
 	public void saveWeights(){
 		//Enregistrement de l'objet weights
@@ -259,7 +259,7 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Fonction qui permet de charger le taux de succès sauvegardé
+	 * Fonction qui permet de charger le taux de succes sauvegarde
 	 */
 	public void extractSuccessRate(){
 		this.successRate = 0;
@@ -285,7 +285,7 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Fonction qui permet de charger l'erreur quadratique moyenne sauvegardée
+	 * Fonction qui permet de charger l'erreur quadratique moyenne sauvegardee
 	 */
 	public void extractMeanSquareError(){
 		NeuronalNetworks.MeanSquareError = 1;
@@ -311,7 +311,7 @@ public class NeuronalNetworks {
 	}
 	
 	/**
-	 * Méthode qui permet de charger le facteur d'apprentissage sauvegardé
+	 * Methode qui permet de charger le facteur d'apprentissage sauvegarde
 	 */
 	public void extractLearningFactor(){
 		NeuronalNetworks.LEARNING_FACTOR = 15;
@@ -337,7 +337,7 @@ public class NeuronalNetworks {
 	}
 
 	/**
-	 * Méthode qui retourne le taux de succès de ce réseau de neurones au cours de la validation
+	 * Methode qui retourne le taux de succes de ce reseau de neurones au cours de la validation
 	 * @return
 	 */
 	public String getSuccessRate() {
