@@ -26,16 +26,15 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import neuronalnetworks.NeuralNetworks;
+import neuronalnetworks.Test;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 
-import neuronalnetworks.NeuronalNetworks;
-
 public class SimpleViewCtrl {
 	
-	NeuronalNetworks nN = new NeuronalNetworks(492,true);
-	private static String OS = System.getProperty("os.name").toLowerCase();
+	NeuralNetworks nN = new NeuralNetworks(492,true);
 	
 	@FXML Button boutonAnalyser;
 	@FXML Button boutonNouveau;
@@ -65,43 +64,57 @@ public class SimpleViewCtrl {
 	@FXML Text txSuccess;
 	@FXML ImageView imageResized;
 	
-	//save a resized png version of the canvas
-    void save() {
-    	String location = NeuronalNetworks.location;
-		File file = new File(location + "/tmp.png");
-		File fileResized = new File(location + "/tmpResized.png");
-		try {
-            WritableImage writableImage = new WritableImage((int)Canvas.getWidth(), (int)Canvas.getHeight());
-            Canvas.snapshot(null, writableImage);
-            RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-            ImageIO.write(renderedImage, "png", file);
-            
-            BufferedImage resizedImage = new BufferedImage(28, 28, 1);
-    		Graphics2D g = resizedImage.createGraphics();
-    		g.drawImage((BufferedImage)renderedImage, 0, 0, 28, 28, null);
-    		g.dispose();
-    		ImageIO.write(resizedImage, "png", fileResized);
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
-    };
 	
-    //make a forward propagation on the canvas and return result
+	String OS = Test.OS; 
+	
+	//Save a resized png version of the canvas
+     void save() {
+    	String location =NeuralNetworks.location;	
+    	if(OS.indexOf("win") >= 0){
+    		File file = new File(location + "\\tmp.png");    			
+        	File fileResized = new File(location + "\\tmpResized.png");
+        	try {    	            
+        		WritableImage writableImage = new WritableImage((int)Canvas.getWidth(), (int)Canvas.getHeight());    	            
+        		Canvas.snapshot(null, writableImage);
+        		RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+        		ImageIO.write(renderedImage, "png", file);    	             	            
+        		BufferedImage resizedImage = new BufferedImage(28, 28, 1);    	    		
+        		Graphics2D g = resizedImage.createGraphics();   	    		
+        		g.drawImage((BufferedImage)renderedImage, 0, 0, 28, 28, null);    	    		
+        		g.dispose();    	    		
+        		ImageIO.write(resizedImage, "png", fileResized);    	       
+        	 } catch (IOException e) {    	        	
+        		 e.printStackTrace();
+        	}
+		}
+		else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+			File file = new File(location + "/tmp.png");    			
+	    	File fileResized = new File(location + "/tmpResized.png");
+	    	try {    	            
+	    		WritableImage writableImage = new WritableImage((int)Canvas.getWidth(), (int)Canvas.getHeight());    	            
+	    		Canvas.snapshot(null, writableImage);
+	    		RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+	    		ImageIO.write(renderedImage, "png", file);    	             	            
+	    		BufferedImage resizedImage = new BufferedImage(28, 28, 1);    	    		
+	    		Graphics2D g = resizedImage.createGraphics();   	    		
+	    		g.drawImage((BufferedImage)renderedImage, 0, 0, 28, 28, null);    	    		
+	    		g.dispose();    	    		
+	    		ImageIO.write(resizedImage, "png", fileResized);    	       
+	    	 } catch (IOException e) {    	        	
+	    		 e.printStackTrace();
+	    	}
+		}			
+    };
+    
+    //Make a forward propagation on the canvas and return result
 	@FXML
 	void analyse() {
 		
-		String location = NeuronalNetworks.location;
-		String nom = "";
+		String location = NeuralNetworks.location;
 		save();
 		
 		try {
-			if(OS.indexOf("win") >= 0){
-				nom = location + "\\tmpResized.png";
-			}
-			else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
-				nom = location + "/tmpResized.png";
-			}
-			double[] results = nN.forwardPropagationRAM(NeuronalNetworks.imageLecture(nom));
+			double[] results = nN.forwardPropagationRAM(Test.imageLecture("tmpResized"));
 			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -109,17 +122,26 @@ public class SimpleViewCtrl {
 			e.printStackTrace();
 		}
 		
-		File file = new File(location + "/tmp.png");
-		File fileResized = new File(location + "/tmpResized.png");
-		file.delete();
-		fileResized.delete();
+		if(OS.indexOf("win") >= 0){
+			File file = new File(location + "\\tmp.png");
+			File fileResized = new File(location + "\\tmpResized.png");
+			file.delete();
+			fileResized.delete();
+		}
+		else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+			File file = new File(location + "/tmp.png");
+			File fileResized = new File(location + "/tmpResized.png");
+			file.delete();
+			fileResized.delete();
+		}
 	}
 	
-	//change color of a circle to identify it
+	
+	//Change color of a circle to identify it
 	void turnOnLights(double[] tab) {
 		Text[] values = {value0, value1, value2, value3, value4, value5, value6, value7, value8, value9};
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
-		int imax = NeuronalNetworks.max(tab);
+		int imax = NeuralNetworks.max(tab);
 		for (int i = 0; i<=9; i++) {
 			DecimalFormat numberFormat = new DecimalFormat("#0.00");
 			values[i].setText(numberFormat.format(tab[i]));
@@ -128,12 +150,12 @@ public class SimpleViewCtrl {
 			c.setStrokeWidth(0);
 			if (i ==imax) {
 				RadialGradient gradient1 = new RadialGradient(0,0,0.5,0.5,0.6,true,CycleMethod.NO_CYCLE,
-						new Stop(0, Color.DARKRED),
+						new Stop(0, Color.RED),
 			            new Stop(1, Color.WHITE));
 				c.setFill(gradient1);}
 			else {
 				RadialGradient gradient1 = new RadialGradient(0,0,0.5,0.5,0.5,true,CycleMethod.NO_CYCLE,
-						new Stop(0, Color.RED),
+						new Stop(0, Color.BLACK),
 			            new Stop(1, Color.WHITE));
 				c.setFill(gradient1);
 				
@@ -141,7 +163,8 @@ public class SimpleViewCtrl {
 		}
 	}
 	
-	//set back to normal a circle 
+	
+	//Set back to normal a circle 
 	void turnOffLights() {
 		Text[] values = {value0, value1, value2, value3, value4, value5, value6, value7, value8, value9};
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
@@ -149,12 +172,13 @@ public class SimpleViewCtrl {
 			values[i].setText("");
 			Circle c = circles[i];
 			c.setRadius(8);
-			c.setFill(Color.RED);
+			c.setFill(Color.BLACK);
 			c.setStrokeWidth(1);
 		}
 	}
 
-	//enable to draw on the canvas (mouse dragged)
+	
+	//Enable to draw on the canvas (mouse dragged)
 	@FXML
 	void draw(MouseEvent event) {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
@@ -163,7 +187,8 @@ public class SimpleViewCtrl {
         gc.stroke();
 	}
 	
-	//enable to move on the canvas (mouse not clicked)
+	
+	//Enable to move on the canvas (mouse not clicked)
 	@FXML
 	void moveTo(MouseEvent event) {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
@@ -172,7 +197,8 @@ public class SimpleViewCtrl {
         gc.stroke();
 	}
 	
-	//reset canvas and circles
+	
+	//Reset canvas and circles
 	@FXML
 	void clear() {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
@@ -181,15 +207,16 @@ public class SimpleViewCtrl {
 		turnOffLights();
 	}
 	
-	//importe puis analyse une image
+	
+	//Importe puis analyse une image
 	@FXML
 	void importation() throws MalformedURLException {
 		
-		String location = NeuronalNetworks.location;
+		String location = NeuralNetworks.location;
 		Stage mainStage = new Stage();
 
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Ouvrir l'image à analyser");
+		fileChooser.setTitle("Ouvrir l'image Ã  analyser");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
 		File selectedFile = fileChooser.showOpenDialog(mainStage);
 		Image apercuImage = new Image("file:" + selectedFile.getAbsolutePath());
@@ -207,7 +234,7 @@ public class SimpleViewCtrl {
 			g.dispose();
 			ImageIO.write(resizedImage, "png", fileResized);
 		
-			double[] results = nN.forwardPropagationRAM(NeuronalNetworks.imageLecture("tmpResized"));
+			double[] results = nN.forwardPropagationRAM(Test.imageLecture("tmpResized"));
 			turnOnLights(results);
 
 
@@ -219,6 +246,8 @@ public class SimpleViewCtrl {
 		}
 	}
 	
+	
+	//Extraction du taux de succés du reseau
 	@FXML
 	void init(){
 		nN.extractSuccessRate();
