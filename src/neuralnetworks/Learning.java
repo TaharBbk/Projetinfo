@@ -14,8 +14,7 @@ public class Learning {
 	//Definition des variables
 	static int seuil = 150; //Seuil pour les pixels des images en noir et blanc 1 si le pixel est noir et 0 sinon 
 	public static double[][][] images = new double[10][5000][784]; //Conteneur des tableaux d'images en RAM
-	public static NeuralNetworks bestNeuralNetworks; //Meilleur reseau de neurones connus
-	public static NeuralNetworks N; //Reseau de test
+	public static NeuralNetworks bestNeuralNetworks; //Meilleur reseau de neurones connu
 	public static String OS = System.getProperty("os.name").toLowerCase(); //Permet de determiner la distribution du systeme
 	
 	
@@ -170,14 +169,15 @@ public class Learning {
 	
 	
 	//Constructeur de la classe
-	public Learning(int i){
-		N = new NeuralNetworks(i,false);				
+	public Learning(){
+		Learning.bestNeuralNetworks = new NeuralNetworks(490, false);
+		Learning.bestNeuralNetworks.successRate = 0;				
 	}
 	
 	
 	//Extraction du reseaux de neurones enregistrer dans les fichiers
-	public void extractNeuralNetworks(){//permet d'extraire le reseau de neurones enregistrées
-		bestNeuralNetworks.extractWeights(482, true);
+	public void extractNeuralNetworks(int i , boolean load){//permet d'extraire le reseau de neurones enregistrées
+		bestNeuralNetworks.extractWeights(i, load);
 		bestNeuralNetworks.extractSuccessRate();
 		bestNeuralNetworks.extractLearningFactor();
 		bestNeuralNetworks.extractMeanSquareError();
@@ -186,32 +186,34 @@ public class Learning {
 	
 	
 	//Enregistrement des objets necessaires pour reconstituer le reseau de neurones avec le meilleur taux de succes
-	public static void saveNeuralNetworks(){
+	public static void saveNeuralNetworks(NeuralNetworks N, int i){
+		
 		FileOutputStream fos1;
 		FileOutputStream fos2;
 		FileOutputStream fos3;
 		FileOutputStream fos4;
 		
 		try {
-			fos1 = new FileOutputStream (NeuralNetworks.location + "/bestWeights");
-			fos2 = new FileOutputStream (NeuralNetworks.location + "/bestSuccessRate");
-			fos3 = new FileOutputStream (NeuralNetworks.location + "/bestLearningFactor");
-			fos4 = new FileOutputStream (NeuralNetworks.location + "/bestMeanSquareError");
+			fos1 = new FileOutputStream (NeuralNetworks.location + "/bestWeights" + i);
+			fos2 = new FileOutputStream (NeuralNetworks.location + "/bestSuccessRate" + i);
+			fos3 = new FileOutputStream (NeuralNetworks.location + "/bestLearningFactor" + i);
+			fos4 = new FileOutputStream (NeuralNetworks.location + "/bestMeanSquareError" + i);
 			
 			ObjectOutputStream oos1 = new ObjectOutputStream (fos1);
 			ObjectOutputStream oos2 = new ObjectOutputStream (fos2);
 			ObjectOutputStream oos3 = new ObjectOutputStream (fos3);
 			ObjectOutputStream oos4 = new ObjectOutputStream(fos4);
 			
-			oos1.writeObject(Learning.bestNeuralNetworks.weights);
-			oos2.writeObject(Learning.bestNeuralNetworks.successRate);
-			oos3.writeObject(Learning.bestNeuralNetworks.learningFactor);
-			oos4.writeObject(Learning.bestNeuralNetworks.meanSquareError);
+			oos1.writeObject(N.weights);
+			oos2.writeObject(N.successRate);
+			oos3.writeObject(N.learningFactor);
+			oos4.writeObject(N.meanSquareError);
 			
 			oos1.close();
 			oos2.close();
 			oos3.close();
 			oos4.close();
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -221,7 +223,7 @@ public class Learning {
 	
 	
 	//Apprentissage sur un echantillon de la base stocke en ram
-	public void learningRAM(double learningFactor){
+	public void learningRAM(double learningFactor, NeuralNetworks N){
 		int count = 0;
 		for (int j=0; j<10; j++){
 			for (int i=0; i<1500; i++){
@@ -239,7 +241,7 @@ public class Learning {
 
 	
 	//Renvoie le taux de succes et l'erreur quadratique moyenne du reseau sur un echantillon de la base stocke en ram
-	public double[] successRateCalculRAM(){
+	public double[] successRateCalculRAM(NeuralNetworks N){
 		double[] result;
 		double success = 0;
 		double eqm=0;
@@ -281,70 +283,109 @@ public class Learning {
 	
 	
 	//Trouve le reseau ayant le meilleur taux de succes
-	public static void findTheRightOneRAM(int hiddenSizeStart, int hiddenSizeEnd, double learnStart, double learnEnd, double learnIncrement){
+	public void findTheRightOneRAM(int hiddenSizeStart, int hiddenSizeEnd, double learnStart, double learnEnd, double learnIncrement){
+		
 		//On charge les images en ram pour accelerer le traitement
 		Learning.loadImages();
+		
 		//On affiche le nombre d'iterations de la boucle pour voir le temps que cela peut prendre
 		System.out.println("Nombre d'iterations : " + (int) ((hiddenSizeEnd-hiddenSizeStart)*((learnEnd-learnStart)/learnIncrement)));
 		System.out.println("------------------------");
-		Learning T = new Learning(hiddenSizeStart);
-		bestNeuralNetworks = new NeuralNetworks(hiddenSizeStart, true);
+		
+		//Learning T = new Learning(hiddenSizeStart);
+		
+		
+		
 		//On extrait le reseau de neurones des fichiers
-		T.extractNeuralNetworks();
-		double[] bestStats = new double[2]; // 0 = successrate, 1 = meanSquareError
-		bestStats[0] = Learning.bestNeuralNetworks.successRate;
-		bestStats[1] = Learning.bestNeuralNetworks.meanSquareError;
+		//T.extractNeuralNetworks();
+		
+		
+		
 		//On affiche le meilleur reseaux de neurones connu a ce jour 
-		System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
-		System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
-		System.out.println("Taux de succes : " + bestStats[0]);
-		System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
-		System.out.println("-----------------------");
-		Learning.saveNeuralNetworks();
+		//System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
+		//System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
+		//System.out.println("Taux de succes : " + bestStats[0]);
+		//System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
+		//System.out.println("-----------------------");
+		
+		//Learning.saveNeuralNetworks();
+		
+		/**
+		 * Array qui contient les informations du meilleur réseau de neurones testé
+		 */
+		//double[] bestStats = new double[2]; // 0 = successrate, 1 = meanSquareError
+		//bestStats[0] = Learning.bestNeuralNetworks.successRate;
+		//bestStats[1] = Learning.bestNeuralNetworks.meanSquareError;
+		
+		/**
+		 * Array qui contient à chaque itération les informations du meilleur réseau de neurones testé
+		 */
 		double[] stats;
-		double currentLearnF = learnStart;
+		
+		//double currentLearnF = learnStart;
+		
 		//On teste pour differentes valeurs du learning factor
-		while(currentLearnF <= learnEnd) {
+		for (double currentLearnF = learnStart ; currentLearnF <= learnEnd ; currentLearnF += learnIncrement) {
+		
 			//On affiche le learning factor actuel
 			System.out.println("Learning factor : " + currentLearnF);
+			
 			//On calcule le taux de succes pour des reseaux de taille differente
-			for(int i=hiddenSizeStart; i<hiddenSizeEnd; i++){
+			for(int i = hiddenSizeStart ; i <= hiddenSizeEnd ; i++){
+			
+				//On affiche le learning factor actuel
+				System.out.println("Learning factor : " + currentLearnF);
+				
 				System.out.println("Taille couche cachee : "+ i);
-				Learning.N = new NeuralNetworks(i, false);
+				
+				NeuralNetworks tested = new NeuralNetworks(i, false);
+				
 				//Apprentissage
-				T.learningRAM(currentLearnF);
+				
+				this.learningRAM(currentLearnF, tested);
+				
 				//Test et determination du taux de succes
-				stats = T.successRateCalculRAM();
+				
+				stats = this.successRateCalculRAM(tested);
+				
+				tested.hiddenSize = i;
+				tested.learningFactor = currentLearnF;
+				tested.successRate = stats[0];
+				tested.meanSquareError = stats[1];
+				
 				System.out.println("Taux de succes : " + stats[0]);
-				if(stats[0] > bestStats[0]){
+				
+				if(stats[0] > Learning.bestNeuralNetworks.successRate){
+				
 					//Mise a jour du reseaux et sauvegarde
-					Learning.bestNeuralNetworks.learningFactor = currentLearnF;
-					Learning.bestNeuralNetworks = Learning.N;
-					Learning.bestNeuralNetworks.successRate=stats[0];
-					Learning.bestNeuralNetworks.meanSquareError=stats[1];
-					bestStats[0] = stats[0];
-					bestStats[1] = stats[1];
-					Learning.saveNeuralNetworks();
+					Learning.bestNeuralNetworks = tested;
+					Learning.saveNeuralNetworks(tested, 0);
 					Toolkit.getDefaultToolkit().beep();
 					System.out.println("Le reseau de neurones a ete change et sauvegarde");
+				
 				}
+				
 				System.out.println("-----------------------");
-			}
-			currentLearnF += learnIncrement; 			
+			
+			}			
+			
 			//On affiche le meilleur reseau pour voir si il a change au cours de l'iteration sur la boucle
-			System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
+			System.out.println("Erreur quadratique moyenne : " + Learning.bestNeuralNetworks.meanSquareError);
 			System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
-			System.out.println("Taux de succes : " + bestStats[0]);
+			System.out.println("Taux de succes : " + Learning.bestNeuralNetworks.successRate);
 			System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
 			System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
 			System.out.println("---------------------------------------------------------");
+		
 		}
+		
 		//On affiche enfin le reseau obtenu a la fin de l'execution de l'ensemble du processus 
-		System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
+		System.out.println("Erreur quadratique moyenne : " + Learning.bestNeuralNetworks.meanSquareError);
 		System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
-		System.out.println("Taux de succes : " + bestStats[0]);
+		System.out.println("Taux de succes : " + Learning.bestNeuralNetworks.successRate);
 		System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
 		System.out.println("-----------------------");
+	
 	}
 	
 	
@@ -358,10 +399,16 @@ public class Learning {
 	
 	public static void main(String[] args) {
 		Toolkit.getDefaultToolkit().beep();
+		
 		long startTime = System.currentTimeMillis();
-		Learning.findTheRightOneRAM(477,480,0.15,0.16,0.005);
+		
+		Learning instance = new Learning();
+		
+		instance.findTheRightOneRAM(492,493,0.15,0.15,0.005);
+		
 		long endTime   = System.currentTimeMillis();
 		long totalTime = (endTime - startTime)/1000;
+		
 		Learning.tempsExecution(totalTime);
 		Toolkit.getDefaultToolkit().beep();
 	}

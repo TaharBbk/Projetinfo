@@ -21,6 +21,7 @@ public class NeuralNetworks {
 	double learningFactor;
 	double successRate;
 	double meanSquareError;
+	int hiddenSize;
 	public static final int nombreIterationsBackprop = 1;
 
 	
