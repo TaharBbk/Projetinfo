@@ -162,8 +162,6 @@ public class Learning {
 			for(int j=0; j<limits[2]; j++){
 				
 				String nom = i + "_0" + (1+j+limits[0]+limits[1]) + ".png";
-				
-				System.out.println(path+nom);
 
 				test[i][j]=Learning.imageLecture(path+nom);
 			}
@@ -198,7 +196,7 @@ public class Learning {
 		
 		}
 		
-		return arrayDivide(avg, 50000);
+		return arrayDivide(avg, 20000);
 	
 	}
 	
@@ -243,7 +241,7 @@ public class Learning {
 					var = arraySum(var, arraySquared(base[i][j]));					
 			}
 		}		
-		return arraySum(arrayDivide(var, 50000), arrayNegate(arraySquared(moyenne)));				
+		return arraySum(arrayDivide(var, 20000), arrayNegate(arraySquared(moyenne)));				
 	}
 	
 	
