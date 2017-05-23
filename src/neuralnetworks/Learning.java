@@ -44,8 +44,8 @@ public class Learning {
 	 */
 	public static String OS = System.getProperty("os.name").toLowerCase(); 
 	
-	private static double[] average;
-	private static double[] sigma;
+	private static double[] average = null;
+	private static double[] sigma = null;
 	
 	
 	/**
@@ -331,9 +331,21 @@ public class Learning {
 		
 	}
 	
-	
-	private static double[] centreReduit(double[] input) {
+	/**
+	 * Methode qui normalise une image passee en entree
+	 * @param input L'array des pixels de l'image a normaliser
+	 * @return L'array de l'image normalisee
+	 */
+	public static double[] centreReduit(double[] input) {
 		
+		if (Learning.average == null) {
+			
+			try {
+				Learning.loadImages();
+			} catch (Exception e) {}
+			
+		}
+			
 		double[] result = new double[input.length];
 		
 		for (int i = 0 ; i < input.length ; i++)
