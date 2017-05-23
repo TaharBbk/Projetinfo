@@ -34,7 +34,7 @@ import javax.imageio.ImageIO;
 
 public class SimpleViewCtrl {
 	
-	NeuralNetworks nN = new NeuralNetworks("test");
+	NeuralNetworks nN = new NeuralNetworks("best");
 	
 	@FXML Button boutonAnalyser;
 	@FXML Button boutonNouveau;
