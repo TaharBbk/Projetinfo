@@ -67,7 +67,9 @@ public class SimpleViewCtrl {
 	
 	String OS = Learning.OS; 
 	
-	//Save a resized png version of the canvas
+	/**
+	 * Save a resized png version of the canvas
+	 */
      void save() {
     	String location =NeuralNetworks.location;	
     	if(OS.indexOf("win") >= 0){
@@ -106,7 +108,9 @@ public class SimpleViewCtrl {
 		}			
     };
     
-    //Make a forward propagation on the canvas and return result
+    /**
+     * Make a forward propagation on the canvas and return result
+     */
 	@FXML
 	void analyse() {
 		
@@ -125,6 +129,9 @@ public class SimpleViewCtrl {
 		try {
 			double[] image = Learning.imageLecture(nom);
 			double[] results = nN.forwardPropagationRAM(image);
+			for (int i=0; i<10; i++){
+				System.out.println(results[i]);
+			}
 			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -147,7 +154,9 @@ public class SimpleViewCtrl {
 	}
 	
 	
-	//Change color of a circle to identify it
+	/**
+	 * Change color of a circle to identify it
+	 */
 	void turnOnLights(double[] tab) {
 		Text[] values = {value0, value1, value2, value3, value4, value5, value6, value7, value8, value9};
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
@@ -174,7 +183,9 @@ public class SimpleViewCtrl {
 	}
 	
 	
-	//Set back to normal a circle 
+	/**
+	 * Set back to normal a circle 
+	 */
 	void turnOffLights() {
 		Text[] values = {value0, value1, value2, value3, value4, value5, value6, value7, value8, value9};
 		Circle[] circles = {circle0, circle1, circle2, circle3, circle4, circle5, circle6, circle7, circle8, circle9};
@@ -188,7 +199,10 @@ public class SimpleViewCtrl {
 	}
 
 	
-	//Enable to draw on the canvas (mouse dragged)
+	/**
+	 * Enable to draw on the canvas (mouse dragged)
+	 * @param event
+	 */
 	@FXML
 	void draw(MouseEvent event) {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
@@ -198,7 +212,10 @@ public class SimpleViewCtrl {
 	}
 	
 	
-	//Enable to move on the canvas (mouse not clicked)
+	/**
+	 * Enable to move on the canvas (mouse not clicked)
+	 * @param event
+	 */
 	@FXML
 	void moveTo(MouseEvent event) {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
@@ -208,7 +225,9 @@ public class SimpleViewCtrl {
 	}
 	
 	
-	//Reset canvas and circles
+	/**
+	 * Reset canvas and circles
+	 */
 	@FXML
 	void clear() {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
@@ -218,7 +237,10 @@ public class SimpleViewCtrl {
 	}
 	
 	
-	//Importe puis analyse une image
+	/**
+	 * Importe puis analyse une image
+	 * @throws MalformedURLException
+	 */
 	@FXML
 	void importation() throws MalformedURLException {
 		
@@ -271,7 +293,9 @@ public class SimpleViewCtrl {
 	}
 	
 	
-	//Extraction du taux de succés du reseau
+	/**
+	 * Extraction du taux de succes du reseau
+	 */
 	@FXML
 	void init(){
 		txSuccess.setText(nN.getSuccessRate());

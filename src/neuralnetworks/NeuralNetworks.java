@@ -16,8 +16,14 @@ public class NeuralNetworks {
 	 * Array qui contient les couches du reseau de neurones : 0 - entree, 1 - cachee, 2 - sortie
 	 */
 	Layer[] layers;
+	/**
+	* Array qui contient les matrices de poids des différentes couches: 0 - matrice de l'input, 1 - matrice de la couche cachee
+	*/
 	public double[][][] weights; //Tableau contenant les matrices des poids
-	private int numberOfWeights; //Nombre de matrices de poids
+	/**
+	* Int qui indique la taille du reseau, il suffit de faire +1 pour connaitre la taille du reseau en termes de couche
+	*/
+	private int numberOfWeights;
 	double learningFactor = 0;
 	double successRate = 0;
 	double meanSquareError = 0;
@@ -27,8 +33,8 @@ public class NeuralNetworks {
 	
 	/**
 	 * Constructeur de la classe
-	 * @param l taille de la couche cachee
-	 * @param extract boolean qui dicte si les poids sont a extraire d'un reseau sauvegarde ou pas
+	 * @param l taille de la couche cachee a generer
+	 * @param loadFrom String indiquant l'emplacement du reseau a charger
 	 */
 	public NeuralNetworks(String loadFrom) {
 		
@@ -175,6 +181,11 @@ public class NeuralNetworks {
 	
 	}
 	
+	
+	/**
+	 * Methode qui extrait des poids a partir d'un fichier
+	 * @param loadFrom String indiquant le fichier de poids dont il s'agit
+	 */
 	public void extractWeights(String loadFrom) {
 		
 		//Extraction de l'objet weights
@@ -195,6 +206,7 @@ public class NeuralNetworks {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	/**
 	 * Fonction qui sauvegarde les poids de l'instance actuelle de la classe, afin de les reutiliser plus tard
@@ -219,6 +231,7 @@ public class NeuralNetworks {
 	
 	/**
 	 * Fonction qui permet de charger le taux de succes sauvegarde
+	 * @param loadFrom String indiquant le fichier concerne
 	 */
 	public void extractSuccessRate(String loadFrom){
 		//Besoin d'initialiser le taux de succes si le fichier n'existe pas
@@ -246,6 +259,7 @@ public class NeuralNetworks {
 	
 	/**
 	 * Fonction qui permet de charger l'erreur quadratique moyenne sauvegardee
+	 * @param loadFrom String indiquant le fichier concerne
 	 */
 	public void extractMeanSquareError(String loadFrom){
 		//Besoin d'initialiser l'erreur quadratique moyenne si le fichier n'existe pas
@@ -273,6 +287,7 @@ public class NeuralNetworks {
 	
 	/**
 	 * Methode qui permet de charger le facteur d'apprentissage sauvegarde
+	 * @param loadFrom String indiquant le fichier concerne
 	 */
 	public void extractLearningFactor(String loadFrom){
 		//Besoin d'initialiser le learning factor si le fichier n'existe pas
@@ -297,6 +312,11 @@ public class NeuralNetworks {
 		}
 	}
 	
+	
+	/**
+	* Methode qui permet de charger l'ensemble des parametres necessaire a la reconstruction du reseau
+	* @param loadFrom String indiquant le fichier concerne
+	*/
 	public void extractData(String loadFrom) {
 		
 		this.extractWeights(loadFrom);
@@ -304,14 +324,12 @@ public class NeuralNetworks {
 		this.extractLearningFactor(loadFrom);
 		this.extractSuccessRate(loadFrom);
 		
-		
-		
 	}
 
 	
 	/**
 	 * Methode qui retourne le taux de succes de ce reseau de neurones au cours de la validation
-	 * @return
+	 * @return le taux de succes du reseau
 	 */
 	public String getSuccessRate() {
 		return "" + successRate;
