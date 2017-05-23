@@ -501,7 +501,7 @@ public class Learning {
 		else if (f.exists()) {
 		
 			this.bestNeuralNetworks = new NeuralNetworks(loadFrom);
-			this.bestNeuralNetworks.extractData();
+			this.bestNeuralNetworks.extractData(loadFrom);
 			System.out.println("Le reseau de neurones " + loadFrom + " a ete charge");
 			System.out.println("Ses caract�ristiques sont :");
 			System.out.println("Taille : " + this.bestNeuralNetworks.weights[1].length);
@@ -556,7 +556,7 @@ public class Learning {
 					Learning.saveNeuralNetworks(tested, saveTo);
 					this.bestNeuralNetworks = tested;
 					Toolkit.getDefaultToolkit().beep();
-					System.out.println("Le reseau de neurones a ete change et sauvegarde");
+					System.out.println("Le reseau de neurones a ete change et sauvegarde sous le nom "+ saveTo);
 				
 				}
 				

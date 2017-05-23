@@ -132,7 +132,7 @@ public class Layer {
 		
 		for (int i = 0 ; i < this.next.numberOfNeurons ; i++)
 			//assert(this.next.values[i] != 0);
-		
+
 		this.next.propagate();		
 	}
 	
@@ -230,7 +230,7 @@ public class Layer {
 		// On met a jour la valeur des poids de cette couche
 		this.weights = (this.soustractionMatrice(this.weights, this.scalaireMatrice(learningFactor, this.differentialErrorWeights))); 
 		
-		// Si une couche precedente existe, alors on appelle la methode en passant en argument la variable returned et le même learningFactor
+		// Si une couche precedente existe, alors on appelle la methode en passant en argument la variable returned et le mï¿½me learningFactor
 		if (this.precedent != null)
 			// We call the method on the next layer to be processed, passing as input what we formerly calculated
 			this.precedent.backprop(returned, learningFactor);
