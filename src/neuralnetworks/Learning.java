@@ -20,19 +20,19 @@ public class Learning {
 	/**
 	 * tableau qui comprend l'ensemble des images utilisees pour l'entrainement du reseau de neurones, chargees en RAM
 	 * entrainement[i] correspond a l'ensmble des images du chiffre i dans la base d'entrainement
-	 * entrainement[i][j] correspond � l'array de pixels de la jeme image du chiffre i dans la base d'entrainement
+	 * entrainement[i][j] correspond a l'array de pixels de la jeme image du chiffre i dans la base d'entrainement
 	 */
 	private static double[][][] entrainement = new double[10][2000][784];
 	/**
 	 * tableau qui comprend l'ensemble des images utilisees pour la validation du reseau de neurones, chargees en RAM
 	 * validation[i] correspond a l'ensmble des images du chiffre i dans la base de validation
-	 * validation[i][j] correspond � l'array de pixels de la jeme image du chiffre i dans la base de validation
+	 * validation[i][j] correspond a l'array de pixels de la jeme image du chiffre i dans la base de validation
 	 */
 	private static double[][][] validation = new double[10][2000][784];
 	/**
 	 * tableau qui comprend l'ensemble des images utilisees pour la validation du reseau de neurones, chargees en RAM
 	 * test[i] correspond a l'ensmble des images du chiffre i dans la base de test
-	 * test[i][j] correspond � l'array de pixels de la jeme image du chiffre i dans la base de test
+	 * test[i][j] correspond a l'array de pixels de la jeme image du chiffre i dans la base de test
 	 */
 	private static double[][][] test = new double[10][1000][784];
 	/**
@@ -85,7 +85,7 @@ public class Learning {
 					color = new Color(image.getRGB(i,j), false);
 					couleur = (color.getBlue()+color.getRed()+color.getGreen())/3;
 					
-					//Ici on compare la somme des trois couleurs au seuil : si c'est inf�rieur au seuil, plus proche du noir on place un 1, sinon c'est un 0;
+					//Ici on compare la somme des trois couleurs au seuil : si c'est inferieur au seuil, plus proche du noir on place un 1, sinon c'est un 0;
 					if(couleur<seuil)
 						imagetab[i*largeur+j]=1;
 					
@@ -125,7 +125,7 @@ public class Learning {
 		int[] limits = new int[] {2000,2000,1000};
 		
 		/**
-		 * Chaine de caract�res recevant le chemin vers le dossier ou se situent les images
+		 * Chaine de caracteres recevant le chemin vers le dossier ou se situent les images
 		 */
 		String path = NeuralNetworks.location;
 		
@@ -568,7 +568,7 @@ public class Learning {
 		
 		
 		/**
-		 * Array qui contient � chaque it�ration les informations du meilleur r�seau de neurones test�
+		 * Array qui contient a chaque iteration les informations du meilleur reseau de neurones teste
 		 */
 		double[] stats;
 		
@@ -645,8 +645,17 @@ public class Learning {
 	}
 	
 	/**
-	* Methode la plus importante, elle permet de lancer, l'apprentissage en ligne de commande 
-	*/
+	 * Methode la plus importante de la classe car elle permet de lancer l'apprentissage en ligne de commande : 
+	 * java learning.java startingHiddenSize endingHiddenSize startingLearnFactor endingLearnFactor learnFactorIncrement loadFrom saveTo
+	 * avec startingHiddenSize la taille minimale de la couche cachee (int),
+	 * endingHiddenSize la taille maximale de la couche cachee (int),
+	 * startingLearn Factor le taux d'apprentissage minimum (double),
+	 * endingLearnFactor le taux d'apprentissage maximum (double),
+	 * learnIncrement le pas d'incrementation du learning factor (double),
+	 * loadFrom le nom du reseau a charge et extraire pour la comparaison (String),
+	 * saveTo le nom donne au meilleur reseau obtenu apres l'apprentissage (String),
+	 * Cela permet d'avoir plusieurs reseaux de neurones
+	 */
 	public static void main(String[] args) {
 		
 		
