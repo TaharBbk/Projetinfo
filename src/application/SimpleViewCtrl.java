@@ -26,15 +26,15 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import neuronalnetworks.NeuralNetworks;
-import neuronalnetworks.Test;
+import neuralnetworks.NeuralNetworks;
+import neuralnetworks.Learning;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 
 public class SimpleViewCtrl {
 	
-	NeuralNetworks nN = new NeuralNetworks(492,true);
+	NeuralNetworks nN = new NeuralNetworks("test");
 	
 	@FXML Button boutonAnalyser;
 	@FXML Button boutonNouveau;
@@ -65,7 +65,7 @@ public class SimpleViewCtrl {
 	@FXML ImageView imageResized;
 	
 	
-	String OS = Test.OS; 
+	String OS = Learning.OS; 
 	
 	//Save a resized png version of the canvas
      void save() {
@@ -111,10 +111,19 @@ public class SimpleViewCtrl {
 	void analyse() {
 		
 		String location = NeuralNetworks.location;
+		String nom = "";
 		save();
 		
+		if(OS.indexOf("win") >= 0){
+			nom = location + "\\tmpResized.png";
+		}
+		
+		else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+			nom = location + "/tmpResized.png";
+		}
+		
 		try {
-			double[] results = nN.forwardPropagationRAM(Test.imageLecture("tmpResized"));
+			double[] results = nN.forwardPropagationRAM(Learning.imageLecture(nom));
 			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -234,7 +243,7 @@ public class SimpleViewCtrl {
 			g.dispose();
 			ImageIO.write(resizedImage, "png", fileResized);
 		
-			double[] results = nN.forwardPropagationRAM(Test.imageLecture("tmpResized"));
+			double[] results = nN.forwardPropagationRAM(Learning.imageLecture("tmpResized"));
 			turnOnLights(results);
 
 

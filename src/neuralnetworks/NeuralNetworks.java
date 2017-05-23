@@ -41,7 +41,7 @@ public class NeuralNetworks {
 		//Creation du reseau de neurones et de ses differentes couches 
 		layers = new Layer[numberOfWeights+1];
 		layers[numberOfWeights] = new Layer(new double[10]);
-		//Attribution des poids aux différentes couches ainsi que lien entre les différentes couches
+		//Attribution des poids aux diffï¿½rentes couches ainsi que lien entre les diffï¿½rentes couches
 		for(int i=numberOfWeights-1; i>=0; i--){
 			layers[i] = new Layer(new double[weights[i][0].length], weights[i], layers[i+1]);		
 		}
@@ -55,7 +55,7 @@ public class NeuralNetworks {
 		//Creation du reseau de neurones et de ses differentes couches 
 		layers = new Layer[numberOfWeights+1];
 		layers[numberOfWeights] = new Layer(new double[10]);
-		//Attribution des poids aux différentes couches ainsi que lien entre les différentes couches
+		//Attribution des poids aux diffï¿½rentes couches ainsi que lien entre les diffï¿½rentes couches
 		for(int i=numberOfWeights-1; i>=0; i--){
 			layers[i] = new Layer(new double[weights[i][0].length], weights[i], layers[i+1]);		
 		}
@@ -179,7 +179,7 @@ public class NeuralNetworks {
 		FileInputStream fis;
 		try {
 			
-			fis = new FileInputStream (location + "/bestWeights_"+loadFrom);
+			fis = new FileInputStream (location + "/Weights_"+loadFrom);
 			ObjectInputStream ois = new ObjectInputStream (fis);
 			Object weight = ois.readObject();
 			weights = (double[][][]) weight;

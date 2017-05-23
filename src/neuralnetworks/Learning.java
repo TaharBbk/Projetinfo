@@ -1,5 +1,6 @@
 package neuralnetworks;
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,9 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import javax.imageio.ImageIO;
 
-import java.awt.Toolkit;
+import javax.imageio.ImageIO;
 
 public class Learning {
 	//Definition des variables
@@ -20,23 +20,23 @@ public class Learning {
 	/**
 	 * tableau qui comprend l'ensemble des images utilisees pour l'entrainement du reseau de neurones, chargees en RAM
 	 * entrainement[i] correspond a l'ensmble des images du chiffre i dans la base d'entrainement
-	 * entrainement[i][j] correspond à l'array de pixels de la jeme image du chiffre i dans la base d'entrainement
+	 * entrainement[i][j] correspond ï¿½ l'array de pixels de la jeme image du chiffre i dans la base d'entrainement
 	 */
 	private static double[][][] entrainement = new double[10][2000][784];
 	/**
 	 * tableau qui comprend l'ensemble des images utilisees pour la validation du reseau de neurones, chargees en RAM
 	 * validation[i] correspond a l'ensmble des images du chiffre i dans la base de validation
-	 * validation[i][j] correspond à l'array de pixels de la jeme image du chiffre i dans la base de validation
+	 * validation[i][j] correspond ï¿½ l'array de pixels de la jeme image du chiffre i dans la base de validation
 	 */
 	private static double[][][] validation = new double[10][2000][784];
 	/**
 	 * tableau qui comprend l'ensemble des images utilisees pour la validation du reseau de neurones, chargees en RAM
 	 * test[i] correspond a l'ensmble des images du chiffre i dans la base de test
-	 * test[i][j] correspond à l'array de pixels de la jeme image du chiffre i dans la base de test
+	 * test[i][j] correspond ï¿½ l'array de pixels de la jeme image du chiffre i dans la base de test
 	 */
 	private static double[][][] test = new double[10][1000][784];
 	/**
-	 * Reseau de neurones ayant obtenu le meilleur taux de succès
+	 * Reseau de neurones ayant obtenu le meilleur taux de succï¿½s
 	 */
 	private NeuralNetworks bestNeuralNetworks; 
 	/**
@@ -48,7 +48,7 @@ public class Learning {
 	/**
 	 * Methode qui convertit une image donnee en array de pixels 0 ou 1
 	 * @param locationImage Le chemin de l'image a traiter
-	 * @return Un Array de pixels 0 ou 1 correspondant à une image
+	 * @return Un Array de pixels 0 ou 1 correspondant ï¿½ une image
 	 */
 	public static double[] imageLecture(String locationImage){ 
 		
@@ -65,7 +65,7 @@ public class Learning {
 			int hauteur = image.getHeight();
 			int largeur = image.getWidth();
 			/**
-			 * Entier qui stocke à chaque itération la somme des troix couleurs du pixel parcouru
+			 * Entier qui stocke ï¿½ chaque itï¿½ration la somme des troix couleurs du pixel parcouru
 			 */
 			int couleur;
 			/**
@@ -82,7 +82,7 @@ public class Learning {
 					color = new Color(image.getRGB(i,j), false);
 					couleur = (color.getBlue()+color.getRed()+color.getGreen())/3;
 					
-					//Ici on compare la somme des trois couleurs au seuil : si c'est inférieur au seuil, plus proche du noir on place un 1, sinon c'est un 0;
+					//Ici on compare la somme des trois couleurs au seuil : si c'est infï¿½rieur au seuil, plus proche du noir on place un 1, sinon c'est un 0;
 					if(couleur<seuil)
 						imagetab[i*largeur+j]=1;
 					
@@ -122,7 +122,7 @@ public class Learning {
 		int[] limits = new int[] {2000,4000,5000};
 		
 		/**
-		 * Chaine de caractères recevant le chemin vers le dossier ou se situent les images
+		 * Chaine de caractï¿½res recevant le chemin vers le dossier ou se situent les images
 		 */
 		String path = NeuralNetworks.location;
 		
@@ -169,7 +169,7 @@ public class Learning {
 			}
 		}
 		
-		//On centre et réduit les images de la base d'entrainement pour une convergence plus rapide du reseau de neurones
+		//On centre et rï¿½duit les images de la base d'entrainement pour une convergence plus rapide du reseau de neurones
 		//centreReduitImages(entrainement);
 		
 		System.out.println("Les images ont ete chargees en ram");
@@ -335,7 +335,7 @@ public class Learning {
 	 * @param i Taille de la couche cachee
 	 */
 /*
-	public void extractNeuralNetworks(String i){//permet d'extraire le reseau de neurones enregistrées
+	public void extractNeuralNetworks(String i){//permet d'extraire le reseau de neurones enregistrï¿½es
 		
 		this.bestNeuralNetworks.extractWeights(i, true);
 		this.bestNeuralNetworks.extractSuccessRate();
@@ -388,7 +388,7 @@ public class Learning {
 	}
 	
 	
-	//Apprentissage sur un echantillon de la base stocke en ram
+	//Apprentissage sur un echantillon de la base stockee en ram
 	public void learningRAM(double learningFactor, NeuralNetworks N){
 		
 		double count = 0;
@@ -503,7 +503,7 @@ public class Learning {
 			this.bestNeuralNetworks = new NeuralNetworks(loadFrom);
 			this.bestNeuralNetworks.extractData();
 			System.out.println("Le reseau de neurones " + loadFrom + " a ete charge");
-			System.out.println("Ses caractéristiques sont :");
+			System.out.println("Ses caractï¿½ristiques sont :");
 			System.out.println("Taille : " + this.bestNeuralNetworks.weights[1].length);
 			System.out.println("Learning factor : " + this.bestNeuralNetworks.learningFactor);
 			System.out.println("Erreur quadratique moyenne : " + this.bestNeuralNetworks.meanSquareError);
@@ -516,7 +516,7 @@ public class Learning {
 		
 		
 		/**
-		 * Array qui contient à chaque itération les informations du meilleur réseau de neurones testé
+		 * Array qui contient ï¿½ chaque itï¿½ration les informations du meilleur rï¿½seau de neurones testï¿½
 		 */
 		double[] stats;
 		
@@ -567,14 +567,14 @@ public class Learning {
 		}
 		
 		//On affiche enfin le reseau obtenu a la fin de l'execution de l'ensemble du processus 
-		System.out.println("Meilleur résultat obtenu :");
+		System.out.println("Meilleur rï¿½sultat obtenu :");
 		System.out.println("Erreur quadratique moyenne : " + this.bestNeuralNetworks.meanSquareError);
 		System.out.println("Taille : " + this.bestNeuralNetworks.weights[1].length);
 		System.out.println("Taux de succes : " + this.bestNeuralNetworks.successRate);
 		System.out.println("Learning factor : " + this.bestNeuralNetworks.learningFactor);
 		System.out.println("-----------------------");
 		
-		System.out.println("Verification a l'aide de la base de tets");
+		System.out.println("Verification a l'aide de la base de tests");
 		//System.out.println("Taux de succes :" + this.successRateCalculRAM(this.bestNeuralNetworks)[0]);
 	
 	}
