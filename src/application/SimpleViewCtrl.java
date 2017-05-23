@@ -123,7 +123,8 @@ public class SimpleViewCtrl {
 		}
 		
 		try {
-			double[] results = nN.forwardPropagationRAM(Learning.imageLecture(nom));
+			double[] image = Learning.imageLecture(nom);
+			double[] results = nN.forwardPropagationRAM(image);
 			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -259,7 +260,6 @@ public class SimpleViewCtrl {
 	//Extraction du taux de succés du reseau
 	@FXML
 	void init(){
-		nN.extractSuccessRate();
 		txSuccess.setText(nN.getSuccessRate());
 	}
 

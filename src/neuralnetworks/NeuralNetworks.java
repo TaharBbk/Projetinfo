@@ -34,9 +34,8 @@ public class NeuralNetworks {
 		
 		assert (loadFrom != "");
 		
-		//Extraction des poids
-		this.extractWeights(loadFrom);
-		this.extractData();
+		//Extraction des donnees
+		this.extractData(loadFrom);
 		numberOfWeights = weights.length;
 		//Creation du reseau de neurones et de ses differentes couches 
 		layers = new Layer[numberOfWeights+1];
@@ -73,9 +72,9 @@ public class NeuralNetworks {
 	 */
 	public double[] forwardPropagationRAM(double [] image) throws IOException, ClassNotFoundException{
 		assert (image.length == 784);
+		
 		layers[0].setValues(image);
 		layers[0].forward_init();
-
 		
 		return layers[2].getValues();
 		
@@ -221,15 +220,15 @@ public class NeuralNetworks {
 	/**
 	 * Fonction qui permet de charger le taux de succes sauvegarde
 	 */
-	public void extractSuccessRate(){
+	public void extractSuccessRate(String loadFrom){
 		//Besoin d'initialiser le taux de succes si le fichier n'existe pas
 		this.successRate = 0.1;
 		
-		File f = new File(location + "/bestSuccessRate");
+		File f = new File(location + "/SuccessRate_"+loadFrom);
 		if(f.exists()){
 			FileInputStream fis;
 			try {
-				fis = new FileInputStream (NeuralNetworks.location + "/bestSuccessRate");
+				fis = new FileInputStream (NeuralNetworks.location + "/SuccessRate_"+loadFrom);
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object successRate= ois.readObject();
 				this.successRate = (double) successRate;
@@ -248,15 +247,15 @@ public class NeuralNetworks {
 	/**
 	 * Fonction qui permet de charger l'erreur quadratique moyenne sauvegardee
 	 */
-	public void extractMeanSquareError(){
+	public void extractMeanSquareError(String loadFrom){
 		//Besoin d'initialiser l'erreur quadratique moyenne si le fichier n'existe pas
 		this.meanSquareError = 1;
 		
 		FileInputStream fis;
-		File f = new File(location + "/bestMeanSquareError");
+		File f = new File(location + "/MeanSquareError_"+loadFrom);
 		if(f.exists()){
 			try {
-				fis = new FileInputStream (NeuralNetworks.location + "/bestMeanSquareError");
+				fis = new FileInputStream (NeuralNetworks.location + "/MeanSquareError_"+loadFrom);
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object meanSquareError= ois.readObject();
 				this.meanSquareError = (double) meanSquareError;
@@ -275,15 +274,15 @@ public class NeuralNetworks {
 	/**
 	 * Methode qui permet de charger le facteur d'apprentissage sauvegarde
 	 */
-	public void extractLearningFactor(){
+	public void extractLearningFactor(String loadFrom){
 		//Besoin d'initialiser le learning factor si le fichier n'existe pas
 		this.learningFactor = 0.2;
 		
 		FileInputStream fis;
-		File f = new File(location + "/bestLearningFactor");
+		File f = new File(location + "/LearningFactor_"+loadFrom);
 		if(f.exists()){
 			try {
-				fis = new FileInputStream (NeuralNetworks.location + "/bestLearningFactor");
+				fis = new FileInputStream (NeuralNetworks.location + "/LearningFactor_"+loadFrom);
 				ObjectInputStream ois = new ObjectInputStream (fis);
 				Object learningFactor= ois.readObject();
 				this.learningFactor = (double) learningFactor;
@@ -298,12 +297,13 @@ public class NeuralNetworks {
 		}
 	}
 	
-	public void extractData() {
+	public void extractData(String loadFrom) {
 		
+		this.extractWeights(loadFrom);
+		this.extractMeanSquareError(loadFrom);
+		this.extractLearningFactor(loadFrom);
+		this.extractSuccessRate(loadFrom);
 		
-		this.extractMeanSquareError();
-		this.extractLearningFactor();
-		this.extractSuccessRate();
 		
 		
 	}
