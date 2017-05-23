@@ -204,10 +204,9 @@ public class Learning {
 	
 	
 	/**
-	 * Methode qui effectue la somme de deux arrays de meme longueur
-	 * @param a1 un array passe en argument
-	 * @param a2 un array passe en argument
-	 * @return un array pour lequel chaque indice a pour valeur la somme des deux valeurs a cet indice des arrays passes en argument
+	 * Methode qui calcule la valeur moyenne de chaque pixel calculee sur l'ensemble d'une base
+	 * @param base La base sur laquelle seront effectuee les moyennes
+	 * @return Un array qui contient les valeurs moyennes de chacun de 784 pixels calculees sur les images de la base
 	 */
 	private static double[] arraySum(double[] a1, double[] a2) {		
 		assert (a1.length == a2.length);		
@@ -224,7 +223,7 @@ public class Learning {
 	 * Divise tous les elements d'un array par un scalaire
 	 * @param a array pass en argument
 	 * @param diviseur
-	 * @return array dont tous les elements ont ete divises par le diviseur
+	 * @return Un array dont tous les elements ont ete divises par le diviseur
 	 */
 	private static double[] arrayDivide(double[] a, double diviseur) {		
 		double[] resultat = new double[a.length];
@@ -249,8 +248,8 @@ public class Learning {
 	
 	/**
 	 * Oppose la valeur de chaque element d'un array
-	 * @param a 
-	 * @return array dont tous les elements on pris leur valeur opposee
+	 * @param a array passe en argument
+	 * @return Un array dont tous les elements ont pris leur valeur opposee
 	 */
 	private static double[] arrayNegate(double[] a) {		
 		double[] resultat = new double[a.length];
@@ -262,8 +261,8 @@ public class Learning {
 	
 	/**
 	 * Fonction qui met au carre tous les elements d'un array
-	 * @param a
-	 * @return
+	 * @param a array passe en argument
+	 * @return Un array dont tous les elements ont pris le carre de leur valeur
 	 */
 	private static double[] arraySquared(double[] a) {		
 		double[] resultat = new double[a.length];		
@@ -275,9 +274,9 @@ public class Learning {
 	
 	
 	/**
-	 * Fonction qui applique la fonction racine carree a tous les elements d'un array
-	 * @param a
-	 * @return
+	 * Centre et reduit l'ensemble des images d'une base
+	 * @param base base passee en argument
+	 * @retrun Un array contenant la base centree et reduite
 	 */
 	private static double[] arraySqrt(double[] a) {	
 		double[] resultat = new double[a.length];
@@ -331,6 +330,7 @@ public class Learning {
 		
 	}
 	
+	
 	/**
 	 * Methode qui normalise une image passee en entree
 	 * @param input L'array des pixels de l'image a normaliser
@@ -357,8 +357,8 @@ public class Learning {
 	
 	
 	/**
-	 * Le constructeur de la classe. Il cree simplement un reseau de neurone non entraine, de taux de succes zero afin qu'il soit remplace par le premier reseau entraine venu contre lequel il est compare.
-	 */
+	* Le constructeur de la classe. Il cree simplement un reseau de neurone non entraine, de taux de succes zero afin qu'il soit remplace par le premier reseau entraine venu contre lequel il est compare.
+	*/
 	public Learning(){
 	
 		this.bestNeuralNetworks = new NeuralNetworks(490);
@@ -425,7 +425,9 @@ public class Learning {
 	}
 	
 	
-	//Apprentissage sur un echantillon de la base stockee en ram
+	/**
+	*Apprentissage sur un echantillon de la base stockee en ram
+	*/
 	public void learningRAM(double learningFactor, NeuralNetworks N){
 		
 		double count = 0;
@@ -456,7 +458,9 @@ public class Learning {
 	}
 
 	
-	//Renvoie le taux de succes et l'erreur quadratique moyenne du reseau sur un echantillon de la base stocke en ram
+	/**
+	*Renvoie le taux de succes et l'erreur quadratique moyenne du reseau sur un echantillon de la base stocke en ram dasn un tableau 0 -successrate, 1 - eqm
+	*/
 	public double[] successRateCalculRAM(NeuralNetworks N, double[][][] base){
 		
 		double[] result;
@@ -518,7 +522,16 @@ public class Learning {
 	}
 	
 	
-	//Trouve le reseau ayant le meilleur taux de succes
+	/**
+	*Trouve le reseau ayant le meilleur taux de succes sous les contraintes imposes
+	* @param hiddenSizeStart int indiquant la taille minimale de la couche cachee
+	* @param hiddenSizeEnd int indiquant la taille maximale de la couche cachee
+	* @param learnStart double indiquant la valeur minimale du taux d'apprentissage
+	* @param learnEnd double indiquant la valeur maximale du taux d'apprentissage
+	/ @param learnIncrement double indiquant le pas d'incrementation du taux d'apprentissage
+	* @param loadFrom String indiquant le nom du reseau de neurone a extraire
+	* @param saveTo String indiquant sous quel nom sera sauvegarde le meilleur reseau determine
+	*/
 	public void findTheRightOneRAM(int hiddenSizeStart, int hiddenSizeEnd, double learnStart, double learnEnd, double learnIncrement, String loadFrom, String saveTo){
 		
 		//On charge les images en ram pour accelerer le traitement
@@ -542,7 +555,7 @@ public class Learning {
 			this.bestNeuralNetworks = new NeuralNetworks(loadFrom);
 			this.bestNeuralNetworks.extractData(loadFrom);
 			System.out.println("Le reseau de neurones " + loadFrom + " a ete charge");
-			System.out.println("Ses caract�ristiques sont :");
+			System.out.println("Ses caracteristiques sont :");
 			System.out.println("Taille : " + this.bestNeuralNetworks.weights[1].length);
 			System.out.println("Learning factor : " + this.bestNeuralNetworks.learningFactor);
 			System.out.println("Erreur quadratique moyenne : " + this.bestNeuralNetworks.meanSquareError);
@@ -618,8 +631,11 @@ public class Learning {
 	
 	}
 	
-	
-	//Permet d'afficher le temps en s sous la forme xx h yy min zz sec
+	/**
+	*Permet d'afficher le temps en s sous la forme xx h yy min zz sec
+	* @param i Long indiquant le temps ecoule en milisecondes
+	*/
+	Permet d'afficher le temps en s sous la forme xx h yy min zz sec
 	public static void tempsExecution(long i){
 		
 		System.out.print(i/3600 + " h ");
@@ -628,7 +644,9 @@ public class Learning {
 	
 	}
 	
-	
+	/**
+	* Methode la plus importante, elle permet de lancer, l'apprentissage en ligne de commande 
+	*/
 	public static void main(String[] args) {
 		
 		
