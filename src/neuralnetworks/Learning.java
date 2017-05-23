@@ -8,80 +8,203 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
+
 import java.awt.Toolkit;
 
 public class Learning {
 	//Definition des variables
-	static int seuil = 150; //Seuil pour les pixels des images en noir et blanc 1 si le pixel est noir et 0 sinon 
-	public static double[][][] images = new double[10][5000][784]; //Conteneur des tableaux d'images en RAM
-	public static NeuralNetworks bestNeuralNetworks; //Meilleur reseau de neurones connu
-	public static String OS = System.getProperty("os.name").toLowerCase(); //Permet de determiner la distribution du systeme
+	/**
+	 * Seuil pour la transformation de l'image en noir et blanc
+	 */
+	static int seuil = 150;
+	/**
+	 * tableau qui comprend l'ensemble des images utilisees pour l'entrainement du reseau de neurones, chargees en RAM
+	 * entrainement[i] correspond a l'ensmble des images du chiffre i dans la base d'entrainement
+	 * entrainement[i][j] correspond à l'array de pixels de la jeme image du chiffre i dans la base d'entrainement
+	 */
+	private static double[][][] entrainement = new double[10][2000][784];
+	/**
+	 * tableau qui comprend l'ensemble des images utilisees pour la validation du reseau de neurones, chargees en RAM
+	 * validation[i] correspond a l'ensmble des images du chiffre i dans la base de validation
+	 * validation[i][j] correspond à l'array de pixels de la jeme image du chiffre i dans la base de validation
+	 */
+	private static double[][][] validation = new double[10][2000][784];
+	/**
+	 * tableau qui comprend l'ensemble des images utilisees pour la validation du reseau de neurones, chargees en RAM
+	 * test[i] correspond a l'ensmble des images du chiffre i dans la base de test
+	 * test[i][j] correspond à l'array de pixels de la jeme image du chiffre i dans la base de test
+	 */
+	private static double[][][] test = new double[10][1000][784];
+	/**
+	 * Reseau de neurones ayant obtenu le meilleur taux de succès
+	 */
+	private NeuralNetworks bestNeuralNetworks; 
+	/**
+	 * Renseigne sur le type d'OS
+	 */
+	public static String OS = System.getProperty("os.name").toLowerCase(); 
 	
 	
-	//Convertit les images de la base en un tableau de 0 et de 1
+	/**
+	 * Methode qui convertit une image donnee en array de pixels 0 ou 1
+	 * @param locationImage Le chemin de l'image a traiter
+	 * @return Un Array de pixels 0 ou 1 correspondant à une image
+	 */
 	public static double[] imageLecture(String locationImage){ 
+		
+		/**
+		 * Objet qui permet de charger l'image
+		 */
 		BufferedImage image;
+		
 		try {
+			
 			//Lecture de l'image par JAVA
 			image = ImageIO.read(new File(locationImage));
+			
 			int hauteur = image.getHeight();
 			int largeur = image.getWidth();
+			/**
+			 * Entier qui stocke à chaque itération la somme des troix couleurs du pixel parcouru
+			 */
+			int couleur;
+			/**
+			 * Objet qui permet de stocker les valeurs RBG d'un pixel
+			 */
+			Color color;
+			
 			double[] imagetab = new double[hauteur*largeur];			
+			
 			for (int i=0; i<hauteur; i++){
+			
 				for(int j=0; j<largeur; j++){
-					Color color = new Color(image.getRGB(i,j), false);
-					int couleur = (color.getBlue()+color.getRed()+color.getGreen())/3;
-					if(couleur<seuil){
+				
+					color = new Color(image.getRGB(i,j), false);
+					couleur = (color.getBlue()+color.getRed()+color.getGreen())/3;
+					
+					//Ici on compare la somme des trois couleurs au seuil : si c'est inférieur au seuil, plus proche du noir on place un 1, sinon c'est un 0;
+					if(couleur<seuil)
 						imagetab[i*largeur+j]=1;
-					}
-					else{
+					
+					else
 						imagetab[i*largeur+j]=0;
-					}
+				
 				}
+			
 			}
+			
 			return imagetab;
+		
 		}
+		
 		catch (IOException e) {
 			e.printStackTrace();
+		
 		}
+		
 		return null;
+
 	}
 	
 	
-	//Permet d'extraire les images dans un tableau qui sera charge en RAM
-	public static void loadImages(){
+	/**
+	 * Methode qui permet de charger les images des differentes bases en memoire RAM, pour eviter de les recharger a chaque fois qu'elles sont utilisees
+	 */
+	public static void loadImages()
+	throws Exception{
+		
+		/**
+		 * Array qui contient la liste des interfaces des tranches de valeurs parcourues par le chargement d'image pour chaque base
+		 * limits[0] - entrainement/validation
+		 * limits[1] - validation/test
+		 * limits[2] - test 
+		 */
+		int[] limits = new int[] {Learning.entrainement.length,(Learning.entrainement.length+Learning.validation.length),(Learning.entrainement.length+Learning.validation.length+Learning.test.length)};
+		
+		/**
+		 * Chaine de caractères recevant le chemin vers le dossier ou se situent les images
+		 */
+		String path = NeuralNetworks.location;
+		
+		//Il faut determiner l'os de l'ordinateur car les chemins sont ecrit differements
+		if(OS.indexOf("win") >= 0)
+			path += NeuralNetworks.location + "\\images\\";
+		
+		else 
+			path += NeuralNetworks.location + "/images/";
+		
+		//chargement de la base d'entrainement
 		for(int i=0; i<10; i++){
-			for(int j=1; j<5000; j++){
+			
+			for(int j=1; j<limits[0]; j++){
+				
 				String nom = i + "_0" + j + ".png";
-				//Il faut determiner l'os de l'ordinateur car les chemins sont ecrit differements
-				if(OS.indexOf("win") >= 0){
-					nom = NeuralNetworks.location + "\\images\\" + nom;
-				}
-				else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
-					nom = NeuralNetworks.location + "/images/" + nom;
-				}
-				images[i][j]=Learning.imageLecture(nom);
+
+				entrainement[i][j]=Learning.imageLecture(path+nom);
 			}
 		}
-		centreReduitImages();
+
+		//chargement de la base de validation
+		
+		for(int i=0; i<10; i++){
+			
+			for(int j=limits[0]; j<limits[1]; j++){
+				
+				String nom = i + "_0" + j + ".png";
+
+				validation[i][j]=Learning.imageLecture(path+nom);
+			}
+		}
+		
+		//chargement de la base de test
+		for(int i=0; i<10; i++){
+			
+			for(int j=limits[1]; j<limits[2]; j++){
+				
+				String nom = i + "_0" + j + ".png";
+
+				entrainement[i][j]=Learning.imageLecture(path+nom);
+			}
+		}
+		
+		//On centre et réduit les images de la base d'entrainement pour une convergence plus rapide du reseau de neurones
+		centreReduitImages(entrainement);
+		
 		System.out.println("Les images ont ete chargees en ram");
 		System.out.println("----------------------------------");
 	}
 	
 	
-	// La variance et la moyenne sont calculees pour chaque pixel et non pas globalement
-	public static double[] average(){
+	/**
+	 * Methode qui calcule la valeur moyenne de chaque pixel calculee sur l'ensemble d'une base
+	 * @param base La base sur laquelle seront effectuee les moyennes
+	 * @return Un array qui contient les valeurs moyennes de chacun de 784 pixels calculees sur les images de la base
+	 */
+	public static double[] average(double[][][] base){
+		
 		double[] avg = new double[784];
+		
 		for(int i=0; i<10; i++){
-			for(int j=0; j<images[0].length; j++){
-					avg = arraySum(avg,images[i][j]);
+			
+			for(int j=0; j<base[0].length; j++){
+					
+				avg = arraySum(avg,base[i][j]);
+			
 			}
+		
 		}
+		
 		return arrayDivide(avg, 50000);
+	
 	}
 	
 	
-	//Renvoie un tableau dont l'element d'indice i est la somme des elements d'indice i des tableaux passes en arguments
+	/**
+	 * Methode qui effectue la somme de deux arrays de meme longueur
+	 * @param a1 un array passe en argument
+	 * @param a2 un array passe en argument
+	 * @return un array pour lequel chaque indice a pour valeur la somme des deux valeurs a cet indice des arrays passes en argument
+	 */
 	private static double[] arraySum(double[] a1, double[] a2) {		
 		assert (a1.length == a2.length);		
 		double[] resultat = new double[a1.length];		
@@ -93,7 +216,12 @@ public class Learning {
 	}
 	
 	
-	//Divise tous les elements du tableau par un diviseur
+	/**
+	 * Divise tous les elements d'un array par un scalaire
+	 * @param a array pass en argument
+	 * @param diviseur
+	 * @return array dont tous les elements ont ete divises par le diviseur
+	 */
 	private static double[] arrayDivide(double[] a, double diviseur) {		
 		double[] resultat = new double[a.length];
 		for (int i = 0 ; i < a.length ; i++) {
@@ -103,19 +231,23 @@ public class Learning {
 	}
 	
 	
-	//Calcule la variance du tableau passe en argument
-	public static double[] variance(double[] moyenne) {		
-		double[] var = new double[784];
-		for (int i = 0 ; i < 10 ; i++) {
-			for (int j = 0; j < images[i].length ; j++) {					
-					var = arraySum(var, arraySquared(images[i][j]));					
-			}
-		}		
-		return arraySum(arrayDivide(var, 50000), arrayNegate(arraySquared(moyenne)));				
-	}
+//		Calcule la variance du tableau passe en argument
+//		public static double[] variance(double[] moyenne) {		
+//		double[] var = new double[784];
+//		for (int i = 0 ; i < 10 ; i++) {
+//			for (int j = 0; j < images[i].length ; j++) {					
+//					var = arraySum(var, arraySquared(images[i][j]));					
+//			}
+//		}		
+//		return arraySum(arrayDivide(var, 50000), arrayNegate(arraySquared(moyenne)));				
+//	}
 	
 	
-	//Inverse les signes de tous les elements du tableau passe en arguments
+	/**
+	 * Oppose la valeur de chaque element d'un array
+	 * @param a 
+	 * @return array dont tous les elements on pris leur valeur opposee
+	 */
 	private static double[] arrayNegate(double[] a) {		
 		double[] resultat = new double[a.length];
 		for (int i = 0 ; i < a.length ; i++)
@@ -124,7 +256,11 @@ public class Learning {
 	}
 	
 	
-	//Mets au carre tous les elements du tableau passe en arguments
+	/**
+	 * Fonction qui met au carre tous les elements d'un array
+	 * @param a
+	 * @return
+	 */
 	private static double[] arraySquared(double[] a) {		
 		double[] resultat = new double[a.length];		
 		for (int i = 0 ; i < a.length ; i++) {			
@@ -134,59 +270,81 @@ public class Learning {
 	}
 	
 	
-	//Appliquer la racine carre a tous les elements du tableau passe en arguments
+	/**
+	 * Fonction qui applique la fonction racine carree a tous les elements d'un array
+	 * @param a
+	 * @return
+	 */
 	private static double[] arraySqrt(double[] a) {	
 		double[] resultat = new double[a.length];
 		for(int i = 0 ; i < a.length ; i++)
 			resultat[i] = Math.sqrt(a[i]);
 		return resultat;		
 	}
+
 	
-	// /!\ Il faut rajouter -ea dans les parametres de la vm (clic droit > Run As > Run Configurations)
-	
-	
-	//Permet de centrer reduire les images pour optimiser l'apprentissage
-	public static void centreReduitImages(){
-		double[] moyenne = average();
-		double[] var = variance(moyenne);
+	/**
+	 * Centre et reduit l'ensemble des images d'une base
+	 * @param base base passee en argument
+	 */
+	public static void centreReduitImages(double[][][] base){
+		
+		double[] moyenne = average(base);
+		double[] var = arraySum(moyenne, arrayNegate(arraySquared(moyenne)));
 		double[] ecartType = arraySqrt(var);
+		
 		for(int i=0; i<10; i++){
-			for(int j=0; j<images[i].length; j++){
+		
+			for(int j=0; j<base[i].length; j++){
+			
 				for(int k=0; k<784; k++){
-					assert (!(Double.isNaN(images[i][j][k])));
-					assert (!(Double.isNaN(moyenne[k])));
-					assert (Double.isFinite(images[i][j][k]));
-					assert (Double.isFinite(moyenne[k]));
-					if (ecartType[k]<(0.0012755102)){
-						ecartType[k]=(0.0012755102);
+				
+					// Si l'ecart-type est trop faible on obtient des valeurs incoherentes car on reduit en divisant par l'ecart-type. On minore donc par une valeur sure
+					if (ecartType[k] < 0.0012755102){
+						ecartType[k] = (0.0012755102);
 					}
-					images[i][j][k] = (images[i][j][k]-moyenne[k])/ecartType[k];
-					assert (!(Double.isNaN(images[i][j][k])));
+				
+					base[i][j][k] = (base[i][j][k]-moyenne[k])/ecartType[k];
+				
 				}
 			}
 		}
 	}
 	
 	
-	//Constructeur de la classe
+	/**
+	 * Le constructeur de la classe. Il cree simplement un reseau de neurone non entraine, de taux de succes zero afin qu'il soit remplace par le premier reseau entraine venu contre lequel il est compare.
+	 */
 	public Learning(){
-		Learning.bestNeuralNetworks = new NeuralNetworks(490, false);
-		Learning.bestNeuralNetworks.successRate = 0;				
+	
+		this.bestNeuralNetworks = new NeuralNetworks(490);
+		this.bestNeuralNetworks.successRate = 0;				
+	
 	}
 	
 	
-	//Extraction du reseaux de neurones enregistrer dans les fichiers
-	public void extractNeuralNetworks(int i , boolean load){//permet d'extraire le reseau de neurones enregistrées
-		bestNeuralNetworks.extractWeights(i, load);
-		bestNeuralNetworks.extractSuccessRate();
-		bestNeuralNetworks.extractLearningFactor();
-		bestNeuralNetworks.extractMeanSquareError();
+	/**
+	 * Methode qui permet de charger un reseau de enregistre, et qui est ensuite considere comme le meilleur connu
+	 * @param i Taille de la couche cachee
+	 */
+/*
+	public void extractNeuralNetworks(String i){//permet d'extraire le reseau de neurones enregistrées
+		
+		this.bestNeuralNetworks.extractWeights(i, true);
+		this.bestNeuralNetworks.extractSuccessRate();
+		this.bestNeuralNetworks.extractLearningFactor();
+		this.bestNeuralNetworks.extractMeanSquareError();
 		System.out.println("Le reseau de neurones anciennnement connu a ete charge");
+	
 	}
+*/	
 	
-	
-	//Enregistrement des objets necessaires pour reconstituer le reseau de neurones avec le meilleur taux de succes
-	public static void saveNeuralNetworks(NeuralNetworks N, int i){
+	/**
+	 * Enregistrement du reseau de neurones et de ses caracteristiques
+	 * @param N
+	 * @param i
+	 */
+	public static void saveNeuralNetworks(NeuralNetworks N, String s){
 		
 		FileOutputStream fos1;
 		FileOutputStream fos2;
@@ -194,10 +352,11 @@ public class Learning {
 		FileOutputStream fos4;
 		
 		try {
-			fos1 = new FileOutputStream (NeuralNetworks.location + "/bestWeights" + i);
-			fos2 = new FileOutputStream (NeuralNetworks.location + "/bestSuccessRate" + i);
-			fos3 = new FileOutputStream (NeuralNetworks.location + "/bestLearningFactor" + i);
-			fos4 = new FileOutputStream (NeuralNetworks.location + "/bestMeanSquareError" + i);
+			
+			fos1 = new FileOutputStream (NeuralNetworks.location + "/Weights_" + s);
+			fos2 = new FileOutputStream (NeuralNetworks.location + "/SuccessRate_" + s);
+			fos3 = new FileOutputStream (NeuralNetworks.location + "/LearningFactor_" + s);
+			fos4 = new FileOutputStream (NeuralNetworks.location + "/MeanSquareError_" + s);
 			
 			ObjectOutputStream oos1 = new ObjectOutputStream (fos1);
 			ObjectOutputStream oos2 = new ObjectOutputStream (fos2);
@@ -224,16 +383,27 @@ public class Learning {
 	
 	//Apprentissage sur un echantillon de la base stocke en ram
 	public void learningRAM(double learningFactor, NeuralNetworks N){
-		int count = 0;
+		
+		double count = 0;
+		
 		for (int j=0; j<10; j++){
+			
 			for (int i=0; i<1500; i++){
+				
 				count++;
+				
 				try {
-					N.backPropagationRAM(images[j][i],j, learningFactor/(2*Math.sqrt(count)));
+				
+					N.backPropagationRAM(entrainement[j][i],j, learningFactor/Math.sqrt(count));
+				
 				} catch (ClassNotFoundException e) {
+				
 					e.printStackTrace();
+				
 				} catch (IOException e) {
+					
 					e.printStackTrace();
+				
 				}
 			}
 		}
@@ -242,93 +412,104 @@ public class Learning {
 	
 	//Renvoie le taux de succes et l'erreur quadratique moyenne du reseau sur un echantillon de la base stocke en ram
 	public double[] successRateCalculRAM(NeuralNetworks N){
+		
 		double[] result;
-		double success = 0;
-		double eqm=0;
 		double[] expected;
 		double[] temp;
+		
+		double success = 0;
+		double eqm=0;
+		
 		for (int i=3000; i<5000; i++){
+		
 			for (int j=0; j<10; j++){
+			
 				try {
-					result = N.forwardPropagationRAM(images[j][i]);
-					//Si le neurone attendu a la valeur maximal, il s'agit d'un succés
+				
+					result = N.forwardPropagationRAM(validation[j][i]);
+					
+					//Si le neurone de valeur maximale a un rang egal au chiffre qui doit etre reconnu, c'est un succes
 					if (NeuralNetworks.max(result) == j){
+					
 						success++;
+					
 					}
+					
 					expected = new double[10];
 					Arrays.fill(expected,-1);
 					expected[j] = 1;
+					
 					temp = Layer.lossFunction(result, expected);
 					
 					for (int k = 0 ; k < 10 ; k++) {
+					
 						assert (!(Double.isNaN(temp[k])));
 						eqm += temp[k]/10;	
+					
 					}
 					
 				}
+				
 				catch (ClassNotFoundException e) {
+				
 					e.printStackTrace();
+				
 				}
+				
 				catch (IOException e) {
+				
 					e.printStackTrace();
+				
 				}
 			}
 		}
+		
 		double[] res = new double[2];
 		res[0] = success/20000;
 		res[1] = eqm/20000;
-		assert(!(Double.isNaN(res[1])));
+		
 		return res;
 	}
 	
 	
 	//Trouve le reseau ayant le meilleur taux de succes
-	public void findTheRightOneRAM(int hiddenSizeStart, int hiddenSizeEnd, double learnStart, double learnEnd, double learnIncrement){
+	public void findTheRightOneRAM(int hiddenSizeStart, int hiddenSizeEnd, double learnStart, double learnEnd, double learnIncrement, String loadFrom, String saveTo){
 		
 		//On charge les images en ram pour accelerer le traitement
-		Learning.loadImages();
+		try {
+			Learning.loadImages();
+		} catch(Exception e) {
+			
+		}
 		
-		//On affiche le nombre d'iterations de la boucle pour voir le temps que cela peut prendre
-		System.out.println("Nombre d'iterations : " + (int) ((hiddenSizeEnd-hiddenSizeStart)*((learnEnd-learnStart)/learnIncrement)));
-		System.out.println("------------------------");
+	
+		File f = new File (NeuralNetworks.location + "/Weights_" + loadFrom);
 		
-		//Learning T = new Learning(hiddenSizeStart);
+		if (f.exists()) {
 		
+			this.bestNeuralNetworks = new NeuralNetworks(loadFrom);
+			this.bestNeuralNetworks.extractData();
+			System.out.println("Le reseau de neurones " + loadFrom + " a ete charge");
+			System.out.println("Ses caractéristiques sont :");
+			System.out.println("Taille : " + this.bestNeuralNetworks.weights[1].length);
+			System.out.println("Learning factor : " + this.bestNeuralNetworks.learningFactor);
+			System.out.println("Erreur quadratique moyenne : " + this.bestNeuralNetworks.meanSquareError);
+			System.out.println("Taux de succes : " + this.bestNeuralNetworks.successRate);
+			
+			
+		}
+		else
+			System.out.println("Le reseau de neurones " + loadFrom + " n'a pas ete trouve");
 		
-		
-		//On extrait le reseau de neurones des fichiers
-		//T.extractNeuralNetworks();
-		
-		
-		
-		//On affiche le meilleur reseaux de neurones connu a ce jour 
-		//System.out.println("Erreur quadratique moyenne : " + bestStats[1]);
-		//System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
-		//System.out.println("Taux de succes : " + bestStats[0]);
-		//System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
-		//System.out.println("-----------------------");
-		
-		//Learning.saveNeuralNetworks();
-		
-		/**
-		 * Array qui contient les informations du meilleur réseau de neurones testé
-		 */
-		//double[] bestStats = new double[2]; // 0 = successrate, 1 = meanSquareError
-		//bestStats[0] = Learning.bestNeuralNetworks.successRate;
-		//bestStats[1] = Learning.bestNeuralNetworks.meanSquareError;
 		
 		/**
 		 * Array qui contient à chaque itération les informations du meilleur réseau de neurones testé
 		 */
 		double[] stats;
 		
-		//double currentLearnF = learnStart;
-		
 		//On teste pour differentes valeurs du learning factor
 		for (double currentLearnF = learnStart ; currentLearnF <= learnEnd ; currentLearnF += learnIncrement) {
 		
-			//On affiche le learning factor actuel
-			System.out.println("Learning factor : " + currentLearnF);
 			
 			//On calcule le taux de succes pour des reseaux de taille differente
 			for(int i = hiddenSizeStart ; i <= hiddenSizeEnd ; i++){
@@ -338,7 +519,7 @@ public class Learning {
 				
 				System.out.println("Taille couche cachee : "+ i);
 				
-				NeuralNetworks tested = new NeuralNetworks(i, false);
+				NeuralNetworks tested = new NeuralNetworks(i);
 				
 				//Apprentissage
 				
@@ -355,11 +536,11 @@ public class Learning {
 				
 				System.out.println("Taux de succes : " + stats[0]);
 				
-				if(stats[0] > Learning.bestNeuralNetworks.successRate){
+				if(stats[0] > this.bestNeuralNetworks.successRate){
 				
 					//Mise a jour du reseaux et sauvegarde
-					Learning.bestNeuralNetworks = tested;
-					Learning.saveNeuralNetworks(tested, 0);
+					this.bestNeuralNetworks = tested;
+					Learning.saveNeuralNetworks(tested, saveTo);
 					Toolkit.getDefaultToolkit().beep();
 					System.out.println("Le reseau de neurones a ete change et sauvegarde");
 				
@@ -368,22 +549,15 @@ public class Learning {
 				System.out.println("-----------------------");
 			
 			}			
-			
-			//On affiche le meilleur reseau pour voir si il a change au cours de l'iteration sur la boucle
-			System.out.println("Erreur quadratique moyenne : " + Learning.bestNeuralNetworks.meanSquareError);
-			System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
-			System.out.println("Taux de succes : " + Learning.bestNeuralNetworks.successRate);
-			System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
-			System.out.println("Le meilleur reseau de neurones determine a ete sauvegarde");
-			System.out.println("---------------------------------------------------------");
 		
 		}
 		
 		//On affiche enfin le reseau obtenu a la fin de l'execution de l'ensemble du processus 
-		System.out.println("Erreur quadratique moyenne : " + Learning.bestNeuralNetworks.meanSquareError);
-		System.out.println("Taille : " + Learning.bestNeuralNetworks.weights[1].length);
-		System.out.println("Taux de succes : " + Learning.bestNeuralNetworks.successRate);
-		System.out.println("Learning factor : " + Learning.bestNeuralNetworks.learningFactor);
+		System.out.println("Meilleur résultat obtenu :");
+		System.out.println("Erreur quadratique moyenne : " + this.bestNeuralNetworks.meanSquareError);
+		System.out.println("Taille : " + this.bestNeuralNetworks.weights[1].length);
+		System.out.println("Taux de succes : " + this.bestNeuralNetworks.successRate);
+		System.out.println("Learning factor : " + this.bestNeuralNetworks.learningFactor);
 		System.out.println("-----------------------");
 	
 	}
@@ -391,25 +565,36 @@ public class Learning {
 	
 	//Permet d'afficher le temps en s sous la forme xx h yy min zz sec
 	public static void tempsExecution(long i){
+		
 		System.out.print(i/3600 + " h ");
 		System.out.print((i%3600)/60 + " min ");
 		System.out.print((i%3600)%60 + " sec");
+	
 	}
 	
 	
 	public static void main(String[] args) {
-		Toolkit.getDefaultToolkit().beep();
+		
+		
+		int startingHiddenSize = Integer.parseInt(args[0]);
+		int endingHiddenSize = Integer.parseInt(args[1]);
+		
+		double startingLearnFactor = Double.parseDouble(args[2]);
+		double endingLearnFactor = Double.parseDouble(args[3]);
+		double learnFactorIncrement = Double.parseDouble(args[4]);
+		
+		String loadFrom = args[5];
+		String saveTo = (args.length > 6)? args[6] : args[5];
 		
 		long startTime = System.currentTimeMillis();
 		
 		Learning instance = new Learning();
 		
-		instance.findTheRightOneRAM(492,493,0.15,0.15,0.005);
+		instance.findTheRightOneRAM(startingHiddenSize,endingHiddenSize,startingLearnFactor,endingLearnFactor,learnFactorIncrement, loadFrom, saveTo);
 		
 		long endTime   = System.currentTimeMillis();
 		long totalTime = (endTime - startTime)/1000;
 		
 		Learning.tempsExecution(totalTime);
-		Toolkit.getDefaultToolkit().beep();
 	}
 }

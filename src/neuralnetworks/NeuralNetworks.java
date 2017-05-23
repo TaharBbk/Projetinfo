@@ -30,10 +30,12 @@ public class NeuralNetworks {
 	 * @param l taille de la couche cachee
 	 * @param extract boolean qui dicte si les poids sont a extraire d'un reseau sauvegarde ou pas
 	 */
-	public NeuralNetworks(int l, boolean extract) {
+	public NeuralNetworks(String loadFrom) {
+		
+		assert (loadFrom != "");
+		
 		//Extraction des poids
-		//Si extract=true > les poids sont extraits du fichier sinon ils sont generes aleatoirement 
-		this.extractWeights(l, extract);
+		this.extractWeights(loadFrom);
 		numberOfWeights = weights.length;
 		//Creation du reseau de neurones et de ses differentes couches 
 		layers = new Layer[numberOfWeights+1];
@@ -42,6 +44,22 @@ public class NeuralNetworks {
 		for(int i=numberOfWeights-1; i>=0; i--){
 			layers[i] = new Layer(new double[weights[i][0].length], weights[i], layers[i+1]);		
 		}
+	}
+	
+	public NeuralNetworks(int l) {
+		
+		//Generation des poids
+		this.extractWeights(l);
+		numberOfWeights = weights.length;
+		//Creation du reseau de neurones et de ses differentes couches 
+		layers = new Layer[numberOfWeights+1];
+		layers[numberOfWeights] = new Layer(new double[10]);
+		//Attribution des poids aux différentes couches ainsi que lien entre les différentes couches
+		for(int i=numberOfWeights-1; i>=0; i--){
+			layers[i] = new Layer(new double[weights[i][0].length], weights[i], layers[i+1]);		
+		}
+		
+		
 	}
 	
 	
@@ -141,42 +159,38 @@ public class NeuralNetworks {
 	
 	
 	/**
-	 * Methode qui charge les matrices de poids d'un reseau de neurones sauvegarde ou genere de nouveaux poids aleatoires
-	 * @param i Taille de la couche cachee dans le reseau a charger / generer
-	 * @param extract boolean qui indique si oui ou non il faut charger des poids d'un reseau de neurones sauvegarde, ou bien en generer de nouveaux
+	 * Methode qui genere de nouveaux poids aleatoires
+	 * @param i Taille de la couche cachee dans le reseau a generer
 	 */
-	public void extractWeights(int i, boolean extract){
-		//Besoin d'initialiser les poids si le fichier n'existe pas
-		double[][][] weights = new double[2][][];
+	public void extractWeights(int i){
+		this.weights = new double[2][][];
 		weights[0] = new double[784][i];
 		weights[1] = new double[i][10];
-		this.weights = weights;
-		
-		File f = new File(location + "/bestWeights");
-		//Extraction de l'objet weights
-		if(f.exists() && extract){
-			FileInputStream fis;
-			try {
-				fis = new FileInputStream (location + "/bestWeights");
-				ObjectInputStream ois = new ObjectInputStream (fis);
-				Object weight = ois.readObject();
-				weights = (double[][][]) weight;
-				ois.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
 			
-			this.generateWeights();
-			
-		}
+		this.generateWeights();
+	
 	}
 	
+	public void extractWeights(String loadFrom) {
+		
+		//Extraction de l'objet weights
+		FileInputStream fis;
+		try {
+			
+			fis = new FileInputStream (location + "/bestWeights_"+loadFrom);
+			ObjectInputStream ois = new ObjectInputStream (fis);
+			Object weight = ois.readObject();
+			weights = (double[][][]) weight;
+			ois.close();
+		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Fonction qui sauvegarde les poids de l'instance actuelle de la classe, afin de les reutiliser plus tard
@@ -277,6 +291,16 @@ public class NeuralNetworks {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void extractData() {
+		
+		
+		this.extractMeanSquareError();
+		this.extractLearningFactor();
+		this.extractSuccessRate();
+		
+		
 	}
 
 	
