@@ -119,7 +119,7 @@ public class Learning {
 		 * limits[1] - validation/test
 		 * limits[2] - test 
 		 */
-		int[] limits = new int[] {Learning.entrainement.length,(Learning.entrainement.length+Learning.validation.length),(Learning.entrainement.length+Learning.validation.length+Learning.test.length)};
+		int[] limits = new int[] {2000,4000,5000};
 		
 		/**
 		 * Chaine de caractères recevant le chemin vers le dossier ou se situent les images
@@ -128,10 +128,10 @@ public class Learning {
 		
 		//Il faut determiner l'os de l'ordinateur car les chemins sont ecrit differements
 		if(OS.indexOf("win") >= 0)
-			path += NeuralNetworks.location + "\\images\\";
+			path += "\\images\\";
 		
 		else 
-			path += NeuralNetworks.location + "/images/";
+			path += "/images/";
 		
 		//chargement de la base d'entrainement
 		for(int i=0; i<10; i++){
@@ -162,6 +162,8 @@ public class Learning {
 			for(int j=limits[1]; j<limits[2]; j++){
 				
 				String nom = i + "_0" + j + ".png";
+				
+				System.out.println(path+nom);
 
 				entrainement[i][j]=Learning.imageLecture(path+nom);
 			}
@@ -485,7 +487,12 @@ public class Learning {
 	
 		File f = new File (NeuralNetworks.location + "/Weights_" + loadFrom);
 		
-		if (f.exists()) {
+		if (loadFrom == "") {
+			
+			System.out.println("Aucun reseau de neurones charge");
+			
+		}
+		else if (f.exists()) {
 		
 			this.bestNeuralNetworks = new NeuralNetworks(loadFrom);
 			this.bestNeuralNetworks.extractData();
@@ -583,8 +590,8 @@ public class Learning {
 		double endingLearnFactor = Double.parseDouble(args[3]);
 		double learnFactorIncrement = Double.parseDouble(args[4]);
 		
-		String loadFrom = args[5];
-		String saveTo = (args.length > 6)? args[6] : args[5];
+		String loadFrom = (args.length < 6)? "" : args[5];
+		String saveTo = (args.length < 7)? "" : args[6];
 		
 		long startTime = System.currentTimeMillis();
 		
