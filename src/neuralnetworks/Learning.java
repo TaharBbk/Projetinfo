@@ -635,7 +635,6 @@ public class Learning {
 	*Permet d'afficher le temps en s sous la forme xx h yy min zz sec
 	* @param i Long indiquant le temps ecoule en milisecondes
 	*/
-	Permet d'afficher le temps en s sous la forme xx h yy min zz sec
 	public static void tempsExecution(long i){
 		
 		System.out.print(i/3600 + " h ");
