@@ -427,7 +427,7 @@ public class Learning {
 		double success = 0;
 		double eqm=0;
 		
-		for (int i=0; i<2000; i++){
+		for (int i=0; i<base[0].length; i++){
 		
 			for (int j=0; j<10; j++){
 			
@@ -471,7 +471,7 @@ public class Learning {
 		}
 		
 		double[] res = new double[2];
-		double taille = (double) base[0].length;
+		double taille = (double) base[0].length * 10;
 		res[0] = success/taille;
 		res[1] = eqm/taille;
 		
