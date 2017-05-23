@@ -18,9 +18,9 @@ public class NeuralNetworks {
 	Layer[] layers;
 	public double[][][] weights; //Tableau contenant les matrices des poids
 	private int numberOfWeights; //Nombre de matrices de poids
-	double learningFactor;
-	double successRate;
-	double meanSquareError;
+	double learningFactor = 0;
+	double successRate = 0;
+	double meanSquareError = 0;
 	int hiddenSize;
 	public static final int nombreIterationsBackprop = 1;
 
@@ -75,8 +75,10 @@ public class NeuralNetworks {
 		assert (image.length == 784);
 		layers[0].setValues(image);
 		layers[0].forward_init();
-		//System.out.println(layers[2].getValues()[0]);
+
+		
 		return layers[2].getValues();
+		
 	}
 	
 	
@@ -153,7 +155,8 @@ public class NeuralNetworks {
 		for(int i=0; i<weights.length; i++){
 			for(int j=0; j<weights[i].length; j++){
 				for(int h=0; h<weights[i][j].length; h++){
-					weights[i][j][h] = randomWeights(weights.length);
+					weights[i][j][h] = randomWeights(1);
+					assert(weights[i][j][h] != 0);
 				}
 			}
 		}

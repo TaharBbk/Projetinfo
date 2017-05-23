@@ -119,7 +119,7 @@ public class Learning {
 		 * limits[1] - validation/test
 		 * limits[2] - test 
 		 */
-		int[] limits = new int[] {2000,4000,5000};
+		int[] limits = new int[] {2000,2000,1000};
 		
 		/**
 		 * Chaine de caract�res recevant le chemin vers le dossier ou se situent les images
@@ -136,9 +136,9 @@ public class Learning {
 		//chargement de la base d'entrainement
 		for(int i=0; i<10; i++){
 			
-			for(int j=1; j<limits[0]; j++){
+			for(int j=0; j < 2000; j++){
 				
-				String nom = i + "_0" + j + ".png";
+				String nom = i + "_0" + (j+1) + ".png";
 
 				entrainement[i][j]=Learning.imageLecture(path+nom);
 			}
@@ -148,9 +148,9 @@ public class Learning {
 		
 		for(int i=0; i<10; i++){
 			
-			for(int j=limits[0]; j<limits[1]; j++){
+			for(int j=0; j<limits[1]; j++){
 				
-				String nom = i + "_0" + j + ".png";
+				String nom = i + "_0" + (j+limits[0]+1) + ".png";
 
 				validation[i][j]=Learning.imageLecture(path+nom);
 			}
@@ -159,9 +159,9 @@ public class Learning {
 		//chargement de la base de test
 		for(int i=0; i<10; i++){
 			
-			for(int j=limits[1]; j<limits[2]; j++){
+			for(int j=0; j<limits[2]; j++){
 				
-				String nom = i + "_0" + j + ".png";
+				String nom = i + "_0" + (1+j+limits[0]+limits[1]) + ".png";
 				
 				System.out.println(path+nom);
 
@@ -170,7 +170,9 @@ public class Learning {
 		}
 		
 		//On centre et r�duit les images de la base d'entrainement pour une convergence plus rapide du reseau de neurones
-		//centreReduitImages(entrainement);
+		entrainement = centreReduitImages(entrainement);
+		validation = centreReduitImages(validation);
+		
 		
 		System.out.println("Les images ont ete chargees en ram");
 		System.out.println("----------------------------------");
@@ -233,16 +235,16 @@ public class Learning {
 	}
 	
 	
-//		Calcule la variance du tableau passe en argument
-//		public static double[] variance(double[] moyenne) {		
-//		double[] var = new double[784];
-//		for (int i = 0 ; i < 10 ; i++) {
-//			for (int j = 0; j < images[i].length ; j++) {					
-//					var = arraySum(var, arraySquared(images[i][j]));					
-//			}
-//		}		
-//		return arraySum(arrayDivide(var, 50000), arrayNegate(arraySquared(moyenne)));				
-//	}
+		//Calcule la variance du tableau passe en argument
+		public static double[] variance(double[][][] base, double[] moyenne) {		
+		double[] var = new double[784];
+		for (int i = 0 ; i < 10 ; i++) {
+			for (int j = 0; j < base[i].length ; j++) {					
+					var = arraySum(var, arraySquared(base[i][j]));					
+			}
+		}		
+		return arraySum(arrayDivide(var, 50000), arrayNegate(arraySquared(moyenne)));				
+	}
 	
 	
 	/**
@@ -289,33 +291,32 @@ public class Learning {
 	 * Centre et reduit l'ensemble des images d'une base
 	 * @param base base passee en argument
 	 */
-	public static void centreReduitImages(){
+	public static double[][][] centreReduitImages(double [][][] base){
 		
-		double[] moyenne = average(entrainement);
-		double[] var = arraySum(moyenne, arrayNegate(arraySquared(moyenne)));
+		double[] moyenne = average(base);
+		double[] var = variance(base, moyenne);
 		double[] ecartType = arraySqrt(var);
+		double[][][] result = new double[base.length][base[0].length][784];
 		
 		for(int i=0; i<10; i++){
 		
 			for(int j=0; j<2000; j++){
 			
 				for(int k=0; k<784; k++){
-					
-					assert (!(Double.isNaN(entrainement[i][j][k])));
-					assert (!(Double.isNaN(moyenne[k])));
-					assert (Double.isFinite(entrainement[i][j][k]));
-					assert (Double.isFinite(moyenne[k]));
 				
 					// Si l'ecart-type est trop faible on obtient des valeurs incoherentes car on reduit en divisant par l'ecart-type. On minore donc par une valeur sure
 					if (ecartType[k] < 0.0012755102){
 						ecartType[k] = (0.0012755102);
 					}
 				
-					entrainement[i][j][k] = (entrainement[i][j][k]-moyenne[k])/ecartType[k];
+					result[i][j][k] = (base[i][j][k]-moyenne[k])/ecartType[k];
 				
 				}
 			}
 		}
+		
+		return result;
+		
 	}
 	
 	
@@ -434,7 +435,7 @@ public class Learning {
 			
 				try {
 				
-					result = N.forwardPropagationRAM(entrainement[j][i]);
+					result = N.forwardPropagationRAM(validation[j][i]);
 					
 					//Si le neurone de valeur maximale a un rang egal au chiffre qui doit etre reconnu, c'est un succes
 					if (NeuralNetworks.max(result) == j){

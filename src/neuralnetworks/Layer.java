@@ -129,6 +129,10 @@ public class Layer {
 	 */
 	public void forward_init() {		
 		this.next.setValues(productMatrixVector(this.weights, this.values));		
+		
+		for (int i = 0 ; i < this.next.numberOfNeurons ; i++)
+			//assert(this.next.values[i] != 0);
+		
 		this.next.propagate();		
 	}
 	
@@ -178,6 +182,7 @@ public class Layer {
 	 * @param learningFactor le facteur d'apprentissage qui definit l'importance de la correction sur les poids
 	 */
 	public void backprop(double[] incomingValues, double learningFactor) {		
+		
 		/**
 		 * Variable contenant le nombre de neurones dans la couche suivante
 		 */
@@ -216,19 +221,6 @@ public class Layer {
 			
 		this.differentialErrorWeights = productVectorVector(this.differentialErrorProduct, this.values);
 		
-		for (int i = 0 ; i < this.differentialErrorWeights.length ; i++) {
-			
-			for (int j = 0 ; j < this.differentialErrorWeights[0].length ; j++) {
-				
-				assert(!(Double.isNaN(this.differentialErrorWeights[i][j])));
-				assert(Double.isFinite(this.differentialErrorWeights[i][j]));
-				//System.out.println(i + " " + j);
-				assert(this.differentialErrorWeights[i][j] != 0);
-				
-			}
-			
-		}
-		
 		returned = productMatrixVector(transpose(this.weights), this.differentialErrorProduct);
 		assert (returned.length == this.values.length);
 	
@@ -238,7 +230,7 @@ public class Layer {
 		// On met a jour la valeur des poids de cette couche
 		this.weights = (this.soustractionMatrice(this.weights, this.scalaireMatrice(learningFactor, this.differentialErrorWeights))); 
 		
-		// Si une couche precedente existe, alors on appelle la methode en passant en argument la variable returned et le mÃªme learningFactor
+		// Si une couche precedente existe, alors on appelle la methode en passant en argument la variable returned et le même learningFactor
 		if (this.precedent != null)
 			// We call the method on the next layer to be processed, passing as input what we formerly calculated
 			this.precedent.backprop(returned, learningFactor);
