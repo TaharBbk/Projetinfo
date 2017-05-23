@@ -165,7 +165,7 @@ public class Learning {
 				
 				System.out.println(path+nom);
 
-				entrainement[i][j]=Learning.imageLecture(path+nom);
+				test[i][j]=Learning.imageLecture(path+nom);
 			}
 		}
 		
@@ -396,7 +396,7 @@ public class Learning {
 				
 				try {
 				
-					N.backPropagationRAM(entrainement[j][i],j, learningFactor/Math.sqrt(count));
+					N.backPropagationRAM(entrainement[j][i],j, learningFactor/(2*Math.sqrt(count)));
 				
 				} catch (ClassNotFoundException e) {
 				
@@ -515,7 +515,6 @@ public class Learning {
 		
 		//On teste pour differentes valeurs du learning factor
 		for (double currentLearnF = learnStart ; currentLearnF <= learnEnd ; currentLearnF += learnIncrement) {
-		
 			
 			//On calcule le taux de succes pour des reseaux de taille differente
 			for(int i = hiddenSizeStart ; i <= hiddenSizeEnd ; i++){
