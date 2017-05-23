@@ -36,6 +36,7 @@ public class NeuralNetworks {
 		
 		//Extraction des poids
 		this.extractWeights(loadFrom);
+		this.extractData();
 		numberOfWeights = weights.length;
 		//Creation du reseau de neurones et de ses differentes couches 
 		layers = new Layer[numberOfWeights+1];
@@ -74,6 +75,7 @@ public class NeuralNetworks {
 		assert (image.length == 784);
 		layers[0].setValues(image);
 		layers[0].forward_init();
+		//System.out.println(layers[2].getValues()[0]);
 		return layers[2].getValues();
 	}
 	

@@ -170,7 +170,7 @@ public class Learning {
 		}
 		
 		//On centre et réduit les images de la base d'entrainement pour une convergence plus rapide du reseau de neurones
-		centreReduitImages(entrainement);
+		//centreReduitImages(entrainement);
 		
 		System.out.println("Les images ont ete chargees en ram");
 		System.out.println("----------------------------------");
@@ -289,24 +289,29 @@ public class Learning {
 	 * Centre et reduit l'ensemble des images d'une base
 	 * @param base base passee en argument
 	 */
-	public static void centreReduitImages(double[][][] base){
+	public static void centreReduitImages(){
 		
-		double[] moyenne = average(base);
+		double[] moyenne = average(entrainement);
 		double[] var = arraySum(moyenne, arrayNegate(arraySquared(moyenne)));
 		double[] ecartType = arraySqrt(var);
 		
 		for(int i=0; i<10; i++){
 		
-			for(int j=0; j<base[i].length; j++){
+			for(int j=0; j<2000; j++){
 			
 				for(int k=0; k<784; k++){
+					
+					assert (!(Double.isNaN(entrainement[i][j][k])));
+					assert (!(Double.isNaN(moyenne[k])));
+					assert (Double.isFinite(entrainement[i][j][k]));
+					assert (Double.isFinite(moyenne[k]));
 				
 					// Si l'ecart-type est trop faible on obtient des valeurs incoherentes car on reduit en divisant par l'ecart-type. On minore donc par une valeur sure
 					if (ecartType[k] < 0.0012755102){
 						ecartType[k] = (0.0012755102);
 					}
 				
-					base[i][j][k] = (base[i][j][k]-moyenne[k])/ecartType[k];
+					entrainement[i][j][k] = (entrainement[i][j][k]-moyenne[k])/ecartType[k];
 				
 				}
 			}
@@ -396,6 +401,7 @@ public class Learning {
 				
 				try {
 				
+					assert (learningFactor/(2*Math.sqrt(count)) > 0);
 					N.backPropagationRAM(entrainement[j][i],j, learningFactor/(2*Math.sqrt(count)));
 				
 				} catch (ClassNotFoundException e) {
@@ -413,7 +419,7 @@ public class Learning {
 
 	
 	//Renvoie le taux de succes et l'erreur quadratique moyenne du reseau sur un echantillon de la base stocke en ram
-	public double[] successRateCalculRAM(NeuralNetworks N, double[][][] base){
+	public double[] successRateCalculRAM(NeuralNetworks N){
 		
 		double[] result;
 		double[] expected;
@@ -422,13 +428,13 @@ public class Learning {
 		double success = 0;
 		double eqm=0;
 		
-		for (int i=0; i<base[0].length; i++){
+		for (int i=0; i<2000; i++){
 		
 			for (int j=0; j<10; j++){
 			
 				try {
 				
-					result = N.forwardPropagationRAM(base[j][i]);
+					result = N.forwardPropagationRAM(validation[j][i]);
 					
 					//Si le neurone de valeur maximale a un rang egal au chiffre qui doit etre reconnu, c'est un succes
 					if (NeuralNetworks.max(result) == j){
@@ -436,7 +442,7 @@ public class Learning {
 						success++;
 					
 					}
-					
+							
 					expected = new double[10];
 					Arrays.fill(expected,-1);
 					expected[j] = 1;
@@ -444,7 +450,7 @@ public class Learning {
 					temp = Layer.lossFunction(result, expected);
 					
 					for (int k = 0 ; k < 10 ; k++) {
-					
+				
 						eqm += temp[k]/10;	
 					
 					}
@@ -466,8 +472,8 @@ public class Learning {
 		}
 		
 		double[] res = new double[2];
-		res[0] = success/(base[0].length*10);
-		res[1] = eqm/(base[0].length*10);
+		res[0] = success/20000;
+		res[1] = eqm/20000;
 		
 		return res;
 	}
@@ -489,6 +495,7 @@ public class Learning {
 		if (loadFrom == "") {
 			
 			System.out.println("Aucun reseau de neurones charge");
+			saveTo = "default";
 			
 		}
 		else if (f.exists()) {
@@ -532,7 +539,7 @@ public class Learning {
 				
 				//Test et determination du taux de succes
 				
-				stats = this.successRateCalculRAM(tested, validation);
+				stats = this.successRateCalculRAM(tested);
 				
 				System.out.println(stats[0]);
 				
@@ -546,8 +553,8 @@ public class Learning {
 				if(stats[0] > this.bestNeuralNetworks.successRate){
 				
 					//Mise a jour du reseaux et sauvegarde
-					this.bestNeuralNetworks = tested;
 					Learning.saveNeuralNetworks(tested, saveTo);
+					this.bestNeuralNetworks = tested;
 					Toolkit.getDefaultToolkit().beep();
 					System.out.println("Le reseau de neurones a ete change et sauvegarde");
 				
@@ -568,7 +575,7 @@ public class Learning {
 		System.out.println("-----------------------");
 		
 		System.out.println("Verification a l'aide de la base de tets");
-		System.out.println("Taux de succes :" + this.successRateCalculRAM(this.bestNeuralNetworks, test)[0]);
+		//System.out.println("Taux de succes :" + this.successRateCalculRAM(this.bestNeuralNetworks)[0]);
 	
 	}
 	
