@@ -159,11 +159,9 @@ public class Layer {
 		for (int i = 0 ; i < this.numberOfNeurons ; i++) {
 			
 			this.differentialErrorValues = lossFunctionDerivative(this.values, expectedResult);					
-		
-		}
-		
-		for (int i = 0 ; i < this.differentialErrorValues.length ; i++)
 			assert (!(Double.isNaN(this.differentialErrorValues[i])));
+			
+		}
 		
 		//On lance l'appel de la backprop sur la couche precedente en passant en argument le vecteur que l'on vient de calculer, ainsi que le facteur d'apprentisssage qui reste le même
 		this.precedent.backprop(this.differentialErrorValues, learningFactor);							
@@ -217,6 +215,19 @@ public class Layer {
 		}
 			
 		this.differentialErrorWeights = productVectorVector(this.differentialErrorProduct, this.values);
+		
+		for (int i = 0 ; i < this.differentialErrorWeights.length ; i++) {
+			
+			for (int j = 0 ; j < this.differentialErrorWeights[0].length ; j++) {
+				
+				assert(!(Double.isNaN(this.differentialErrorWeights[i][j])));
+				assert(Double.isFinite(this.differentialErrorWeights[i][j]));
+				//System.out.println(i + " " + j);
+				assert(this.differentialErrorWeights[i][j] != 0);
+				
+			}
+			
+		}
 		
 		returned = productMatrixVector(transpose(this.weights), this.differentialErrorProduct);
 		assert (returned.length == this.values.length);

@@ -434,7 +434,7 @@ public class Learning {
 			
 				try {
 				
-					result = N.forwardPropagationRAM(validation[j][i]);
+					result = N.forwardPropagationRAM(entrainement[j][i]);
 					
 					//Si le neurone de valeur maximale a un rang egal au chiffre qui doit etre reconnu, c'est un succes
 					if (NeuralNetworks.max(result) == j){
