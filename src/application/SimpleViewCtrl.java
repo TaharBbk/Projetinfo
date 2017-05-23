@@ -226,7 +226,7 @@ public class SimpleViewCtrl {
 		Stage mainStage = new Stage();
 
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Ouvrir l'image Ã  analyser");
+		fileChooser.setTitle("Ouvrir l'image a analyser");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
 		File selectedFile = fileChooser.showOpenDialog(mainStage);
 		Image apercuImage = new Image("file:" + selectedFile.getAbsolutePath());
@@ -243,17 +243,31 @@ public class SimpleViewCtrl {
 			g.drawImage(Image, 0, 0, 28, 28, null);
 			g.dispose();
 			ImageIO.write(resizedImage, "png", fileResized);
-		
-			double[] results = nN.forwardPropagationRAM(Learning.imageLecture("tmpResized"));
-			turnOnLights(results);
 
-
+			String nom = "";
+			
+			if(OS.indexOf("win") >= 0){
+				nom = location + "\\tmpResized.png";
+			}
+			
+			else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+				nom = location + "/tmpResized.png";
+			}
+			
+			try {
+				double[] image = Learning.imageLecture(nom);
+				double[] results = nN.forwardPropagationRAM(image);
+				turnOnLights(results);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			fileResized.delete();
+
 		  } catch (IOException e) {
 	        	e.printStackTrace();
-	        } catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+	        }
 	}
 	
 	
