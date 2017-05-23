@@ -44,6 +44,9 @@ public class Learning {
 	 */
 	public static String OS = System.getProperty("os.name").toLowerCase(); 
 	
+	private static double[] average;
+	private static double[] sigma;
+	
 	
 	/**
 	 * Methode qui convertit une image donnee en array de pixels 0 ou 1
@@ -167,9 +170,8 @@ public class Learning {
 			}
 		}
 		
-		//On centre et r�duit les images de la base d'entrainement pour une convergence plus rapide du reseau de neurones
-		entrainement = centreReduitImages(entrainement);
-		validation = centreReduitImages(validation);
+		//On centre et reduit les images des bases pour une convergence plus rapide du reseau de neurones
+		centreReduitImages();
 		
 		
 		System.out.println("Les images ont ete chargees en ram");
@@ -289,29 +291,53 @@ public class Learning {
 	 * Centre et reduit l'ensemble des images d'une base
 	 * @param base base passee en argument
 	 */
-	public static double[][][] centreReduitImages(double [][][] base){
+	public static void centreReduitImages(){
 		
-		double[] moyenne = average(base);
-		double[] var = variance(base, moyenne);
-		double[] ecartType = arraySqrt(var);
-		double[][][] result = new double[base.length][base[0].length][784];
+		double[] moyenne = average(entrainement);
+		moyenne = arraySum(moyenne, average(validation));
+		moyenne = arraySum(moyenne, average(test));
+		Learning.average = arrayDivide(moyenne, 3);
+		
+		double[] var = arraySum(moyenne, arrayNegate(arraySquared(moyenne)));
+		
+		for (int i = 0 ; i < var.length ; i++) {
+			
+			// Si l'ecart-type est trop faible on obtient des valeurs incoherentes car on reduit en divisant par l'ecart-type. On minore donc par une valeur sure
+			if (var[i] < 0.0012755102){
+				var[i] = (0.0012755102);
+			}
+			
+		}
+		
+		Learning.sigma = arraySqrt(var);
 		
 		for(int i=0; i<10; i++){
 		
-			for(int j=0; j<2000; j++){
+			for(int j=0; j<1000; j++){
 			
-				for(int k=0; k<784; k++){
+				entrainement[i][j] = centreReduit(entrainement[i][j]);
+				validation[i][j] = centreReduit(validation[i][j]);
+				test[i][j] = centreReduit(test[i][j]);
 				
-					// Si l'ecart-type est trop faible on obtient des valeurs incoherentes car on reduit en divisant par l'ecart-type. On minore donc par une valeur sure
-					if (ecartType[k] < 0.0012755102){
-						ecartType[k] = (0.0012755102);
-					}
+			}
+			
+			for (int j = 1000 ; j < 2000 ; j++) {
 				
-					result[i][j][k] = (base[i][j][k]-moyenne[k])/ecartType[k];
+				entrainement[i][j] = centreReduit(entrainement[i][j]);
+				validation[i][j] = centreReduit(validation[i][j]);				
 				
-				}
 			}
 		}
+		
+	}
+	
+	
+	private static double[] centreReduit(double[] input) {
+		
+		double[] result = new double[input.length];
+		
+		for (int i = 0 ; i < input.length ; i++)
+			result[i] = (input[i]-Learning.average[i])/Learning.sigma[i];
 		
 		return result;
 		
