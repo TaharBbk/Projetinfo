@@ -196,7 +196,7 @@ public class Learning {
 		
 		}
 		
-		return arrayDivide(avg, 50000);
+		return arrayDivide(avg, 20000);
 	
 	}
 	
@@ -241,7 +241,7 @@ public class Learning {
 					var = arraySum(var, arraySquared(base[i][j]));					
 			}
 		}		
-		return arraySum(arrayDivide(var, 50000), arrayNegate(arraySquared(moyenne)));				
+		return arraySum(arrayDivide(var, 20000), arrayNegate(arraySquared(moyenne)));				
 	}
 	
 	
