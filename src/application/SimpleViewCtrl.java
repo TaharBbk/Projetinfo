@@ -35,6 +35,7 @@ import javax.imageio.ImageIO;
 public class SimpleViewCtrl {
 	
 	NeuralNetworks nN = new NeuralNetworks("best");
+	Learning L = new Learning();
 	
 	@FXML Button boutonAnalyser;
 	@FXML Button boutonNouveau;
@@ -128,7 +129,7 @@ public class SimpleViewCtrl {
 		
 		try {
 			double[] image = Learning.imageLecture(nom);
-			image = Learning.centreReduit(image);
+			//image = L.centreReduit(image);
 			double[] results = nN.forwardPropagationRAM(image);
 			for (int i=0; i<10; i++){
 				System.out.println(results[i]);
@@ -299,10 +300,6 @@ public class SimpleViewCtrl {
 	 */
 	@FXML
 	void init(){
-		try {
-			Learning.loadImages();
-		}
-		catch (Exception e) {}
 		txSuccess.setText(nN.getSuccessRate());
 	}
 

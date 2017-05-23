@@ -44,8 +44,8 @@ public class Learning {
 	 */
 	public static String OS = System.getProperty("os.name").toLowerCase(); 
 	
-	private static double[] average = null;
-	private static double[] sigma = null;
+	private double[] average = null;
+	private double[] sigma = null;
 	
 	
 	/**
@@ -113,7 +113,7 @@ public class Learning {
 	/**
 	 * Methode qui permet de charger les images des differentes bases en memoire RAM, pour eviter de les recharger a chaque fois qu'elles sont utilisees
 	 */
-	public static void loadImages()
+	public void loadImages()
 	throws Exception{
 		
 		/**
@@ -171,7 +171,7 @@ public class Learning {
 		}
 		
 		//On centre et reduit les images des bases pour une convergence plus rapide du reseau de neurones
-		centreReduitImages();
+		this.centreReduitImages();
 		
 		
 		System.out.println("Les images ont ete chargees en ram");
@@ -291,12 +291,12 @@ public class Learning {
 	 * Centre et reduit l'ensemble des images d'une base
 	 * @param base base passee en argument
 	 */
-	public static void centreReduitImages(){
+	public void centreReduitImages(){
 		
 		double[] moyenne = average(entrainement);
 		moyenne = arraySum(moyenne, average(validation));
 		moyenne = arraySum(moyenne, average(test));
-		Learning.average = arrayDivide(moyenne, 3);
+		average = arrayDivide(moyenne, 3);
 		
 		double[] var = arraySum(moyenne, arrayNegate(arraySquared(moyenne)));
 		
@@ -309,7 +309,7 @@ public class Learning {
 			
 		}
 		
-		Learning.sigma = arraySqrt(var);
+		sigma = arraySqrt(var);
 		
 		for(int i=0; i<10; i++){
 		
@@ -336,12 +336,12 @@ public class Learning {
 	 * @param input L'array des pixels de l'image a normaliser
 	 * @return L'array de l'image normalisee
 	 */
-	public static double[] centreReduit(double[] input) {
+	public double[] centreReduit(double[] input) {
 		
-		if (Learning.average == null) {
+		if (average == null) {
 			
 			try {
-				Learning.loadImages();
+				this.loadImages();
 			} catch (Exception e) {}
 			
 		}
@@ -349,7 +349,7 @@ public class Learning {
 		double[] result = new double[input.length];
 		
 		for (int i = 0 ; i < input.length ; i++)
-			result[i] = (input[i]-Learning.average[i])/Learning.sigma[i];
+			result[i] = (input[i]-average[i])/sigma[i];
 		
 		return result;
 		
@@ -430,9 +430,10 @@ public class Learning {
 		
 		double count = 0;
 		
-		for (int j=0; j<10; j++){
-			
-			for (int i=0; i<1500; i++){
+		
+		for (int i=0; i<1500; i++){
+		
+			for (int j=0; j<10; j++){
 				
 				count++;
 				
@@ -522,7 +523,7 @@ public class Learning {
 		
 		//On charge les images en ram pour accelerer le traitement
 		try {
-			Learning.loadImages();
+			this.loadImages();
 		} catch(Exception e) {
 			
 		}
