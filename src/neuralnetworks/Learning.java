@@ -445,7 +445,6 @@ public class Learning {
 					
 					for (int k = 0 ; k < 10 ; k++) {
 					
-						assert (!(Double.isNaN(temp[k])));
 						eqm += temp[k]/10;	
 					
 					}
@@ -467,8 +466,8 @@ public class Learning {
 		}
 		
 		double[] res = new double[2];
-		res[0] = success/20000;
-		res[1] = eqm/20000;
+		res[0] = success/(base[0].length*10);
+		res[1] = eqm/(base[0].length*10);
 		
 		return res;
 	}
@@ -535,6 +534,8 @@ public class Learning {
 				//Test et determination du taux de succes
 				
 				stats = this.successRateCalculRAM(tested, validation);
+				
+				System.out.println(stats[0]);
 				
 				tested.hiddenSize = i;
 				tested.learningFactor = currentLearnF;
