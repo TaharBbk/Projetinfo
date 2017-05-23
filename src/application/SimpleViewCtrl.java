@@ -131,9 +131,6 @@ public class SimpleViewCtrl {
 			double[] image = Learning.imageLecture(nom);
 			//image = L.centreReduit(image);
 			double[] results = nN.forwardPropagationRAM(image);
-			for (int i=0; i<10; i++){
-				System.out.println(results[i]);
-			}
 			turnOnLights(results);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
