@@ -413,7 +413,7 @@ public class Learning {
 
 	
 	//Renvoie le taux de succes et l'erreur quadratique moyenne du reseau sur un echantillon de la base stocke en ram
-	public double[] successRateCalculRAM(NeuralNetworks N){
+	public double[] successRateCalculRAM(NeuralNetworks N, double[][][] base){
 		
 		double[] result;
 		double[] expected;
@@ -422,13 +422,13 @@ public class Learning {
 		double success = 0;
 		double eqm=0;
 		
-		for (int i=3000; i<5000; i++){
+		for (int i=0; i<base[0].length; i++){
 		
 			for (int j=0; j<10; j++){
 			
 				try {
 				
-					result = N.forwardPropagationRAM(validation[j][i]);
+					result = N.forwardPropagationRAM(base[j][i]);
 					
 					//Si le neurone de valeur maximale a un rang egal au chiffre qui doit etre reconnu, c'est un succes
 					if (NeuralNetworks.max(result) == j){
@@ -534,7 +534,7 @@ public class Learning {
 				
 				//Test et determination du taux de succes
 				
-				stats = this.successRateCalculRAM(tested);
+				stats = this.successRateCalculRAM(tested, validation);
 				
 				tested.hiddenSize = i;
 				tested.learningFactor = currentLearnF;
@@ -566,6 +566,9 @@ public class Learning {
 		System.out.println("Taux de succes : " + this.bestNeuralNetworks.successRate);
 		System.out.println("Learning factor : " + this.bestNeuralNetworks.learningFactor);
 		System.out.println("-----------------------");
+		
+		System.out.println("Verification a l'aide de la base de tets");
+		System.out.println("Taux de succes :" + this.successRateCalculRAM(this.bestNeuralNetworks, test)[0]);
 	
 	}
 	
