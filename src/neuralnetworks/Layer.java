@@ -13,7 +13,7 @@ public class Layer {
 	/**
 	 * Variable qui determine le coefficient lineaire dans la fonction d'activation
 	 */
-	double activationFunctionLinearCoeff = 0.01;
+	double activationFunctionLinearCoeff = 0.6;
 	
 	
 	/**

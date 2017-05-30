@@ -26,11 +26,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import neuralnetworks.NeuralNetworks;
-import neuralnetworks.Learning;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+
+import neuralnetworks.Learning;
+import neuralnetworks.NeuralNetworks;
 
 public class SimpleViewCtrl {
 	
@@ -70,9 +71,10 @@ public class SimpleViewCtrl {
 	
 	/**
 	 * Save a resized png version of the canvas
+	 * @throws IOException 
 	 */
-     void save() {
-    	String location =NeuralNetworks.location;	
+     void save() throws IOException {
+    	String location = NeuralNetworks.location;	
     	if(OS.indexOf("win") >= 0){
     		File file = new File(location + "\\tmp.png");    			
         	File fileResized = new File(location + "\\tmpResized.png");
@@ -89,7 +91,83 @@ public class SimpleViewCtrl {
         	 } catch (IOException e) {    	        	
         		 e.printStackTrace();
         	}
-		}
+		
+    	   	BufferedImage image = ImageIO.read(file);
+			int hauteur = image.getHeight();
+			int largeur = image.getWidth();
+			int couleur;
+			java.awt.Color color;
+			
+			double[][] imagetab = new double[hauteur][largeur];			
+			
+			for (int i=0; i<hauteur; i++){
+				for(int j=0; j<largeur; j++){
+					color = new java.awt.Color(image.getRGB(i,j), false);
+					couleur = (color.getBlue()+color.getRed()+color.getGreen())/3;
+					if(couleur<150)
+						imagetab[i][j]=1;
+					else
+						imagetab[i][j]=0;
+				}
+			}
+			
+			int xmin = -1, xmax = -1, ymin = -1, ymax = -1;
+			
+			for (int y=0; y<hauteur; y++){
+				boolean lignenulle = true;
+				for(int x=0; x<largeur; x++){
+					if (ymin == -1 && imagetab[y][x]==1){
+						ymin = y;
+					}
+					if (imagetab[y][x]==1){
+						lignenulle = false;
+					}
+				}
+				if (ymin != -1 && ymax == -1 && lignenulle){
+					ymax = y;
+				}
+			}
+			
+			for (int x=0; x<largeur; x++){
+				boolean colonnenulle = true;
+				for(int y=0; y<hauteur; y++){
+					if (xmin == -1 && imagetab[y][x]==1){
+						xmin = x;
+					}
+					if (imagetab[y][x]==1){
+						colonnenulle = false;
+					}
+				}
+				if (xmin != -1 && xmax == -1 && colonnenulle){
+					xmax = x;
+				}
+			}
+			
+			System.out.println(ymin + ";" + ymax + ";" + xmin + ";" + xmax);
+			
+			int taille;
+			if (ymin-ymax<xmin-xmax){
+				taille = xmin-xmax;
+			}
+			else {
+				taille = ymin-ymax;
+			}
+			
+			double[][] imagecentered = new double[taille][taille];
+			System.out.println(taille);
+			for (int i=0; i<taille; i++){
+				for(int j=0; j<taille; j++){
+					imagecentered[i][j] = imagetab[i+ymin][j+xmin];
+				}
+			}
+			
+			
+    	}
+    	
+    	
+    	
+    	
+    	
 		else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
 			File file = new File(location + "/tmp.png");    			
 	    	File fileResized = new File(location + "/tmpResized.png");
@@ -97,23 +175,109 @@ public class SimpleViewCtrl {
 	    		WritableImage writableImage = new WritableImage((int)Canvas.getWidth(), (int)Canvas.getHeight());    	            
 	    		Canvas.snapshot(null, writableImage);
 	    		RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-	    		ImageIO.write(renderedImage, "png", file);    	             	            
-	    		BufferedImage resizedImage = new BufferedImage(28, 28, 1);    	    		
-	    		Graphics2D g = resizedImage.createGraphics();   	    		
-	    		g.drawImage((BufferedImage)renderedImage, 0, 0, 28, 28, null);    	    		
-	    		g.dispose();    	    		
-	    		ImageIO.write(resizedImage, "png", fileResized);    	       
+	    		ImageIO.write(renderedImage, "png", file);    	             	                	       
 	    	 } catch (IOException e) {    	        	
 	    		 e.printStackTrace();
 	    	}
+	    
+	    	
+	    	BufferedImage image = ImageIO.read(file);
+			int hauteur = image.getHeight();
+			int largeur = image.getWidth();
+			int couleur;
+			java.awt.Color color;
+			
+			double[][] imagetab = new double[hauteur][largeur];			
+			
+			for (int i=0; i<hauteur; i++){
+				for(int j=0; j<largeur; j++){
+					color = new java.awt.Color(image.getRGB(i,j), false);
+					couleur = (color.getBlue()+color.getRed()+color.getGreen())/3;
+					if(couleur<150)
+						imagetab[i][j]=1;
+					else
+						imagetab[i][j]=0;
+				}
+			}
+
+			int xmin = -1, xmax = -1, ymin = -1, ymax = -1;
+			
+			for (int y=0; y<hauteur; y++){
+				boolean lignenulle = true;
+				for(int x=0; x<largeur; x++){
+					if (ymin == -1 && imagetab[y][x]==1){
+						ymin = y;
+					}
+					if (imagetab[y][x]==1){
+						lignenulle = false;
+					}
+				}
+				if (ymin != -1 && ymax == -1 && lignenulle){
+					ymax = y;
+				}
+			}
+
+			for (int x=0; x<largeur; x++){
+				boolean colonnenulle = true;
+				for(int y=0; y<hauteur; y++){
+					if (xmin == -1 && imagetab[y][x]==1){
+						xmin = x;
+					}
+					if (imagetab[y][x]==1){
+						colonnenulle = false;
+					}
+				}
+				if (xmin != -1 && xmax == -1 && colonnenulle){
+					xmax = x;
+				}
+			}
+
+			int taille = 0;
+			if ((ymax-ymin)<(xmax-xmin)){
+				taille = xmax-xmin;
+			}
+			else {
+				taille = ymax-ymin;
+			}
+
+			double[][] imagetabcentered = new double[taille][taille];
+
+			for (int i=0; i<taille; i++){
+				for(int j=0; j<taille; j++){
+					imagetabcentered[i][j] = imagetab[i+ymin][j+xmin];
+
+				}
+			}
+			try {
+			    BufferedImage imagecentered = new BufferedImage(taille, taille, 1);
+			    for(int i=0; i<taille; i++) {
+			        for(int j=0; j<taille; j++) {
+			            int a = (int) imagetabcentered[j][i];
+			            java.awt.Color newColor = new java.awt.Color((1-a)*255,(1-a)*255,(1-a)*255);
+			            imagecentered.setRGB(j,i,newColor.getRGB());
+			        }
+			    }
+			    File output = new File("imagecentered.png");
+			    ImageIO.write(imagecentered, "png", output);
+			    BufferedImage resizedImage = new BufferedImage(28, 28, 1);    	    		
+	    		Graphics2D g = resizedImage.createGraphics();   	    		
+	    		g.drawImage((BufferedImage)imagecentered, 0, 0, 28, 28, null);    	    		
+	    		g.dispose();    	    		
+	    		ImageIO.write(resizedImage, "png", fileResized);
+			}
+
+			catch(Exception e) {
+				e.printStackTrace();
+			}
 		}			
     };
     
     /**
      * Make a forward propagation on the canvas and return result
+     * @throws IOException 
      */
 	@FXML
-	void analyse() {
+	void analyse() throws IOException {
 		
 		String location = NeuralNetworks.location;
 		String nom = "";
@@ -205,7 +369,7 @@ public class SimpleViewCtrl {
 	@FXML
 	void draw(MouseEvent event) {
 		GraphicsContext gc = Canvas.getGraphicsContext2D();
-		gc.setLineWidth(5);
+		gc.setLineWidth(12);
         gc.lineTo(event.getX(), event.getY());
         gc.stroke();
 	}
