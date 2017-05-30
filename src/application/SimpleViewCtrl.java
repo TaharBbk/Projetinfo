@@ -92,7 +92,7 @@ public class SimpleViewCtrl {
         		 e.printStackTrace();
         	}
 		
-    	   	BufferedImage image = ImageIO.read(file);
+        	BufferedImage image = ImageIO.read(file);
 			int hauteur = image.getHeight();
 			int largeur = image.getWidth();
 			int couleur;
@@ -110,7 +110,7 @@ public class SimpleViewCtrl {
 						imagetab[i][j]=0;
 				}
 			}
-			
+
 			int xmin = -1, xmax = -1, ymin = -1, ymax = -1;
 			
 			for (int y=0; y<hauteur; y++){
@@ -127,7 +127,7 @@ public class SimpleViewCtrl {
 					ymax = y;
 				}
 			}
-			
+
 			for (int x=0; x<largeur; x++){
 				boolean colonnenulle = true;
 				for(int y=0; y<hauteur; y++){
@@ -142,27 +142,70 @@ public class SimpleViewCtrl {
 					xmax = x;
 				}
 			}
-			
-			System.out.println(ymin + ";" + ymax + ";" + xmin + ";" + xmax);
-			
-			int taille;
-			if (ymin-ymax<xmin-xmax){
-				taille = xmin-xmax;
+
+			int taille = 0;
+			if ((ymax-ymin)<(xmax-xmin)){
+				taille = xmax-xmin+20;
 			}
 			else {
-				taille = ymin-ymax;
+				taille = ymax-ymin+20;
 			}
-			
-			double[][] imagecentered = new double[taille][taille];
-			System.out.println(taille);
+			if ((ymax+ymin)<taille){
+				ymin = 0;
+			}
+			else if ((ymax+ymin+taille)>2*hauteur){
+				ymin = hauteur-taille-1;
+			}
+			else {
+				ymin=((ymax+ymin)-taille)/2;
+			}
+			if ((xmax+xmin)<taille){
+				xmin = 0;
+			}
+			else if ((xmax+xmin+taille)>2*hauteur){
+				xmin = hauteur-taille-1;
+			}
+			else {
+				xmin=((xmax+xmin)-taille)/2;
+			}
+
+			double[][] imagetabcentered = new double[taille][taille];
+
 			for (int i=0; i<taille; i++){
 				for(int j=0; j<taille; j++){
-					imagecentered[i][j] = imagetab[i+ymin][j+xmin];
+					imagetabcentered[i][j] = imagetab[i+ymin][j+xmin];
+
 				}
 			}
+			try {
+			    BufferedImage imagecentered = new BufferedImage(taille, taille, 1);
+			    for(int i=0; i<taille; i++) {
+			        for(int j=0; j<taille; j++) {
+			            int a = (int) imagetabcentered[j][i];
+			            java.awt.Color newColor = new java.awt.Color((1-a)*255,(1-a)*255,(1-a)*255);
+			            imagecentered.setRGB(j,i,newColor.getRGB());
+			        }
+			    }
+			    File output = new File("imagecentered.png");
+			    ImageIO.write(imagecentered, "png", output);
+			    BufferedImage resizedImage = new BufferedImage(28, 28, 1);    	    		
+	    		Graphics2D g = resizedImage.createGraphics();   	    		
+	    		g.drawImage((BufferedImage)imagecentered, 0, 0, 28, 28, null);    	    		
+	    		g.dispose();    	    		
+	    		ImageIO.write(resizedImage, "png", fileResized);
+	    		output.delete();
+			}
+			
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+			Image apercuImage = new Image("file:" + fileResized.getAbsolutePath());
+			imageResized.setImage(apercuImage);
+
+		}
 			
 			
-    	}
+    	
     	
     	
     	
@@ -234,10 +277,28 @@ public class SimpleViewCtrl {
 
 			int taille = 0;
 			if ((ymax-ymin)<(xmax-xmin)){
-				taille = xmax-xmin;
+				taille = xmax-xmin+20;
 			}
 			else {
-				taille = ymax-ymin;
+				taille = ymax-ymin+20;
+			}
+			if ((ymax+ymin)<taille){
+				ymin = 0;
+			}
+			else if ((ymax+ymin+taille)>2*hauteur){
+				ymin = hauteur-taille-1;
+			}
+			else {
+				ymin=((ymax+ymin)-taille)/2;
+			}
+			if ((xmax+xmin)<taille){
+				xmin = 0;
+			}
+			else if ((xmax+xmin+taille)>2*hauteur){
+				xmin = hauteur-taille-1;
+			}
+			else {
+				xmin=((xmax+xmin)-taille)/2;
 			}
 
 			double[][] imagetabcentered = new double[taille][taille];
@@ -264,11 +325,15 @@ public class SimpleViewCtrl {
 	    		g.drawImage((BufferedImage)imagecentered, 0, 0, 28, 28, null);    	    		
 	    		g.dispose();    	    		
 	    		ImageIO.write(resizedImage, "png", fileResized);
+	    		output.delete();
 			}
-
+			
 			catch(Exception e) {
 				e.printStackTrace();
 			}
+			Image apercuImage = new Image("file:" + fileResized.getAbsolutePath());
+			imageResized.setImage(apercuImage);
+
 		}			
     };
     
@@ -414,10 +479,9 @@ public class SimpleViewCtrl {
 		fileChooser.setTitle("Ouvrir l'image a analyser");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
 		File selectedFile = fileChooser.showOpenDialog(mainStage);
-		Image apercuImage = new Image("file:" + selectedFile.getAbsolutePath());
-		imageResized.setImage(apercuImage);
 		
 		BufferedImage Image;
+		if (selectedFile != null){
 		try {
 			Image = ImageIO.read(selectedFile);
 			
@@ -439,6 +503,9 @@ public class SimpleViewCtrl {
 				nom = location + "/tmpResized.png";
 			}
 			
+			Image apercuImage = new Image("file:" + fileResized.getAbsolutePath());
+			imageResized.setImage(apercuImage);
+			
 			try {
 				double[] image = Learning.imageLecture(nom);
 				double[] results = nN.forwardPropagationRAM(image);
@@ -453,6 +520,7 @@ public class SimpleViewCtrl {
 		  } catch (IOException e) {
 	        	e.printStackTrace();
 	        }
+		}
 	}
 	
 	
@@ -462,6 +530,7 @@ public class SimpleViewCtrl {
 	@FXML
 	void init(){
 		txSuccess.setText(nN.getSuccessRate());
+		nN.setActivationFunctionLinearCoeffLayers(0.6);
 	}
 
 }

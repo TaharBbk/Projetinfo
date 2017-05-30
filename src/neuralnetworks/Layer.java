@@ -13,7 +13,7 @@ public class Layer {
 	/**
 	 * Variable qui determine le coefficient lineaire dans la fonction d'activation
 	 */
-	double activationFunctionLinearCoeff = 0.6;
+	double activationFunctionLinearCoeff = 0.3;
 	
 	
 	/**
@@ -86,6 +86,10 @@ public class Layer {
 	 */
 	public void setNext(Layer n) {
 		this.next = n;
+	}
+	
+	public void setActivationFunctionLinearCoeff(double d){
+		this.activationFunctionLinearCoeff = d;
 	}
 
 	/**

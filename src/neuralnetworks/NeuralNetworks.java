@@ -105,6 +105,11 @@ public class NeuralNetworks {
 		return posmax;
 	}
 	
+	public void setActivationFunctionLinearCoeffLayers(double d){
+		for (Layer layer : this.layers){
+			layer.setActivationFunctionLinearCoeff(d);
+		}
+	}
 	
 	/**
 	 * Methode qui effectue une backprop sur une image chargee en RAM
