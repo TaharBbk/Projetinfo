@@ -211,7 +211,7 @@ public class SimpleViewCtrl {
     	
     	
     	
-		else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+		else{
 			File file = new File(location + "/tmp.png");    			
 	    	File fileResized = new File(location + "/tmpResized.png");
 	    	try {    	            
@@ -373,7 +373,7 @@ public class SimpleViewCtrl {
 			file.delete();
 			fileResized.delete();
 		}
-		else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+		else{
 			File file = new File(location + "/tmp.png");
 			File fileResized = new File(location + "/tmpResized.png");
 			file.delete();
@@ -499,7 +499,7 @@ public class SimpleViewCtrl {
 				nom = location + "\\tmpResized.png";
 			}
 			
-			else if(OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0){
+			else{
 				nom = location + "/tmpResized.png";
 			}
 			
