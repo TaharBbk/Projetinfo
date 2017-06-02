@@ -23,7 +23,7 @@ public class NeuralNetworks {
 	/**
 	* Int qui indique la taille du reseau, il suffit de faire +1 pour connaitre la taille du reseau en termes de couche
 	*/
-	private int numberOfWeights;
+	public int numberOfWeights;
 	double learningFactor = 0;
 	double successRate = 0;
 	double meanSquareError = 0;

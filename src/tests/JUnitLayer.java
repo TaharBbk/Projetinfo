@@ -1,6 +1,7 @@
 package tests;
 
 import neuralnetworks.Layer;
+import neuralnetworks.NeuralNetworks;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -55,6 +56,23 @@ public class JUnitLayer {
 			Assert.assertArrayEquals(underTestLayer2.getWeights()[i], calculatedWeight[i], 0.00001);
 		}
 	}
+	
+	
+	//Test pour la classe NeuralNetworks
+	NeuralNetworks tested = new NeuralNetworks(472);
+	
+	@Test
+	public void testImageLecture(){
+		
+	}
+	
+	
+	@Test
+	public void testExtractLearningFactor(){
+		tested.extractLearningFactor("best");
+		assert(tested.learningFactor==0.16);
+	}
+	
 	
 
 }

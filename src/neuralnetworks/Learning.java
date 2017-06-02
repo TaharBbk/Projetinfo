@@ -36,7 +36,7 @@ public class Learning {
 	 */
 	private static double[][][] test = new double[10][1000][784];
 	/**
-	 * Reseau de neurones ayant obtenu le meilleur taux de succï¿½s
+	 * Reseau de neurones ayant obtenu le meilleur taux de succés
 	 */
 	private NeuralNetworks bestNeuralNetworks; 
 	/**
@@ -51,7 +51,7 @@ public class Learning {
 	/**
 	 * Methode qui convertit une image donnee en array de pixels 0 ou 1
 	 * @param locationImage Le chemin de l'image a traiter
-	 * @return Un Array de pixels 0 ou 1 correspondant ï¿½ une image
+	 * @return Un Array de pixels 0 ou 1 correspondant à une image
 	 */
 	public static double[] imageLecture(String locationImage){ 
 		
@@ -619,7 +619,7 @@ public class Learning {
 		}
 		
 		//On affiche enfin le reseau obtenu a la fin de l'execution de l'ensemble du processus 
-		System.out.println("Meilleur rï¿½sultat obtenu :");
+		System.out.println("Meilleur résultat obtenu :");
 		System.out.println("Erreur quadratique moyenne : " + this.bestNeuralNetworks.meanSquareError);
 		System.out.println("Taille : " + this.bestNeuralNetworks.weights[1].length);
 		System.out.println("Taux de succes : " + this.bestNeuralNetworks.successRate);
